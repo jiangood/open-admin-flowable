@@ -36,3 +36,5 @@ build/
 /web/src/.umi/
 /web/pnpm-lock.yaml
 /logs/
+web/src/.umi-production/
+.mcp.json

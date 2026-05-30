@@ -1,36 +1,55 @@
 package io.github.jiangood.openadmin.modules.flowable.dao.impl;
 
-import cn.hutool.core.io.resource.ResourceUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.jiangood.openadmin.modules.flowable.config.ProcessMetaConfiguration;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.dao.IProcessMetaDao;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
+import org.springframework.boot.env.YamlPropertySourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
-import org.yaml.snakeyaml.Yaml;
 
-import java.io.InputStream;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@Slf4j
 @Component
-@AllArgsConstructor
 public class ProcessMetaDaoYmlImpl implements IProcessMetaDao {
 
-    public static final String PROCESS_YML = "flowable.yml";
+    public static final String PROCESS_DEFINITION_PATTERN = "classpath*:data/flowable-process-definition*.yml";
 
     @Override
     public List<ProcessMeta> findProcessMetaList() {
+        List<ProcessMeta> all = new ArrayList<>();
         try {
-            InputStream is = ResourceUtil.getStream(PROCESS_YML);
-            Yaml yaml = new Yaml();
-            Map<String, Object> root = yaml.load(is);
-            ObjectMapper mapper = new ObjectMapper();
-            ProcessMetaConfiguration cfg = mapper.convertValue(root.get("process"), ProcessMetaConfiguration.class);
-            return cfg.getList();
+            var resolver = new PathMatchingResourcePatternResolver();
+            var resources = resolver.getResources(PROCESS_DEFINITION_PATTERN);
+            if (resources.length == 0) {
+                throw new IllegalStateException("未找到 flowable-process-definition*.yml");
+            }
+
+            var yamlLoader = new YamlPropertySourceLoader();
+            for (var resource : resources) {
+                log.info("===== 加载流程定义: {} =====", resource.getFilename());
+                var propertySources = yamlLoader.load(resource.getFilename(), resource);
+                if (propertySources.isEmpty()) {
+                    continue;
+                }
+                var sources = ConfigurationPropertySources.from(propertySources);
+                var binder = new Binder(sources);
+                var cfg = binder.bind("process", Bindable.of(ProcessMetaConfiguration.class))
+                        .orElseThrow(() -> new IllegalStateException("绑定 " + resource.getFilename() + " 中 process 配置失败"));
+                if (cfg.getList() != null) {
+                    all.addAll(cfg.getList());
+                }
+            }
+
+            log.info("===== 共加载 {} 个流程定义 =====", all.size());
+            return all;
         } catch (Exception e) {
-            return Collections.emptyList();
+            throw new RuntimeException("读取流程定义失败: " + e.getMessage(), e);
         }
     }
 

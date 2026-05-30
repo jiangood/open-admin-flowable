@@ -10,12 +10,10 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
 @Slf4j
 @Component
 @AllArgsConstructor
-public class FlowableDataInit implements OpenLifecycle {
-
+public class FlowableProcessInitializer implements OpenLifecycle {
 
     private ProcessMetaService processMetaService;
 
@@ -23,15 +21,16 @@ public class FlowableDataInit implements OpenLifecycle {
 
     @Override
     public void onDataInit() {
+        log.info("===== FlowableProcessInitializer 开始执行 =====");
         List<ProcessMeta> list = processMetaService.findAll();
+        log.info("===== 流程定义数量: {} =====", list.size());
         for (ProcessMeta meta : list) {
             String key = meta.getKey();
+            log.info("===== 初始化流程模型: key={}, name={} =====", key, meta.getName());
             processService.initModel(meta);
-            log.info("注册流程定义类 {} {}", key, meta.getClass().getName());
+            log.info("注册流程定义 {} {}", key, meta.getClass().getName());
         }
+        log.info("===== FlowableProcessInitializer 执行完毕 =====");
     }
-
-
-
 
 }

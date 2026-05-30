@@ -79,6 +79,7 @@
                         <configuration combine.self="override">
                             <source>${compile.version}</source>
                             <target>${compile.version}</target>
+                            <parameters>true</parameters>
                             <encoding>UTF-8</encoding>
                         </configuration>
                     </plugin>
@@ -88,6 +89,14 @@
         <profile>
             <id>publish</id>
             <build>
+                <resources>
+                    <resource>
+                        <directory>src/main/resources</directory>
+                        <excludes>
+                            <exclude>data/flowable-process-definition-example.yml</exclude>
+                        </excludes>
+                    </resource>
+                </resources>
 
                 <plugins>
 
@@ -132,9 +141,6 @@
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>flowable.yml</exclude>
-                </excludes>
             </resource>
         </resources>
 
@@ -146,6 +152,7 @@
                     <source>${compile.version}</source>
                     <target>${compile.version}</target>
                     <compilerArgument>-Xlint:unchecked</compilerArgument>
+                    <parameters>true</parameters>
                     <encoding>UTF-8</encoding>
                     <excludes>
                         <exclude>io/github/jiangood/openadmin/ProcessBootApplication.java</exclude>

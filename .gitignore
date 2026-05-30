@@ -38,3 +38,5 @@ build/
 /logs/
 web/src/.umi-production/
 .mcp.json
+data/rsa-key
+.playwright-mcp/

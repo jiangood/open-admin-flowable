@@ -18,7 +18,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class ProcessMetaDaoYmlImpl implements IProcessMetaDao {
 
-    public static final String PROCESS_YML = "config/application-process.yml";
+    public static final String PROCESS_YML = "flowable.yml";
 
     @Override
     public List<ProcessMeta> findProcessMetaList() {

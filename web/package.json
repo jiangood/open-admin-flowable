@@ -23,7 +23,7 @@
     "react-dom": "^19.0.0",
     "umi": "^4.0.0"
   },
-  "name": "@jiangood/open-admin-process",
+  "name": "@jiangood/open-admin-flowable",
   "files": [
     "src/*",
     "!src/.umi",

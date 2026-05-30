@@ -1,4 +1,4 @@
-# open-admin-process
+# open-admin-flowable
 
 ## 简介
 开源后台流程管理项目。
@@ -10,10 +10,10 @@
 ```xml
 <dependency>
     <groupId>io.github.jiangood</groupId>
-    <artifactId>open-admin-process</artifactId>
+    <artifactId>open-admin-flowable</artifactId>
     <version>版本号</version>
 </dependency>
 ```
 
-该库已发布于 [Maven Central](https://search.maven.org/artifact/io.github.jiangood/open-admin-process)。
-![Maven Central](https://img.shields.io/maven-central/v/io.github.jiangood/open-admin-process)
+该库已发布于 [Maven Central](https://search.maven.org/artifact/io.github.jiangood/open-admin-flowable)。
+![Maven Central](https://img.shields.io/maven-central/v/io.github.jiangood/open-admin-flowable)

@@ -1,0 +1,21 @@
+menus:
+  - id: myFlowableTask
+    name: 我的任务
+    path: /flowable/task
+    icon: ScheduleOutlined
+    seq: -1
+    refreshOnTabClick: true
+    messageCountUrl: /admin/flowable/my/todoCount
+    perms:
+      - {name: 任务管理, code: myFlowableTask:manage}
+
+  - id: flowable
+    pid: sys
+    name: 流程管理
+    path: /flowable
+    seq: 10
+    perms:
+      - {name: 设计, code: flowableModel:design}
+      - {name: 部署, code: flowableModel:deploy}
+      - {name: 设置受理人, code: flowableTask:setAssignee}
+      - {name: 终止流程, code: flowableInstance:close}

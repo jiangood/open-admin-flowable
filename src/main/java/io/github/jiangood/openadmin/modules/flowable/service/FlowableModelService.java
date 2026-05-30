@@ -1,7 +1,7 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
 
-import io.github.jiangood.openadmin.lang.FontTool;
+import io.github.jiangood.openadmin.util.FontTool;
 import jakarta.annotation.Resource;
 import org.flowable.bpmn.model.*;
 import org.flowable.engine.HistoryService;

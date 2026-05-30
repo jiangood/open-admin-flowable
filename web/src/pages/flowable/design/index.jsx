@@ -9,7 +9,7 @@ import './index.css'
 import customTranslate from "./customTranslate/customTranslate";
 import contextPad from "./contextPad";
 import {CloudUploadOutlined, SaveOutlined} from "@ant-design/icons";
-import {HttpUtils, MessageUtils, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
+import {HttpUtils, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import '@bpmn-io/properties-panel/assets/properties-panel.css';
 import {BpmnPropertiesPanelModule, BpmnPropertiesProviderModule} from 'bpmn-js-properties-panel';
@@ -65,14 +65,14 @@ export default class extends React.Component {
 
     showXML = () => {
         this.bpmnModeler.saveXML({format: true}).then(res => {
-            MessageUtils.alert(<pre style={{overflowX: "auto", height: '64vh'}}>{res.xml}</pre>, {width: 1024})
+            Modal.info({content: <pre style={{overflowX: "auto", height: '64vh'}}>{res.xml}</pre>, width: 1024})
         })
     }
 
 
     handleSave = async () => {
         let id = this.state.id;
-        const hide = MessageUtils.loading('正在保存...')
+        const hide = message.loading('正在保存...', 0)
         try {
             const res = await this.bpmnModeler.saveXML();
             await HttpUtils.post('admin/flowable/model/saveContent', {id, content: res.xml});
@@ -83,7 +83,7 @@ export default class extends React.Component {
     }
     handleDeploy = async () => {
         let id = this.state.id;
-        const hide = MessageUtils.loading('正在部署...')
+        const hide = message.loading('正在部署...', 0)
         try {
             const res = await this.bpmnModeler.saveXML();
             await HttpUtils.post('admin/flowable/model/deploy', {id, content: res.xml});

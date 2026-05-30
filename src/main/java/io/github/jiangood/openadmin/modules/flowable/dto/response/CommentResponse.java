@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.dto.response;
 
-import io.github.jiangood.openadmin.lang.SpringTool;
+import io.github.jiangood.openadmin.util.SpringTool;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;
 import lombok.Data;
 import org.apache.commons.lang3.time.DateFormatUtils;

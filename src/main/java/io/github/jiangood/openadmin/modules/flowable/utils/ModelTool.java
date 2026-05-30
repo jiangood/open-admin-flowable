@@ -1,7 +1,7 @@
 package io.github.jiangood.openadmin.modules.flowable.utils;
 
 import cn.hutool.core.util.StrUtil;
-import io.github.jiangood.openadmin.lang.SpringTool;
+import io.github.jiangood.openadmin.util.SpringTool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.bpmn.converter.BpmnXMLConverter;

@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
-import io.github.jiangood.openadmin.framework.lifecycle.OpenLifecycle;
+import io.github.jiangood.openadmin.framework.config.OpenLifecycle;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;

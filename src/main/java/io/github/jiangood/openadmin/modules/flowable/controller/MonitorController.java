@@ -2,10 +2,10 @@ package io.github.jiangood.openadmin.modules.flowable.controller;
 
 
 import cn.hutool.core.util.StrUtil;
-import io.github.jiangood.openadmin.lang.dto.AjaxResult;
-import io.github.jiangood.openadmin.lang.PageTool;
+import io.github.jiangood.openadmin.util.dto.AjaxResult;
+import io.github.jiangood.openadmin.util.PageTool;
 import io.github.jiangood.openadmin.framework.log.Log;
-import io.github.jiangood.openadmin.modules.common.LoginTool;
+import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.MonitorTaskResponse;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;
 import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;

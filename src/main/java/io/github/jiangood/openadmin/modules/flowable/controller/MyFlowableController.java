@@ -2,11 +2,10 @@ package io.github.jiangood.openadmin.modules.flowable.controller;
 
 
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
-import io.github.jiangood.openadmin.lang.ImgTool;
-import io.github.jiangood.openadmin.lang.PageTool;
-import io.github.jiangood.openadmin.lang.datetime.DateFormatTool;
-import io.github.jiangood.openadmin.lang.dto.AjaxResult;
-import io.github.jiangood.openadmin.modules.common.LoginTool;
+import io.github.jiangood.openadmin.util.ImgTool;
+import io.github.jiangood.openadmin.util.PageTool;
+import io.github.jiangood.openadmin.util.dto.AjaxResult;
+import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.dto.request.HandleTaskRequest;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.CommentResponse;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.TaskResponse;
@@ -197,7 +196,7 @@ public class MyFlowableController {
             if (instanceName == null) {
                 instanceName = instance.getProcessDefinitionName();
             }
-            data.put("startTime", DateFormatTool.format(instance.getStartTime()));
+            data.put("startTime", cn.hutool.core.date.DateUtil.format(instance.getStartTime(), "yyyy-MM-dd HH:mm:ss"));
             data.put("starter", processService.getUserName(instance.getStartUserId()));
             data.put("name", instanceName);
             data.put("id", instance.getId());

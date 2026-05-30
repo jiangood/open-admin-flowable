@@ -3,11 +3,10 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import io.github.jiangood.openadmin.lang.FriendlyTool;
-import io.github.jiangood.openadmin.lang.PageTool;
-import io.github.jiangood.openadmin.lang.datetime.DateFormatTool;
+import io.github.jiangood.openadmin.util.FriendlyTool;
+import io.github.jiangood.openadmin.util.PageTool;
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
-import io.github.jiangood.openadmin.modules.common.LoginTool;
+import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessVariable;
 import io.github.jiangood.openadmin.modules.flowable.core.FlowableProperties;
@@ -100,7 +99,7 @@ public class ProcessService {
 
 
         if (title == null) {
-            String day = DateFormatTool.formatDayCn(new Date());
+            String day = cn.hutool.core.date.DateUtil.format(new Date(), "yyyy年MM月dd日");
             title = MessageFormat.format("{0}({1}){2}发起的【{3}】(业务单号:{4})",
                     user.getName(),
                     user.getDeptName() != null ? user.getDeptName() : "未知部门",
@@ -422,7 +421,7 @@ public class ProcessService {
         query.taskCandidateUser(userId);
 
         // 人员及 分组
-        SysUser user = sysUserService.findOne(userId);
+        SysUser user = sysUserService.findById(userId).orElse(null);
         Set<SysRole> roles = user.getRoles();
         if (CollUtil.isNotEmpty(roles)) {
             for (SysRole role : roles) {

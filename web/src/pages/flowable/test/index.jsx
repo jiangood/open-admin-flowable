@@ -1,6 +1,6 @@
 import React from "react";
-import {Button, Card, Form, Input} from "antd";
-import {HttpUtils, MessageUtils, PageLoading, PageUtils, StringUtils} from "@jiangood/open-admin";
+import {Button, Card, Form, Input, Modal} from "antd";
+import {HttpUtils, PageLoading, PageUtils, StringUtils} from "@jiangood/open-admin";
 
 export default class extends React.Component {
 
@@ -49,9 +49,9 @@ export default class extends React.Component {
 
   onFinish = values => {
     HttpUtils.post('admin/flowable/test/submit', values).then(rs=>{
-      MessageUtils.confirm('跳转任务列表?').then(()=>{
+      Modal.confirm({content: '跳转任务列表?', onOk: () => {
         PageUtils.open('/flowable/monitor/task')
-      })
+      }})
     })
   };
 }

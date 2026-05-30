@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
-import io.github.jiangood.openadmin.lang.SpringTool;
+import io.github.jiangood.openadmin.util.SpringTool;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessListener;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.core.ProcessEventType;

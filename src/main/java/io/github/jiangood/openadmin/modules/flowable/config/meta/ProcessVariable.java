@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.config.meta;
 
-import io.github.jiangood.openadmin.lang.field.ValueType;
+import io.github.jiangood.openadmin.util.field.ValueType;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

@@ -4,7 +4,7 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 
 import GeneralSection from './provider/properties/GeneralSection.jsx';
 import DelegateExpressionField from './provider/properties/DelegateExpressionProps.jsx';
-import UserTaskForm from './provider/properties/UserTaskForm.jsx';
+import AssignmentSection from './provider/properties/AssignmentSection.jsx';
 import FormField from './provider/properties/FormProps.jsx';
 import ConditionSection from './provider/properties/ConditionProps.jsx';
 import MultiInstanceSection from './provider/properties/MultiInstanceProps.jsx';
@@ -103,7 +103,7 @@ export default class PropertiesPanel extends React.Component {
         label: '用户',
         children: (
           <div key={element.id}>
-            <UserTaskForm element={element} modeling={modeling} />
+            <AssignmentSection element={element} modeling={modeling} />
           </div>
         ),
       });

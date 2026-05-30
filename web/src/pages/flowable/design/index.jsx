@@ -11,11 +11,8 @@ import contextPad from "./contextPad";
 import {CloudUploadOutlined, SaveOutlined} from "@ant-design/icons";
 import {HttpUtils, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
 import 'bpmn-js/dist/assets/bpmn-js.css';
-import '@bpmn-io/properties-panel/assets/properties-panel.css';
-import {BpmnPropertiesPanelModule, BpmnPropertiesProviderModule} from 'bpmn-js-properties-panel';
-
-import flowablePropertiesProviderModule from './provider';
 import flowableJson from './descriptors/flowable';
+import PropertiesPanel from './PropertiesPanel';
 
 export default class extends React.Component {
 
@@ -23,7 +20,7 @@ export default class extends React.Component {
     state = {
         id: null,
         model: null,
-
+        bpmnModeler: null,
         deployedModal: false
     }
 
@@ -43,13 +40,9 @@ export default class extends React.Component {
 
         this.bpmnModeler = new BpmnModeler({
             container: container,
-            propertiesPanel: {parent: '#js-properties-panel',},
             additionalModules: [
                 {translate: ['value', customTranslate]},
                 contextPad,
-                BpmnPropertiesPanelModule,
-                BpmnPropertiesProviderModule,
-                flowablePropertiesProviderModule
             ],
             moddleExtensions: {
                 flowable: flowableJson
@@ -60,6 +53,7 @@ export default class extends React.Component {
         console.log(xml)
         this.bpmnModeler.importXML(xml)
         this.bpmnModeler.on('element.contextmenu', e => e.preventDefault()) // 关闭右键，影响操作
+        this.setState({bpmnModeler: this.bpmnModeler});
     };
 
 
@@ -118,7 +112,7 @@ export default class extends React.Component {
                 </Splitter.Panel>
 
                 <Splitter.Panel defaultSize={300}>
-                    <div id={'js-properties-panel'}></div>
+                    <PropertiesPanel modeler={this.state.bpmnModeler} />
                 </Splitter.Panel>
             </Splitter>
 

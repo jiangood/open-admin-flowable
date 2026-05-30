@@ -1,54 +1,30 @@
-import {isTextFieldEntryEdited, SelectEntry} from '@bpmn-io/properties-panel';
-import { useService } from 'bpmn-js-properties-panel';
-import { useEffect, useState } from '@bpmn-io/properties-panel/preact/hooks';
+import {Select} from 'antd';
+import {useEffect, useState} from 'react';
 import {HttpUtils} from "@jiangood/open-admin";
-export  function DelegateExpressionProps () {
 
-  return [
-    {
-      id: 'delegateExpression',
-      component: Component,
-      isEdited: isTextFieldEntryEdited,
-    }
+export default function DelegateExpressionField({element, modeling}) {
+    const [options, setOptions] = useState([]);
 
-  ];
-}
+    useEffect(() => {
+        HttpUtils.get('admin/flowable/model/javaDelegateOptions').then(rs => {
+            setOptions((rs || []).map(o => typeof o === 'string' ? {label: o, value: o} : o));
+        });
+    }, []);
 
-function Component(props) {
-  const { element, id } = props;
+    const value = element.businessObject?.delegateExpression || '';
 
-  const modeling = useService('modeling');
-  const debounce = useService('debounceInput');
-
-  const getValue = (element) => {
-    return element.businessObject.delegateExpression || '';
-  };
-
-  const setValue = value => {
-    return modeling.updateProperties(element, {
-      delegateExpression: value
-    });
-  };
-
-  const [ options, setOptions ] = useState([]);
-
-  useEffect(async () => {
-    const rs = await HttpUtils.get('admin/flowable/model/javaDelegateOptions')
-    setOptions(rs)
-  }, [ setOptions ]);
-
-  return SelectEntry({
-    element,
-    id: id,
-    label: 'delegateExpression',
-    description: '实现JavaDelegate接口的Bean名称， 如 ${demoDelegate}',
-    getValue,
-    setValue,
-    debounce,
-
-    getOptions: () => {
-      return options
-    }
-  })
-
+    return (
+        <div style={{padding: 8}}>
+            <div style={{marginBottom: 4, fontSize: 12, color: '#666'}}>delegateExpression</div>
+            <Select
+                style={{width: '100%'}}
+                value={value || undefined}
+                placeholder="实现JavaDelegate接口的Bean名称， 如 ${demoDelegate}"
+                options={options}
+                onChange={(val) => modeling.updateProperties(element, {delegateExpression: val || ''})}
+                allowClear
+                size="small"
+            />
+        </div>
+    );
 }

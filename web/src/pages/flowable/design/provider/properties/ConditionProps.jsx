@@ -1,76 +1,67 @@
-import {isTextFieldEntryEdited, TextAreaEntry, TextFieldEntry} from '@bpmn-io/properties-panel';
-import {useService} from 'bpmn-js-properties-panel';
-import {renderReact} from "./utils";
-import {ConditionDesignButton} from "./ConditionDesign";
+import { Input } from 'antd';
+import { useRef, useState } from 'react';
+import { ConditionDesignButton } from './ConditionDesign';
 
-function PreactConditionDesign(props) {
-    return renderReact(props, ConditionDesignButton, {getValue,setValue})
+function getExpressionValue(element) {
+  const condition = element.businessObject?.conditionExpression;
+  return condition ? condition.body : '';
 }
 
+function setExpressionValue(value, element, modeling, moddle) {
+  const businessObject = element.businessObject;
+  let conditionExpression = businessObject.conditionExpression;
 
-const getValue = (element) => {
-    const condition = element.businessObject.conditionExpression;
-    return condition ? condition.body : '';
-};
+  if (!value) {
+    modeling.updateProperties(element, { conditionExpression: undefined });
+    return;
+  }
 
-const setValue =( value, element, modeling,moddle) => {
-    const businessObject = element.businessObject;
-    let conditionExpression = businessObject.conditionExpression;
+  if (!conditionExpression) {
+    conditionExpression = moddle.create('bpmn:FormalExpression');
+    modeling.updateProperties(element, { conditionExpression });
+  }
 
-    if (!value) {
-        // 移除条件表达式
-        modeling.updateProperties(element, {
-            conditionExpression: undefined
-        });
-        return;
-    }
-
-    if (!conditionExpression) {
-        conditionExpression = moddle.create('bpmn:FormalExpression');
-        modeling.updateProperties(element, {
-            conditionExpression: conditionExpression
-        });
-    }
-
-    // 更新表达式主体
-    modeling.updateModdleProperties(element, conditionExpression, {
-        body: value
-    });
-};
-export function ConditionProps() {
-
-    return [
-        {
-            id: 'expression',
-            component: Component,
-            isEdited: isTextFieldEntryEdited,
-        },
-        {
-            id: 'expressionDesign',
-            component: PreactConditionDesign,
-            isEdited: isTextFieldEntryEdited,
-        }
-    ]
+  modeling.updateModdleProperties(element, conditionExpression, { body: value });
 }
 
-function Component(props) {
-    const {element, id} = props;
+export default function ConditionSection({ element, modeling, moddle, processId }) {
+  const [value, setValue] = useState(getExpressionValue(element));
+  const timerRef = useRef(null);
 
-    const modeling = useService('modeling');
-    const debounce = useService('debounceInput');
-    const moddle = useService('moddle');
+  const handleChange = (e) => {
+    const v = e.target.value;
+    setValue(v);
+    clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      setExpressionValue(v, element, modeling, moddle);
+    }, 300);
+  };
 
-
-    return TextAreaEntry({
-        element,
-        id: id,
-        label: '条件表达式(JUEL)',
-        getValue,
-        setValue: value=>setValue(value,element,modeling,moddle),
-        debounce,
-    })
-
+  return (
+    <div style={{ padding: 8 }}>
+      <div style={{ marginBottom: 4, fontSize: 12, color: '#666' }}>
+        条件表达式(JUEL)
+      </div>
+      <Input.TextArea
+        value={value}
+        onChange={handleChange}
+        placeholder="条件表达式(JUEL)"
+        rows={3}
+        size="small"
+      />
+      <div style={{ display: 'flex', justifyContent: 'right', marginTop: 8 }}>
+        <ConditionDesignButton
+          element={element}
+          modeling={modeling}
+          bpmnFactory={moddle}
+          processId={processId}
+          getValue={getExpressionValue}
+          setValue={(v, el, mod, mdl) => {
+            setExpressionValue(v, el || element, mod || modeling, mdl || moddle);
+            setValue(v);
+          }}
+        />
+      </div>
+    </div>
+  );
 }
-
-
-

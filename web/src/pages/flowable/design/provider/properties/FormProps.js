@@ -1,55 +1,29 @@
-import {isTextFieldEntryEdited, SelectEntry} from '@bpmn-io/properties-panel';
-import { useService } from 'bpmn-js-properties-panel';
-import { useEffect, useState } from '@bpmn-io/properties-panel/preact/hooks';
+import {Select} from 'antd';
+import {useEffect, useState} from 'react';
 import {HttpUtils} from "@jiangood/open-admin";
-export  function FormProps () {
 
-    return [
-        {
-            id: 'form',
-            component: Component,
-            isEdited: isTextFieldEntryEdited,
-        }
+export default function FormField({element, modeling, processId}) {
+    const [options, setOptions] = useState([]);
 
-    ];
-}
-
-function Component(props) {
-    const { element, id } = props;
-
-    const modeling = useService('modeling');
-    const debounce = useService('debounceInput');
-    const canvas = useService('canvas');
-    const rootElement = canvas.getRootElement();
-    const processId = rootElement.id;
-    const getValue = (element) => {
-        return element.businessObject.formKey || '';
-    };
-
-    const setValue = value => {
-        return modeling.updateProperties(element, {
-            formKey: value
+    useEffect(() => {
+        HttpUtils.get('admin/flowable/model/formOptions', {code: processId}).then(rs => {
+            setOptions((rs || []).map(o => typeof o === 'string' ? {label: o, value: o} : o));
         });
-    };
+    }, [processId]);
 
-    const [ options, setOptions ] = useState([]);
+    const value = element.businessObject?.formKey || '';
 
-    useEffect(async () => {
-        const rs = await HttpUtils.get('admin/flowable/model/formOptions',{code:processId})
-        setOptions(rs)
-    }, [ setOptions ]);
-
-    return SelectEntry({
-        element,
-        id: id,
-        label: '选择表单',
-        getValue,
-        setValue,
-        debounce,
-
-        getOptions: () => {
-            return [{ value: '', label: '<留空>'},...options]
-        }
-    })
-
+    return (
+        <div style={{padding: 8}}>
+            <div style={{marginBottom: 4, fontSize: 12, color: '#666'}}>选择表单</div>
+            <Select
+                style={{width: '100%'}}
+                value={value || undefined}
+                options={[{value: '', label: '<留空>'}, ...options]}
+                onChange={(val) => modeling.updateProperties(element, {formKey: val || ''})}
+                allowClear
+                size="small"
+            />
+        </div>
+    );
 }

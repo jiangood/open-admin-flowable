@@ -40,3 +40,5 @@ web/src/.umi-production/
 .mcp.json
 data/rsa-key
 .playwright-mcp/
+*.bak
+*.png

@@ -2,12 +2,12 @@ import React from 'react';
 import { Collapse } from 'antd';
 import { is } from 'bpmn-js/lib/util/ModelUtil';
 
-import GeneralSection from './provider/properties/GeneralSection';
-import DelegateExpressionField from './provider/properties/DelegateExpressionProps';
-import UserTaskForm from './provider/properties/UserTaskForm';
-import FormField from './provider/properties/FormProps';
-import ConditionSection from './provider/properties/ConditionProps';
-import MultiInstanceSection from './provider/properties/MultiInstanceProps';
+import GeneralSection from './provider/properties/GeneralSection.jsx';
+import DelegateExpressionField from './provider/properties/DelegateExpressionProps.jsx';
+import UserTaskForm from './provider/properties/UserTaskForm.jsx';
+import FormField from './provider/properties/FormProps.jsx';
+import ConditionSection from './provider/properties/ConditionProps.jsx';
+import MultiInstanceSection from './provider/properties/MultiInstanceProps.jsx';
 
 export default class PropertiesPanel extends React.Component {
   state = {
@@ -16,7 +16,16 @@ export default class PropertiesPanel extends React.Component {
   };
 
   componentDidMount() {
-    const { modeler } = this.props;
+    this.initModeler(this.props.modeler);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.modeler && this.props.modeler !== prevProps.modeler) {
+      this.initModeler(this.props.modeler);
+    }
+  }
+
+  initModeler(modeler) {
     if (!modeler) return;
 
     this.setState({

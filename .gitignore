@@ -42,3 +42,4 @@ data/rsa-key
 .playwright-mcp/
 *.bak
 *.png
+web/dist/

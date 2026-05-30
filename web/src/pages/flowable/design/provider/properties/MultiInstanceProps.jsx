@@ -21,7 +21,6 @@ export default function MultiInstanceSection({element, modeling}) {
     return (
         <Form
             layout="vertical"
-            size="small"
             initialValues={initialValues}
             onValuesChange={(changedValues) => {
                 modeling.updateModdleProperties(element, loopCharacteristics, changedValues);

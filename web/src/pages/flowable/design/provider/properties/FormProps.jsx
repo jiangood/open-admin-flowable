@@ -22,7 +22,6 @@ export default function FormField({element, modeling, processId}) {
                 options={[{value: '', label: '<留空>'}, ...options]}
                 onChange={(val) => modeling.updateProperties(element, {formKey: val || ''})}
                 allowClear
-                size="small"
             />
         </div>
     );

@@ -126,7 +126,8 @@ export class ConditionDesignButton extends Component {
     state = {
         open: false,
         varList: [],
-        varOptions: []
+        varOptions: [],
+        editingArr: [], // 弹窗内本地编辑状态，点击确定后才提交
     }
 
     componentDidMount() {
@@ -144,10 +145,29 @@ export class ConditionDesignButton extends Component {
         })
     }
 
-    onChange = arr => {
-        const str = this.convertArrToStr(arr)
-        this.props.setValue(str, this.props.element, this.props.modeling, this.props.bpmnFactory)
+    // 弹窗内实时更新本地状态，不提交到模型
+    handleTableChange = arr => {
+        this.setState({ editingArr: arr })
     };
+
+    // 确定：将本地状态提交到模型
+    handleOk = () => {
+        const str = this.convertArrToStr(this.state.editingArr)
+        this.props.setValue(str, this.props.element, this.props.modeling, this.props.bpmnFactory)
+        this.setState({ open: false })
+    }
+
+    // 取消：丢弃本地修改
+    handleCancel = () => {
+        this.setState({ open: false })
+    }
+
+    // 打开弹窗时，从当前元素读取最新表达式
+    handleOpen = () => {
+        let value = this.props.getValue(this.props.element);
+        let arrValue = this.convertStrToArr(value);
+        this.setState({ open: true, editingArr: arrValue })
+    }
 
     getOptionsByItem = (record) => {
         let options = []
@@ -187,8 +207,8 @@ export class ConditionDesignButton extends Component {
     ];
 
     render() {
-        let value = this.props.getValue(this.props.element);
-        let arrValue = this.convertStrToArr(value);
+        const { editingArr } = this.state
+        const previewExpression = this.convertArrToStr(editingArr)
 
         return <div style={{display: 'flex', justifyContent: 'right', padding: 8}}>
             <Button type='primary'
@@ -200,22 +220,51 @@ export class ConditionDesignButton extends Component {
                         }
                     }}
 
-                    onClick={() => this.setState({open: true})}
+                    onClick={this.handleOpen}
 
             >条件编辑器</Button>
 
 
-            <Modal title='条件编辑器 (复杂表达式暂不支持)' open={this.state.open} width={600}
-                   onCancel={() => this.setState({open: false})}
-                   footer={null}
+            <Modal title='条件编辑器'
+                   open={this.state.open}
+                   width={600}
+                   onOk={this.handleOk}
+                   onCancel={this.handleCancel}
                    mask={{blur: false}}
                    destroyOnHidden
             >
                 <FieldTable
                     columns={this.columns}
-                    value={arrValue}
-                    onChange={this.onChange}
+                    value={editingArr}
+                    onChange={this.handleTableChange}
                 />
+
+                <div style={{
+                    marginTop: 8,
+                    color: '#999',
+                    fontSize: 12,
+                }}>
+                    提示：暂不支持复杂表达式，复杂表达式请手动编辑
+                </div>
+
+                <div style={{
+                    marginTop: 16,
+                    padding: '8px 12px',
+                    background: '#f6f8fa',
+                    borderRadius: 6,
+                    border: '1px solid #d9d9d9',
+                    fontFamily: 'monospace',
+                    fontSize: 13,
+                    wordBreak: 'break-all',
+                    minHeight: 36,
+                    display: 'flex',
+                    alignItems: 'center',
+                }}>
+                    <span style={{ color: '#999', marginRight: 8, flexShrink: 0 }}>表达式预览：</span>
+                    <span style={{ color: previewExpression ? '#1a1a1a' : '#bbb' }}>
+                        {previewExpression || '（空）'}
+                    </span>
+                </div>
             </Modal>
 
         </div>

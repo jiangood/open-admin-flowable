@@ -47,7 +47,6 @@ export default function ConditionSection({ element, modeling, moddle, processId 
         onChange={handleChange}
         placeholder="条件表达式(JUEL)"
         rows={3}
-        size="small"
       />
       <div style={{ display: 'flex', justifyContent: 'right', marginTop: 8 }}>
         <ConditionDesignButton

@@ -23,7 +23,6 @@ export default function DelegateExpressionField({element, modeling}) {
                 options={options}
                 onChange={(val) => modeling.updateProperties(element, {delegateExpression: val || ''})}
                 allowClear
-                size="small"
             />
         </div>
     );

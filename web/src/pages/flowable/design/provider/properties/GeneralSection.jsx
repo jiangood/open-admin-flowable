@@ -5,7 +5,6 @@ export default function GeneralSection({element, modeling}) {
     return (
         <Form
             layout="vertical"
-            size="small"
             initialValues={{name: element.businessObject?.name || ''}}
             onValuesChange={(changedValues) => {
                 modeling.updateProperties(element, changedValues);

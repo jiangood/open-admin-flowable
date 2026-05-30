@@ -154,7 +154,6 @@ export default class PropertiesPanel extends React.Component {
 
     return (
       <Collapse
-        size="small"
         items={items}
         defaultActiveKey={items.map((i) => i.key)}
         style={{ borderRadius: 0 }}

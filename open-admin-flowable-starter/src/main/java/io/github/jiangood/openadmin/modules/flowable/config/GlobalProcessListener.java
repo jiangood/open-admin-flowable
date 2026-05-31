@@ -30,7 +30,7 @@ public class GlobalProcessListener implements FlowableEventListener {
 
     @Override
     public void onEvent(FlowableEvent flowableEvent) {
-        log.info("流程事件 {}", flowableEvent.getType());
+        log.debug("流程事件 {}", flowableEvent.getType());
 
         if (!(flowableEvent instanceof FlowableProcessEventImpl event)) {
             return;
@@ -67,7 +67,7 @@ public class GlobalProcessListener implements FlowableEventListener {
         }
         Assert.state(businessKey != null && initiator != null, "businessKey 或 initiator 不能为空");
 
-        log.info("流程事件 类型 {} 定义 {} 业务标识 {} 发起人 {} ", definitionKey, event.getType(), businessKey, initiator);
+        log.debug("流程事件 类型 {} 定义 {} 业务标识 {} 发起人 {} ", definitionKey, event.getType(), businessKey, initiator);
         bizListener.onProcessEvent(eventType, initiator, businessKey, variables);
     }
 

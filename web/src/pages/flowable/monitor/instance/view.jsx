@@ -25,7 +25,7 @@ export default class extends React.Component {
     componentDidMount() {
         const {businessKey, id} = PageUtils.currentParams()
 
-        HttpUtils.get("admin/flowable/my/getInstanceInfo", {id, businessKey}).then(rs => {
+        HttpUtils.get("admin/flowable/user-task/getInstanceInfo", {id, businessKey}).then(rs => {
             this.setState(rs)
             this.setState({data: rs})
         }).catch(e => {

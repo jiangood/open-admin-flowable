@@ -78,7 +78,7 @@ public class MonitorController {
     @Log("关闭流程实例")
     @PreAuthorize("hasAuthority('flowableInstance:close')")
     @GetMapping("processInstance/close")
-    public AjaxResult processInstanceClose(String id) {
+    public AjaxResult closeProcessInstance(String id) {
         String name = LoginTool.getUser().getName();
         runtimeService.deleteProcessInstance(id, name + "手动关闭");
 
@@ -146,12 +146,12 @@ public class MonitorController {
         return AjaxResult.ok().data(new PageImpl<>(responseList, pageable, taskPage.getTotalElements()));
     }
 
-    @Log("设置任务处理人")
+    @Log("设置任务处理�?)
     @PreAuthorize("hasAuthority('flowableTask:setAssignee')")
     @RequestMapping("setAssignee")
     public AjaxResult setAssignee(@RequestBody SetAssigneeRequest request) {
         taskService.setAssignee(request.taskId(), request.assignee());
-        return AjaxResult.ok().msg("设置任务处理人成功");
+        return AjaxResult.ok().msg("设置任务处理人成�?);
     }
 
     public record SetAssigneeRequest(String taskId, String assignee) {

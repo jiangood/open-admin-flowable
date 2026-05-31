@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 流程图相关
+ * BPMN 流程图操作：查询节点、生成高亮流程图
  */
 @Service
-public class FlowableModelService {
+public class BpmnDiagramService {
 
     public static final String FONT_NAME = FontTool.getDefaultFontName();
 
@@ -38,53 +38,41 @@ public class FlowableModelService {
     @Resource
     private HistoryService historyService;
 
-
     /**
      * 查询任务的上一个节点
-     *
-     * @param task
-     * @return
      */
     public List<UserTask> findPreActivity(Task task) {
         ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
         String activityId = execution.getActivityId();
 
-
         BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
-        FlowNode flowNode = (FlowNode) bpmnModel.getFlowElement(activityId); // 当前节点
+        FlowNode flowNode = (FlowNode) bpmnModel.getFlowElement(activityId);
 
         List<UserTask> result = new ArrayList<>();
         List<SequenceFlow> incomingFlows = flowNode.getIncomingFlows();
         for (SequenceFlow sequenceFlow : incomingFlows) {
             FlowElement targetFlowElement = sequenceFlow.getSourceFlowElement();
-
             if (targetFlowElement instanceof UserTask) {
                 result.add((UserTask) targetFlowElement);
             }
         }
         return result;
-
     }
 
     /**
      * 查询任务下一个节点
-     *
-     * @param task
-     * @return
      */
     public List<UserTask> findNextTaskList(Task task) {
         ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
         String activityId = execution.getActivityId();
 
-
         BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
-        FlowNode flowNode = (FlowNode) bpmnModel.getFlowElement(activityId); // 当前节点
+        FlowNode flowNode = (FlowNode) bpmnModel.getFlowElement(activityId);
 
         List<UserTask> result = new ArrayList<>();
         List<SequenceFlow> outgoingFlows = flowNode.getOutgoingFlows();
         for (SequenceFlow sequenceFlow : outgoingFlows) {
             FlowElement targetFlowElement = sequenceFlow.getTargetFlowElement();
-
             if (targetFlowElement instanceof UserTask) {
                 result.add((UserTask) targetFlowElement);
             }
@@ -96,65 +84,49 @@ public class FlowableModelService {
     public BufferedImage drawImage(String instanceId) {
         HistoricProcessInstance instance = historyService.createHistoricProcessInstanceQuery().processInstanceId(instanceId).singleResult();
 
-
-        List<String> highLightedList = this.getHighLightedList(instance);
+        List<String> highlightedList = this.getHighlightedList(instance);
         BpmnModel bpmnModel = repositoryService.getBpmnModel(instance.getProcessDefinitionId());
-
 
         DefaultProcessDiagramGenerator generator = new DefaultProcessDiagramGenerator();
 
         double scaleFactor = 1.0;
-        BufferedImage img = generator.generateImage(bpmnModel,
+        return generator.generateImage(bpmnModel,
                 "jpg",
-                highLightedList,
-                highLightedList,
+                highlightedList,
+                highlightedList,
                 FONT_NAME, FONT_NAME, FONT_NAME,
                 null, scaleFactor,
                 true);
-        return img;
     }
 
-
     // 获取应该高亮的节点及线
-    public List<String> getHighLightedList(HistoricProcessInstance instance) {
-
-        // 获取实例历史节点
+    public List<String> getHighlightedList(HistoricProcessInstance instance) {
         List<HistoricActivityInstance> list = historyService.createHistoricActivityInstanceQuery()
                 .processInstanceId(instance.getId())
                 .finished()
                 .orderByHistoricActivityInstanceStartTime().asc()
                 .list();
 
-
-        // 不显示回退节点
         List<String> deleteList = new LinkedList<>();
         for (int i = 0; i < list.size(); i++) {
             HistoricActivityInstance act = list.get(i);
             String deleteReason = act.getDeleteReason();
-            if (deleteReason == null) {
-                continue;
-            }
+            if (deleteReason == null) continue;
 
-            // 回退的删除原因： Change activity to Activity_03ve4yj
             if (deleteReason.startsWith("Change activity to ")) {
-                // 回退的目标节点
                 String toActivity = deleteReason.replace("Change activity to ", "");
-
-                // 将目标节点和当前节点之间的元素都加入到删除列表
                 for (int j = i; j > 0; j--) {
                     HistoricActivityInstance pre = list.get(j);
                     String preActivityId = pre.getActivityId();
                     deleteList.add(preActivityId);
-                    if (preActivityId.equals(toActivity)) {
-                        break;
-                    }
+                    if (preActivityId.equals(toActivity)) break;
                 }
-
             }
-
         }
-        return list.stream().map(HistoricActivityInstance::getActivityId).filter(id -> !deleteList.contains(id)).collect(Collectors.toList());
+        return list.stream()
+                .map(HistoricActivityInstance::getActivityId)
+                .filter(id -> !deleteList.contains(id))
+                .collect(Collectors.toList());
     }
-
 
 }

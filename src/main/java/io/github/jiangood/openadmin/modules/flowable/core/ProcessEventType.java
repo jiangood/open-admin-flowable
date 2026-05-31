@@ -2,6 +2,8 @@ package io.github.jiangood.openadmin.modules.flowable.core;
 
 import lombok.AllArgsConstructor;
 
+import java.util.Arrays;
+
 // 参考 FlowableEngineEventType， 名称保持一致
 @AllArgsConstructor
 public enum ProcessEventType {
@@ -25,13 +27,9 @@ public enum ProcessEventType {
 
 
     public static ProcessEventType findByName(String name) {
-        ProcessEventType[] values = values();
-        for (ProcessEventType value : values) {
-            if (value.name().equals(name)) {
-                return value;
-            }
-        }
-        return null;
+        return Arrays.stream(values())
+                .filter(v -> v.name().equals(name))
+                .findFirst().orElse(null);
     }
 
 }

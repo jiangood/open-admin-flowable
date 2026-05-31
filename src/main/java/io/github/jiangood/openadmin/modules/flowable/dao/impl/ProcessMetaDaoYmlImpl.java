@@ -1,6 +1,5 @@
 package io.github.jiangood.openadmin.modules.flowable.dao.impl;
 
-import io.github.jiangood.openadmin.modules.flowable.config.ProcessMetaConfiguration;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.dao.IProcessMetaDao;
 import lombok.extern.slf4j.Slf4j;
@@ -39,11 +38,9 @@ public class ProcessMetaDaoYmlImpl implements IProcessMetaDao {
                 }
                 var sources = ConfigurationPropertySources.from(propertySources);
                 var binder = new Binder(sources);
-                var cfg = binder.bind("process", Bindable.of(ProcessMetaConfiguration.class))
+                var list = binder.bind("process.list", Bindable.listOf(ProcessMeta.class))
                         .orElseThrow(() -> new IllegalStateException("绑定 " + resource.getFilename() + " 中 process 配置失败"));
-                if (cfg.getList() != null) {
-                    all.addAll(cfg.getList());
-                }
+                all.addAll(list);
             }
 
             log.info("===== 共加载 {} 个流程定义 =====", all.size());

@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable;
 
-public class FlowableConsts {
+public class FlowableConstants {
 
     public static final String VAR_DEPT_LEADER = "INITIATOR_DEPT_LEADER";
 

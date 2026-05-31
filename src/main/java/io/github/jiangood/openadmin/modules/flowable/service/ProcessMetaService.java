@@ -2,30 +2,46 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.dao.IProcessMetaDao;
-import lombok.AllArgsConstructor;
+import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Component
-@AllArgsConstructor
 public class ProcessMetaService {
 
-    private List<IProcessMetaDao> daoList;
+    private final List<IProcessMetaDao> daoList;
+    private Map<String, ProcessMeta> cache;
 
-    public List<ProcessMeta> findAll() {
+    public ProcessMetaService(List<IProcessMetaDao> daoList) {
+        this.daoList = daoList;
+    }
+
+    @PostConstruct
+    void initCache() {
+        log.info("===== 加载流程元数据缓存 =====");
+        cache = loadAll().stream()
+                .collect(Collectors.toUnmodifiableMap(ProcessMeta::getKey, Function.identity()));
+        log.info("===== 共加载 {} 个流程定义 =====", cache.size());
+    }
+
+    private List<ProcessMeta> loadAll() {
         List<ProcessMeta> list = new ArrayList<>();
         for (IProcessMetaDao dao : daoList) {
-            List<ProcessMeta> l = dao.findProcessMetaList();
-            list.addAll(l);
+            list.addAll(dao.findProcessMetaList());
         }
         return list;
     }
 
-    public ProcessMeta findOne(String key) {
-        ProcessMeta meta = this.findAll().stream().filter(item -> item.getKey().equals(key)).findFirst().orElse(null);
+    public List<ProcessMeta> findAll() {
+        return new ArrayList<>(cache.values());
+    }
 
-        return meta;
+    public ProcessMeta findOne(String key) {
+        return cache.get(key);
     }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import {Button, Card, message, Modal, Space, Splitter} from "antd";
 
 import 'bpmn-js/dist/assets/diagram-js.css'
@@ -138,9 +138,9 @@ export default class extends React.Component {
                         }, {
                             title: '操作',
                             dataIndex:'id',
-                            render:(id)=> {
+                            render:(_, record)=> {
                                 return <Button type='primary' onClick={()=>{
-                                    HttpUtils.get('admin/flowable/model/getDefinitionContent',{id}).then(xml=>{
+                                    HttpUtils.get('admin/flowable/model/getDefinitionContent',{id: record.id}).then(xml=>{
                                         this.bpmnModeler.importXML(xml)
                                         this.setState({deployedModal:false})
                                     })

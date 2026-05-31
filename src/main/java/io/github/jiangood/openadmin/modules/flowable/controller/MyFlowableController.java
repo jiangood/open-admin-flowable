@@ -178,11 +178,13 @@ public class MyFlowableController {
         Map<String, Object> data = new HashMap<>();
 
         // 处理意见
-        {
-            List<Comment> processInstanceComments = taskService.getProcessInstanceComments(instance.getId());
-            List<CommentResponse> commentResults = processInstanceComments.stream().sorted(Comparator.comparing(Comment::getTime)).map(c -> new CommentResponse(c)).collect(Collectors.toList());
-            data.put("commentList", commentResults);
-        }
+        List<Comment> processInstanceComments = taskService.getProcessInstanceComments(processInstanceId);
+        List<CommentResponse> commentList = processInstanceComments.stream()
+                .sorted(Comparator.comparing(Comment::getTime))
+                .map(c -> new CommentResponse(c, processService.getUserName(c.getUserId())))
+                .toList();
+        data.put("commentList", commentList);
+        data.put("instanceCommentList", commentList);
 
         // 图片
         {
@@ -201,10 +203,6 @@ public class MyFlowableController {
             data.put("name", instanceName);
             data.put("id", instance.getId());
 
-            List<Comment> processInstanceComments = taskService.getProcessInstanceComments(processInstanceId);
-            List<CommentResponse> commentResults = processInstanceComments.stream().sorted(Comparator.comparing(Comment::getTime)).map(CommentResponse::new).collect(Collectors.toList());
-
-            data.put("instanceCommentList", commentResults);
             data.put("processDefinitionKey", instance.getProcessDefinitionKey());
             data.put("businessKey", instance.getBusinessKey());
         }

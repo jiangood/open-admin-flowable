@@ -16,11 +16,15 @@ export default class PropertiesPanel extends React.Component {
   };
 
   componentDidMount() {
+    this.modeler = null;
     this.initModeler(this.props.modeler);
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.modeler && this.props.modeler !== prevProps.modeler) {
+    if (this.props.modeler && this.props.modeler !== this.modeler) {
+      if (this.modeler) {
+        this.modeler.off('selection.changed', this.onSelectionChanged);
+      }
       this.initModeler(this.props.modeler);
     }
   }
@@ -28,6 +32,7 @@ export default class PropertiesPanel extends React.Component {
   initModeler(modeler) {
     if (!modeler) return;
 
+    this.modeler = modeler;
     this.setState({
       services: {
         modeling: modeler.get('modeling'),
@@ -48,9 +53,8 @@ export default class PropertiesPanel extends React.Component {
   }
 
   componentWillUnmount() {
-    const { modeler } = this.props;
-    if (modeler) {
-      modeler.off('selection.changed', this.onSelectionChanged);
+    if (this.modeler) {
+      this.modeler.off('selection.changed', this.onSelectionChanged);
     }
   }
 

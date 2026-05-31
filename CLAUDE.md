@@ -36,7 +36,7 @@ Flowable engine integration layered as a Spring Boot auto-configuration module:
 | **Initializer** | `FlowableProcessInitializer` | On startup, creates Flowable Model entries for each YAML-defined process |
 | **Event System** | `GlobalProcessListener`, `ProcessListener` interface, `ProcessEventType` | Global engine event listener dispatches to per-definition `ProcessListener` beans |
 | **Core Service** | `ProcessService` | Start process instances, handle tasks (approve/reject), query todo/done tasks, model CRUD |
-| **Model Service** | `FlowableModelService` | BPMN model graph operations (find prev/next nodes), generate process diagram images |
+| **Model Service** | `BpmnDiagramService` | BPMN model graph operations (find prev/next nodes), generate process diagram images |
 | **Controllers** | `ModelController`, `MyFlowableController`, `MonitorController`, `TestController` | REST endpoints under `/admin/flowable/` (model CRUD/deploy, user task mgmt, admin monitoring, testing) |
 | **Properties** | `FlowableProperties` | `flowable.reject-type` — `DELETE` terminates flow on reject, `MOVE_BACK` rolls back to previous node |
 

@@ -4,6 +4,8 @@ import io.github.jiangood.openadmin.util.dto.AjaxResult;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.repository.Model;
@@ -25,19 +27,24 @@ public class TestController {
     public AjaxResult get(String id) {
         Assert.hasText(id, "id不能为空");
         Model model = repositoryService.getModel(id);
+        Assert.notNull(model, "流程模型不存在");
         ProcessMeta meta = processMetaService.findOne(model.getKey());
         return AjaxResult.ok().data(meta);
     }
 
 
     @PostMapping("submit")
-    public AjaxResult submit(@RequestBody Map<String, Object> params) {
-        String bizKey = params.get("id").toString();
-        String key = (String) params.get("key");
-
-        processService.start(key, bizKey, params);
+    public AjaxResult submit(@Valid @RequestBody SubmitRequest request) {
+        processService.start(request.key(), request.id(), request.variables());
 
         return AjaxResult.ok().msg("提交测试流程成功");
+    }
+
+    public record SubmitRequest(
+            @NotBlank String id,
+            @NotBlank String key,
+            Map<String, Object> variables
+    ) {
     }
 
 }

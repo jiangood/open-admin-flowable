@@ -7,6 +7,8 @@ import io.github.jiangood.openadmin.util.PageTool;
 import io.github.jiangood.openadmin.framework.log.Log;
 import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.MonitorTaskResponse;
+import io.github.jiangood.openadmin.modules.flowable.dto.vo.ProcessDefinitionVO;
+import io.github.jiangood.openadmin.modules.flowable.dto.vo.ProcessInstanceVO;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;
 import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
@@ -57,26 +59,7 @@ public class MonitorController {
 
         Page<ProcessDefinition> page = FlowablePageTool.queryPage(query, pageable);
 
-        Page<Map<String, Object>> page2 = PageTool.convert(page, processDefinition -> {
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", processDefinition.getId());
-            map.put("category", processDefinition.getCategory());
-            map.put("name", processDefinition.getName());
-            map.put("key", processDefinition.getKey());
-            map.put("description", processDefinition.getDescription());
-            map.put("version", processDefinition.getVersion());
-            map.put("resourceName", processDefinition.getResourceName());
-            map.put("deploymentId", processDefinition.getDeploymentId());
-            map.put("diagramResourceName", processDefinition.getDiagramResourceName());
-            map.put("hasStartFormKey", processDefinition.hasStartFormKey());
-            map.put("hasGraphicalNotation", processDefinition.hasGraphicalNotation());
-            map.put("isSuspended", processDefinition.isSuspended());
-            map.put("tenantId", processDefinition.getTenantId());
-            map.put("derivedFrom", processDefinition.getDerivedFrom());
-            map.put("derivedFromRoot", processDefinition.getDerivedFromRoot());
-            map.put("derivedVersion", processDefinition.getDerivedVersion());
-            return map;
-        });
+        Page<ProcessDefinitionVO> page2 = PageTool.convert(page, ProcessDefinitionVO::from);
 
 
         return AjaxResult.ok().data(page2);
@@ -87,35 +70,7 @@ public class MonitorController {
         ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery();
         Page<ProcessInstance> page = FlowablePageTool.queryPage(query, pageable);
 
-        Page<Map<String, Object>> page2 = PageTool.convert(page, processInstance -> {
-            Map<String, Object> map = new HashMap<>();
-
-            map.put("id", processInstance.getId());
-            map.put("processDefinitionId", processInstance.getProcessDefinitionId());
-            map.put("processDefinitionName", processInstance.getProcessDefinitionName());
-            map.put("processDefinitionKey", processInstance.getProcessDefinitionKey());
-            map.put("processDefinitionVersion", processInstance.getProcessDefinitionVersion());
-            map.put("processDefinitionCategory", processInstance.getProcessDefinitionCategory());
-            map.put("deploymentId", processInstance.getDeploymentId());
-            map.put("businessKey", processInstance.getBusinessKey());
-            map.put("businessStatus", processInstance.getBusinessStatus());
-            map.put("suspended", processInstance.isSuspended());
-            map.put("processVariables", processInstance.getProcessVariables());
-            map.put("tenantId", processInstance.getTenantId());
-            map.put("name", processInstance.getName());
-            map.put("description", processInstance.getDescription());
-            map.put("localizedName", processInstance.getLocalizedName());
-            map.put("localizedDescription", processInstance.getLocalizedDescription());
-            map.put("startTime", processInstance.getStartTime());
-            map.put("startUserId", processInstance.getStartUserId());
-            map.put("callbackId", processInstance.getCallbackId());
-            map.put("callbackType", processInstance.getCallbackType());
-            map.put("parentId", processInstance.getParentId());
-            map.put("rootProcessInstanceId", processInstance.getRootProcessInstanceId());
-            map.put("superExecutionId", processInstance.getSuperExecutionId());
-            map.put("activityId", processInstance.getActivityId());
-            return map;
-        });
+        Page<ProcessInstanceVO> page2 = PageTool.convert(page, ProcessInstanceVO::from);
 
         return AjaxResult.ok().data(page2);
     }
@@ -154,14 +109,15 @@ public class MonitorController {
 
 
     @GetMapping("task")
-    public AjaxResult task(String assignee) {
+    public AjaxResult task(String assignee, Pageable pageable) {
         TaskQuery query = taskService.createTaskQuery();
 
         if (StrUtil.isNotEmpty(assignee)) {
             query = processService.buildUserTodoTaskQuery(assignee);
         }
         query.orderByTaskCreateTime().desc();
-        List<Task> list = query.list();
+        Page<Task> taskPage = FlowablePageTool.queryPage(query, pageable);
+        List<Task> list = taskPage.getContent();
 
         Set<String> instanceIds = list.stream().map(TaskInfo::getProcessInstanceId).collect(Collectors.toSet());
         List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().active().processInstanceIds(instanceIds).list();
@@ -187,9 +143,10 @@ public class MonitorController {
         }).toList();
 
 
-        return AjaxResult.ok().data(new PageImpl<>(responseList));
+        return AjaxResult.ok().data(new PageImpl<>(responseList, pageable, taskPage.getTotalElements()));
     }
 
+    @Log("设置任务处理人")
     @PreAuthorize("hasAuthority('flowableTask:setAssignee')")
     @RequestMapping("setAssignee")
     public AjaxResult setAssignee(@RequestBody SetAssigneeRequest request) {

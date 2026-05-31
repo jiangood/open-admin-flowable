@@ -17,7 +17,7 @@ import io.github.jiangood.openadmin.modules.flowable.utils.ModelTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
-import io.github.jiangood.openadmin.modules.flowable.FlowableConsts;
+import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.Process;
@@ -52,15 +52,15 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ProcessService {
 
-    private TaskService taskService;
-    private RuntimeService runtimeService;
-    private SysUserService sysUserService;
-    private HistoryService historyService;
-    private FlowableModelService myBpmnModelService;
-    private FlowableProperties flowableProperties;
-    private RepositoryService repositoryService;
-    private IdentityService identityService;
-    private ProcessMetaService processMetaService;
+    private final TaskService taskService;
+    private final RuntimeService runtimeService;
+    private final SysUserService sysUserService;
+    private final HistoryService historyService;
+    private final BpmnDiagramService bpmnDiagramService;
+    private final FlowableProperties flowableProperties;
+    private final RepositoryService repositoryService;
+    private final IdentityService identityService;
+    private final ProcessMetaService processMetaService;
 
     public void start(String processDefinitionKey, String bizKey, Map<String, Object> variables) {
         start(processDefinitionKey, bizKey, null, variables);
@@ -79,13 +79,13 @@ public class ProcessService {
         // 添加一些发起人的相关信息
         String startUserId = user.getId();
         Assert.hasText(startUserId, "当前登录人员ID不能为空");
-        variables.put(FlowableConsts.VAR_USER_ID, startUserId);
-        variables.put(FlowableConsts.VAR_USER_NAME, user.getName());
-        variables.put(FlowableConsts.VAR_UNIT_ID, user.getUnitId());
-        variables.put(FlowableConsts.VAR_UNIT_NAME, user.getUnitName());
-        variables.put(FlowableConsts.VAR_DEPT_ID, user.getDeptId());
-        variables.put(FlowableConsts.VAR_DEPT_NAME, user.getDeptName());
-        variables.put(FlowableConsts.VAR_DEPT_LEADER, user.getDeptLeaderId());   // 部门领导
+        variables.put(FlowableConstants.VAR_USER_ID, startUserId);
+        variables.put(FlowableConstants.VAR_USER_NAME, user.getName());
+        variables.put(FlowableConstants.VAR_UNIT_ID, user.getUnitId());
+        variables.put(FlowableConstants.VAR_UNIT_NAME, user.getUnitName());
+        variables.put(FlowableConstants.VAR_DEPT_ID, user.getDeptId());
+        variables.put(FlowableConstants.VAR_DEPT_NAME, user.getDeptName());
+        variables.put(FlowableConstants.VAR_DEPT_LEADER, user.getDeptLeaderId());   // 部门领导
         variables.put("BUSINESS_KEY", bizKey);
         variables.put("GLOBAL_FORM_KEY", meta.getGlobalFormKey() != null ? meta.getGlobalFormKey() : meta.getKey()); // 全局表单key
 
@@ -127,8 +127,8 @@ public class ProcessService {
         BpmnModel bpmnModel = repositoryService.getBpmnModel(definition.getId());
         for (FlowElement flowElement : bpmnModel.getMainProcess().getFlowElements()) {
             if (flowElement instanceof org.flowable.bpmn.model.UserTask ut) {
-                if (ut.getAssignee() != null && ut.getAssignee().contains(FlowableConsts.VAR_DEPT_LEADER)) {
-                    Assert.notNull(variables.get(FlowableConsts.VAR_DEPT_LEADER), "操作失败：发起用户的部门领导为空");
+                if (ut.getAssignee() != null && ut.getAssignee().contains(FlowableConstants.VAR_DEPT_LEADER)) {
+                    Assert.notNull(variables.get(FlowableConstants.VAR_DEPT_LEADER), "操作失败：发起用户的部门领导为空");
                 }
             }
         }
@@ -227,30 +227,6 @@ public class ProcessService {
         return ModelTool.modelToXml(bpmnModel);
     }
 
-    public static void main(String[] args) {
-
-        // 1. 创建BpmnModel对象
-        BpmnModel bpmnModel = new BpmnModel();
-
-        // 2. 创建流程定义
-        Process process = new Process();
-        process.setId("process_1");
-        process.setName("新建流程");
-        process.setExecutable(true);
-
-        // 3. 添加开始事件
-        StartEvent startEvent = new StartEvent();
-        startEvent.setId("startEvent_1");
-        startEvent.setName("开始");
-        process.addFlowElement(startEvent);
-
-        // 4. 将流程添加到模型中
-        bpmnModel.addProcess(process);
-
-
-        String xml = ModelTool.modelToXml(bpmnModel);
-        System.out.println(xml);
-    }
 
     public void deleteProcessDefinitionByKey(String key) {
         List<Deployment> list = repositoryService.createDeploymentQuery().processDefinitionKey(key).list();
@@ -371,7 +347,7 @@ public class ProcessService {
     // 回退上一个节点
     private void moveBack(Task task) {
         log.debug("开始回退任务 {}", task);
-        List<UserTask> userTaskList = myBpmnModelService.findPreActivity(task);
+        List<UserTask> userTaskList = bpmnDiagramService.findPreActivity(task);
         for (UserTask userTask : userTaskList) {
             log.debug("回退任务 {}", userTask);
         }
@@ -409,7 +385,7 @@ public class ProcessService {
 
 
     public BufferedImage drawImage(String instanceId) {
-        return myBpmnModelService.drawImage(instanceId);
+        return bpmnDiagramService.drawImage(instanceId);
     }
 
 

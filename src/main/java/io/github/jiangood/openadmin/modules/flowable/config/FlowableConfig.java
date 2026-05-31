@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.config;
+﻿package io.github.jiangood.openadmin.modules.flowable.config;
 
 import io.github.jiangood.openadmin.util.IdTool;
 import lombok.AllArgsConstructor;
@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
 import java.util.ArrayList;
 
 @Slf4j
-@AutoConfiguration
+@Configuration
 @AllArgsConstructor
 public class FlowableConfig implements EngineConfigurationConfigurer<SpringProcessEngineConfiguration> {
 

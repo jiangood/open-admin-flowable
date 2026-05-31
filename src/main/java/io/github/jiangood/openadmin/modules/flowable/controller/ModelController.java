@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.controller;
+﻿package io.github.jiangood.openadmin.modules.flowable.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -13,9 +13,9 @@ import io.github.jiangood.openadmin.framework.log.Log;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.FormDefinition;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessVariable;
+import io.github.jiangood.openadmin.modules.flowable.dto.vo.ModelPageVO;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
-import io.github.jiangood.openadmin.modules.flowable.utils.ModelTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysRoleService;
@@ -38,7 +38,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,23 +69,7 @@ public class ModelController {
             query.modelNameLike(searchText);
         }
         Page<Model> page = FlowablePageTool.queryPage(query, pageable);
-        Page<Map<String, Object>> page2 = PageTool.convert(page, model -> {
-            // 将model转换为map
-            Map<String, Object> map = new HashMap<>();
-            map.put("id", model.getId());
-            map.put("name", model.getName());
-            map.put("key", model.getKey());
-            map.put("category", model.getCategory());
-            map.put("createTime", model.getCreateTime());
-            map.put("lastUpdateTime", model.getLastUpdateTime());
-            map.put("version", model.getVersion());
-            map.put("metaInfo", model.getMetaInfo());
-            map.put("deploymentId", model.getDeploymentId());
-            map.put("tenantId", model.getTenantId());
-            map.put("hasEditorSource", model.hasEditorSource());
-            map.put("hasEditorSourceExtra", model.hasEditorSourceExtra());
-            return map;
-        });
+        Page<ModelPageVO> page2 = PageTool.convert(page, ModelPageVO::from);
 
 
         return AjaxResult.ok().data(page2);
@@ -110,7 +93,7 @@ public class ModelController {
 
 
     @PreAuthorize("hasAuthority('flowableModel:design')")
-    @GetMapping("delete")
+    @PostMapping("delete")
     public AjaxResult delete(@Valid @RequestBody  IdReq id) {
         repositoryService.deleteModel(id.getId());
         return AjaxResult.ok().msg("删除模型成功");
@@ -118,7 +101,7 @@ public class ModelController {
 
     @PreAuthorize("hasAuthority('flowableModel:design')")
     @PostMapping("saveContent")
-    public AjaxResult save(@RequestBody ModelRequest param) {
+    public AjaxResult saveContent(@RequestBody ModelRequest param) {
         Assert.hasText(param.content(), "内容不能为空");
         repositoryService.addModelEditorSource(param.id(), param.content().getBytes(StandardCharsets.UTF_8));
         return AjaxResult.ok().msg("保存成功");
@@ -136,7 +119,7 @@ public class ModelController {
         log.info("保存成功，准备部署");
 
         Model m = repositoryService.getModel(id);
-        BpmnModel bpmnModel = ModelTool.xmlToModel(xml);
+        BpmnModel bpmnModel = BpmnModelUtils.xmlToModel(xml);
 
 
         Process mainProcess = bpmnModel.getMainProcess();
@@ -146,7 +129,7 @@ public class ModelController {
         mainProcess.setName(m.getName());
 
         // 校验模型
-        ModelTool.validateModel(bpmnModel);
+        BpmnModelUtils.validateModel(bpmnModel);
 
         String resourceName = m.getName() + ".bpmn20.xml";
 
@@ -194,20 +177,10 @@ public class ModelController {
 
     @GetMapping("assigneeOptions")
     public AjaxResult assigneeOptions(String searchText) {
-        Spec<SysUser> spec = Spec.of();
-        List<SysUser> userList = sysUserService.findAll(spec.orLike(searchText, "name", "account", "phone"), Sort.by("name"));
+        List<Option> list = queryUserOptions(searchText);
 
-
-        List<Option> list = new ArrayList<>();
-
-        list.add(new Option("${INITIATOR}", "发起人"));
-        list.add(new Option("${INITIATOR_DEPT_LEADER}", "部门负责人"));
-
-
-        for (SysUser sysUser : userList) {
-            list.add(new Option(sysUser.getId(), sysUser.getName()));
-        }
-
+        list.add(0, new Option("${INITIATOR}", "发起人"));
+        list.add(1, new Option("${INITIATOR_DEPT_LEADER}", "部门负责人"));
 
         return AjaxResult.ok().data(list);
     }
@@ -228,17 +201,18 @@ public class ModelController {
 
     @GetMapping("candidateUsersOptions")
     public AjaxResult candidateUsersOptions(String searchText) {
-        List<Option> list = new ArrayList<>();
+        return AjaxResult.ok().data(queryUserOptions(searchText));
+    }
+
+    private List<Option> queryUserOptions(String searchText) {
         Spec<SysUser> spec = Spec.of();
+        List<SysUser> userList = sysUserService.findAll(spec.orLike(searchText, "name", "account", "phone"), Sort.by("name"));
 
-        spec.orLike(searchText, "name", "account", "phone");
-        List<SysUser> userList = sysUserService.findAll(spec, Sort.by("name"));
-
+        List<Option> list = new ArrayList<>();
         for (SysUser sysUser : userList) {
             list.add(new Option(sysUser.getId(), sysUser.getName()));
         }
-
-        return AjaxResult.ok().data(list);
+        return list;
     }
 
     @GetMapping("varList")
@@ -272,7 +246,7 @@ public class ModelController {
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery().processDefinitionId(id).singleResult();
 
         BpmnModel bpmnModel = repositoryService.getBpmnModel(definition.getId());
-        String xml = ModelTool.modelToXml(bpmnModel);
+        String xml = BpmnModelUtils.modelToXml(bpmnModel);
 
         return AjaxResult.ok().data(xml).msg("加载流程xml成功");
     }

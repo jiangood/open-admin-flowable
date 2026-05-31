@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.config;
+﻿package io.github.jiangood.openadmin.modules.flowable.config;
 
 import io.github.jiangood.openadmin.util.SpringTool;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessListener;
@@ -15,7 +15,7 @@ import org.flowable.engine.impl.persistence.entity.ExecutionEntityImpl;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -43,6 +43,7 @@ public class GlobalProcessListener implements FlowableEventListener {
             return;
         }
 
+        if (event.getExecution() == null) { return; }
         ExecutionEntityImpl execution = (ExecutionEntityImpl) event.getExecution();
         String definitionKey = execution.getProcessDefinitionKey();
 
@@ -100,18 +101,9 @@ public class GlobalProcessListener implements FlowableEventListener {
 
     @Override
     public Collection<? extends org.flowable.common.engine.api.delegate.event.FlowableEventType> getTypes() {
-        Collection<FlowableEngineEventType> list = new ArrayList<>();
-
-        FlowableEngineEventType[] sourceList = FlowableEngineEventType.values();
-
-        for (FlowableEngineEventType flowableEngineEventType : sourceList) {
-            ProcessEventType byName = ProcessEventType.findByName(flowableEngineEventType.name());
-            if (byName != null) {
-                list.add(flowableEngineEventType);
-            }
-        }
-
-
-        return list;
+        return Arrays.stream(FlowableEngineEventType.values())
+                .filter(t -> ProcessEventType.findByName(t.name()) != null)
+                .toList();
     }
 }
+

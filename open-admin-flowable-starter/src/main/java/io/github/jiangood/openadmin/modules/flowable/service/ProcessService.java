@@ -237,8 +237,6 @@ public class ProcessService {
 
         //获取流程实例id
         String processInstanceId = task.getProcessInstanceId();
-        comment = "【" + task.getName() + "】：" + result.getMessage() + "。" + comment;
-        addComment(processInstanceId, taskId, userId, comment);
 
         String assignee = task.getAssignee();
         if (StrUtil.isNotEmpty(assignee)) {
@@ -259,12 +257,16 @@ public class ProcessService {
                     listener.onFormSubmit(initiator, userId, businessKey, formData);
                 }
             }
+            comment = "【" + task.getName() + "】：" + result.getMessage() + "。" + comment;
+            addComment(processInstanceId, taskId, userId, comment);
             taskService.complete(taskId);
             return;
         }
 
         // 点击拒绝（不同意）
         if (result == TaskHandleType.REJECT) {
+            comment = "【" + task.getName() + "】：" + result.getMessage() + "。" + comment;
+            addComment(processInstanceId, taskId, userId, comment);
             switch (flowableProperties.getRejectType()) {
                 case DELETE:
                     closeAndDelete(comment, task);
@@ -318,7 +320,10 @@ public class ProcessService {
     private ProcessListener getBizListener(Task task) {
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionId(task.getProcessDefinitionId()).singleResult();
-        if (processDefinition == null) return null;
+        if (processDefinition == null) {
+            log.warn("未找到流程定义：{}", task.getProcessDefinitionId());
+            return null;
+        }
         ProcessMeta meta = processMetaService.findOne(processDefinition.getKey());
         if (meta != null && meta.getListener() != null) {
             return SpringTool.getBean(meta.getListener());

@@ -56,8 +56,10 @@ export default class extends React.Component {
     handleTask = async value => {
         this.setState({submitLoading: true});
         try {
+            if (value.result === 'APPROVE') {
+                value.formData = this.state.formData
+            }
             value.taskId = this.state.data.taskId
-            value.formData = this.state.formData
             await HttpUtils.post("admin/flowable/user-task/handleTask", value)
 
             PageUtils.closeCurrent()

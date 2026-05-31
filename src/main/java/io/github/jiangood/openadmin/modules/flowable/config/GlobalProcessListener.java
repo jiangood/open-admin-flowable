@@ -1,4 +1,4 @@
-﻿package io.github.jiangood.openadmin.modules.flowable.config;
+package io.github.jiangood.openadmin.modules.flowable.config;
 
 import io.github.jiangood.openadmin.util.SpringTool;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessListener;
@@ -44,7 +44,7 @@ public class GlobalProcessListener implements FlowableEventListener {
         }
 
         if (event.getExecution() == null) { return; }
-        ExecutionEntityImpl execution = (ExecutionEntityImpl) event.getExecution();
+        if (!(event.getExecution() instanceof ExecutionEntityImpl execution)) { return; }
         String definitionKey = execution.getProcessDefinitionKey();
 
         // 触发

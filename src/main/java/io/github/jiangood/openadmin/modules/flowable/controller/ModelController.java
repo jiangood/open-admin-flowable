@@ -1,4 +1,4 @@
-﻿package io.github.jiangood.openadmin.modules.flowable.controller;
+package io.github.jiangood.openadmin.modules.flowable.controller;
 
 import cn.hutool.core.lang.Dict;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +15,7 @@ import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessVariable;
 import io.github.jiangood.openadmin.modules.flowable.dto.vo.ModelPageVO;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
+import static io.github.jiangood.openadmin.modules.flowable.utils.ModelTool.*;
 import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
@@ -119,7 +120,7 @@ public class ModelController {
         log.info("保存成功，准备部署");
 
         Model m = repositoryService.getModel(id);
-        BpmnModel bpmnModel = BpmnModelUtils.xmlToModel(xml);
+        BpmnModel bpmnModel = xmlToModel(xml);
 
 
         Process mainProcess = bpmnModel.getMainProcess();
@@ -129,7 +130,7 @@ public class ModelController {
         mainProcess.setName(m.getName());
 
         // 校验模型
-        BpmnModelUtils.validateModel(bpmnModel);
+        validateModel(bpmnModel);
 
         String resourceName = m.getName() + ".bpmn20.xml";
 
@@ -246,7 +247,7 @@ public class ModelController {
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery().processDefinitionId(id).singleResult();
 
         BpmnModel bpmnModel = repositoryService.getBpmnModel(definition.getId());
-        String xml = BpmnModelUtils.modelToXml(bpmnModel);
+        String xml = modelToXml(bpmnModel);
 
         return AjaxResult.ok().data(xml).msg("加载流程xml成功");
     }

@@ -42,7 +42,7 @@ public class BpmnDiagramService {
      * 查询任务的上一个节点
      */
     public List<UserTask> findPreActivity(Task task) {
-        ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
+        if (!(runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult() instanceof ExecutionEntity execution)) { return new ArrayList<>(); }
         String activityId = execution.getActivityId();
 
         BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());
@@ -63,7 +63,7 @@ public class BpmnDiagramService {
      * 查询任务下一个节点
      */
     public List<UserTask> findNextTaskList(Task task) {
-        ExecutionEntity execution = (ExecutionEntity) runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult();
+        if (!(runtimeService.createExecutionQuery().executionId(task.getExecutionId()).singleResult() instanceof ExecutionEntity execution)) { return new ArrayList<>(); }
         String activityId = execution.getActivityId();
 
         BpmnModel bpmnModel = repositoryService.getBpmnModel(task.getProcessDefinitionId());

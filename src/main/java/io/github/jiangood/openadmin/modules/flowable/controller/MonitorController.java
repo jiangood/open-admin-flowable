@@ -146,12 +146,12 @@ public class MonitorController {
         return AjaxResult.ok().data(new PageImpl<>(responseList, pageable, taskPage.getTotalElements()));
     }
 
-    @Log("设置任务处理�?)
+    @Log("设置任务处理人")
     @PreAuthorize("hasAuthority('flowableTask:setAssignee')")
     @RequestMapping("setAssignee")
     public AjaxResult setAssignee(@RequestBody SetAssigneeRequest request) {
         taskService.setAssignee(request.taskId(), request.assignee());
-        return AjaxResult.ok().msg("设置任务处理人成�?);
+        return AjaxResult.ok().msg("设置任务处理人成功");
     }
 
     public record SetAssigneeRequest(String taskId, String assignee) {

@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 
 
 /**
- * 用户侧功能，待办，处理，查看流程�?
- * 每个人都可以看自己任务，故而没有权限注�?
+ * 用户侧功能，待办，处理，查看流程等
+ * 每个人都可以看自己任务，故而没有权限注解
  */
 @RestController
 @RequestMapping("admin/flowable/user-task")
@@ -147,7 +147,7 @@ public class UserTaskController {
             formKey = (String) task.getProcessVariables().get("GLOBAL_FORM_KEY");
         }
 
-        // 兼容性代�?TODO 老系统运行几个月后可移除
+        // 兼容性代码 TODO 老系统运行几个月后可移除
         if (formKey == null) {
             HistoricProcessInstance instance = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
             formKey = instance.getProcessDefinitionKey();

@@ -2,6 +2,7 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 
 import io.github.jiangood.openadmin.util.FontTool;
+import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
 import lombok.AllArgsConstructor;
 import org.flowable.bpmn.model.*;
 import org.flowable.engine.HistoryService;
@@ -108,8 +109,8 @@ public class BpmnDiagramService {
             String deleteReason = act.getDeleteReason();
             if (deleteReason == null) continue;
 
-            if (deleteReason.startsWith("Change activity to ")) {
-                String toActivity = deleteReason.replace("Change activity to ", "");
+            if (deleteReason.startsWith(FlowableConstants.DELETE_REASON_CHANGE_ACTIVITY_PREFIX)) {
+                String toActivity = deleteReason.substring(FlowableConstants.DELETE_REASON_CHANGE_ACTIVITY_PREFIX.length());
                 for (int j = i; j > 0; j--) {
                     HistoricActivityInstance pre = list.get(j);
                     String preActivityId = pre.getActivityId();

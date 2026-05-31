@@ -4,6 +4,9 @@ public class FlowableConstants {
 
     public static final String VAR_INITIATOR_DEPT_LEADER = "INITIATOR_DEPT_LEADER";
 
+    /** Flowable internal delete reason prefix: activity move/reject operation */
+    public static final String DELETE_REASON_CHANGE_ACTIVITY_PREFIX = "Change activity to ";
+
     // 变量KEY
     public static final String VAR_USER_ID = "userId";
     public static final String VAR_USER_NAME = "userName";

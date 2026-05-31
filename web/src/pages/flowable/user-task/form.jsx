@@ -10,6 +10,9 @@ export default class extends React.Component {
         submitLoading: false,
 
 
+        formData: {},
+
+
         instanceCommentList: [],
         vars: {},
 
@@ -23,9 +26,6 @@ export default class extends React.Component {
 
         errorMsg: null
     }
-
-
-    externalFormRef = React.createRef()
 
     componentDidMount() {
         const {taskId} = PageUtils.currentParams()
@@ -56,14 +56,8 @@ export default class extends React.Component {
     handleTask = async value => {
         this.setState({submitLoading: true});
         try {
-            if (value.result === 'APPROVE') {
-                const fn = this.externalFormRef.current?.submit
-                if (fn) {
-                    await fn()
-                }
-            }
-
             value.taskId = this.state.data.taskId
+            value.formData = this.state.formData
             await HttpUtils.post("admin/flowable/user-task/handleTask", value)
 
             PageUtils.closeCurrent()
@@ -170,7 +164,7 @@ export default class extends React.Component {
     </Card>;
 
     renderForm = () => {
-        const {data} = this.state
+        const {data, formData} = this.state
         const {businessKey} = data
         const formKey = data.formKey;
         const formName = data.formKey + 'Form'
@@ -181,6 +175,7 @@ export default class extends React.Component {
             return <Empty description={"表单不存在： " + formName}></Empty>
         }
 
-        return <ExForm id={businessKey} formKey={formKey} ref={this.externalFormRef}></ExForm>
+        return <ExForm id={businessKey} formKey={formKey} value={formData}
+                       onChange={v => this.setState({formData: v})}></ExForm>
     }
 }

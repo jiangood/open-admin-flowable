@@ -105,7 +105,7 @@ public class UserTaskController {
     @PostMapping("handleTask")
     public AjaxResult handle(@RequestBody HandleTaskRequest param) {
         String user = LoginTool.getUserId();
-        processService.handle(user, param.getResult(), param.getTaskId(), param.getComment());
+        processService.handle(user, param.getResult(), param.getTaskId(), param.getComment(), param.getFormData());
         return AjaxResult.ok().msg("处理成功");
     }
 

@@ -68,6 +68,88 @@ definitions:
         label: "请假申请单"
 ```
 
+### 表单定义
+
+流程中每个节点（开始事件、用户任务）可绑定一个表单，表单由 **YAML 元数据** + **前端组件** 两部分组成。
+
+#### 1. YAML 定义表单元数据
+
+在 `flowable-process-definition-*.yml` 的 `forms` 列表中配置：
+
+```yaml
+definitions:
+  - key: "leave_request"
+    name: "请假流程"
+    forms:
+      - key: "start_form"            # 表单标识，需全局唯一
+        label: "请假申请表"           # 表单名称，显示在设计师下拉框
+      - key: "manager_approve_form"
+        label: "经理审批表"
+      - key: "finish_view"
+        label: "流程结果查看"
+```
+
+#### 2. 前端表单组件
+
+在前端 `web/src/forms/` 目录下创建对应的 React 组件。
+
+**命名规则：** 前端组件通过 `formKey + 'Form'` 查找，例如 YAML 中 `formKey: start_form`，则对应组件名 `start_formForm`。
+
+**组件约定：** 组件接收 `value`（当前表单数据）和 `onChange`（数据变化回调）两个 props，通过 `onValuesChange` 将表单数据实时同步给父组件。
+
+示例 `web/src/forms/start_formForm.jsx`：
+
+```jsx
+import { Form, Input, InputNumber } from "antd";
+
+export default function ({ value, onChange }) {
+  const onValuesChange = (_, allValues) => {
+    onChange?.(allValues);
+  };
+
+  return (
+    <Form onValuesChange={onValuesChange} initialValues={value}>
+      <Form.Item label="事由" name="reason">
+        <Input />
+      </Form.Item>
+      <Form.Item label="请假天数" name="days">
+        <InputNumber />
+      </Form.Item>
+    </Form>
+  );
+}
+```
+
+#### 3. 自动注册
+
+框架的 UmiJS 插件 `@jiangood/open-admin/config/common-plugin` 在构建时自动扫描 `web/src/forms/*.jsx`，无需手动注册即可生效。**只需将组件文件放入 `web/src/forms/` 目录即可。**
+
+#### 4. 在 BPMN 设计中绑定表单
+
+打开流程设计器，选中 **UserTask** 节点 → 右侧属性面板「表单」下拉框 → 选择对应表单 key（即 YAML 中定义的 `key`）。保存后，表单 key 会写入 BPMN XML 的 `flowable:formKey` 属性。
+
+#### 5. 运行时表单解析
+
+流程流转到该节点时，`user-task/form.jsx` 从后端获取任务信息得到 `formKey`，拼接为 `<formKey>Form`，通过 `FormRegistryUtils.get(name)` 查找前端注册的组件并渲染。
+
+#### 6. 表单数据提交
+
+用户点击「同意」时，前端将表单数据（`formData`）随审批请求一同提交到后端。后端在处理 APPROVE 时，会调用 `ProcessListener.onFormSubmit(initiator, approver, businessKey, formData)`，业务方在 `ProcessListener` 实现类中覆盖该方法即可接收并持久化表单数据：
+
+```java
+@Component
+public class MyProcessListener implements ProcessListener {
+    @Override
+    public void onProcessEvent(ProcessEventType type, String initiator, String businessKey, Map<String, Object> variables) {
+    }
+
+    @Override
+    public void onFormSubmit(String initiator, String approver, String businessKey, Map<String, Object> formData) {
+        // 在此处保存业务数据
+    }
+}
+```
+
 ## 项目结构
 
 ```

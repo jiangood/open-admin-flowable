@@ -19,6 +19,8 @@ import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
 import io.github.jiangood.openadmin.modules.flowable.FlowableTemplate;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessListener;
+import io.github.jiangood.openadmin.util.SpringTool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.Process;
@@ -227,7 +229,7 @@ public class ProcessService {
         return page2;
     }
 
-    public void handle(String userId, TaskHandleType result, String taskId, String comment) {
+    public void handle(String userId, TaskHandleType result, String taskId, String comment, Map<String, Object> formData) {
         Assert.notNull(userId, "用户Id不能为空");
         //校验任务是否存在
         Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -247,6 +249,16 @@ public class ProcessService {
 
 
         if (result == TaskHandleType.APPROVE) {
+            if (formData != null && !formData.isEmpty()) {
+                ProcessListener listener = getBizListener(task);
+                if (listener != null) {
+                    HistoricProcessInstance instance = historyService.createHistoricProcessInstanceQuery()
+                            .processInstanceId(processInstanceId).singleResult();
+                    String initiator = instance.getStartUserId();
+                    String businessKey = task.getProcessInstanceBusinessKey();
+                    listener.onFormSubmit(initiator, userId, businessKey, formData);
+                }
+            }
             taskService.complete(taskId);
             return;
         }
@@ -302,6 +314,17 @@ public class ProcessService {
         return sysUserService.getNameById(userId);
     }
 
+
+    private ProcessListener getBizListener(Task task) {
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery()
+                .processDefinitionId(task.getProcessDefinitionId()).singleResult();
+        if (processDefinition == null) return null;
+        ProcessMeta meta = processMetaService.findOne(processDefinition.getKey());
+        if (meta != null && meta.getListener() != null) {
+            return SpringTool.getBean(meta.getListener());
+        }
+        return null;
+    }
 
     private void addComment(String processInstanceId, String taskId, String taskAssignee, String comment) {
         // addComment 持久化时 userId 为空，需补设后再 save

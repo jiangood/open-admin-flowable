@@ -9,4 +9,5 @@ public class HandleTaskRequest {
     TaskHandleType result;
     String taskId;
     String comment;
+    Map<String, Object> formData;
 }

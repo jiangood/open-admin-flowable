@@ -1,14 +1,17 @@
 import {Form, Input, InputNumber} from "antd";
 
-export default function (){
+export default function ({value, onChange}) {
+    const onValuesChange = (_, allValues) => {
+        onChange?.(allValues);
+    };
 
     return <div>
         demo表单示例
-        <Form>
-            <Form.Item label="事由">
+        <Form onValuesChange={onValuesChange} initialValues={value}>
+            <Form.Item label="事由" name="reason">
                 <Input/>
             </Form.Item>
-            <Form.Item label="请假天数" name='days'>
+            <Form.Item label="请假天数" name="days">
                 <InputNumber/>
             </Form.Item>
         </Form>

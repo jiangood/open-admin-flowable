@@ -28,10 +28,9 @@ export default class extends React.Component {
 
 
     async componentDidMount() {
-        let params = PageUtils.currentParams()
-        this.state.id = params.id
-        const rs = await HttpUtils.get('admin/flowable/model/detail', {id: this.state.id})
-        this.setState({model: rs}, this.initBpmn)
+        const params = PageUtils.currentParams()
+        const rs = await HttpUtils.get('admin/flowable/model/detail', {id: params.id})
+        this.setState({model: rs, id: params.id}, this.initBpmn)
     }
 
     initBpmn = () => {

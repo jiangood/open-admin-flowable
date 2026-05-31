@@ -26,8 +26,8 @@ jobs:
         with:
           without_prefix_v: true # Remove prefix `v` from tag
 
-      - name: Publish MAVEN
-        run: mvn -q deploy -DskipTests -Drevision=${{ steps.tag.outputs.tag }} -pl open-admin-flowable-starter -am -P publish
+       - name: Publish MAVEN
+         run: cd open-admin-flowable-starter && mvn -q deploy -DskipTests -Drevision=${{ steps.tag.outputs.tag }} -P publish
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}

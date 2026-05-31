@@ -378,9 +378,10 @@ public class ProcessService {
 
 
     private void addComment(String processInstanceId, String taskId, String taskAssignee, String comment) {
-        Comment addComment = taskService.addComment(taskId, processInstanceId, comment);
-        addComment.setUserId(taskAssignee);
-        taskService.saveComment(addComment);
+        // addComment 持久化时 userId 为空，需补设后再 save
+        Comment commentEntity = taskService.addComment(taskId, processInstanceId, comment);
+        commentEntity.setUserId(taskAssignee);
+        taskService.saveComment(commentEntity);
     }
 
 

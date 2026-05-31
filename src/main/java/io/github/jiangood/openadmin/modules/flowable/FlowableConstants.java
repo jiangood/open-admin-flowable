@@ -2,7 +2,7 @@ package io.github.jiangood.openadmin.modules.flowable;
 
 public class FlowableConstants {
 
-    public static final String VAR_DEPT_LEADER = "INITIATOR_DEPT_LEADER";
+    public static final String VAR_INITIATOR_DEPT_LEADER = "INITIATOR_DEPT_LEADER";
 
     // 变量KEY
     public static final String VAR_USER_ID = "userId";

@@ -71,7 +71,7 @@ public class FlowableTemplate {
         variables.put(FlowableConstants.VAR_UNIT_NAME, user.getUnitName());
         variables.put(FlowableConstants.VAR_DEPT_ID, user.getDeptId());
         variables.put(FlowableConstants.VAR_DEPT_NAME, user.getDeptName());
-        variables.put(FlowableConstants.VAR_DEPT_LEADER, user.getDeptLeaderId());
+        variables.put(FlowableConstants.VAR_INITIATOR_DEPT_LEADER, user.getDeptLeaderId());
         variables.put("BUSINESS_KEY", bizKey);
         variables.put("GLOBAL_FORM_KEY", meta.getGlobalFormKey() != null ? meta.getGlobalFormKey() : meta.getKey());
     }
@@ -97,8 +97,8 @@ public class FlowableTemplate {
         BpmnModel bpmnModel = repositoryService.getBpmnModel(definition.getId());
         for (FlowElement el : bpmnModel.getMainProcess().getFlowElements()) {
             if (el instanceof org.flowable.bpmn.model.UserTask ut) {
-                if (ut.getAssignee() != null && ut.getAssignee().contains(FlowableConstants.VAR_DEPT_LEADER)) {
-                    Assert.notNull(variables.get(FlowableConstants.VAR_DEPT_LEADER), "操作失败：发起用户的部门负责人为空");
+                if (ut.getAssignee() != null && ut.getAssignee().contains(FlowableConstants.VAR_INITIATOR_DEPT_LEADER)) {
+                    Assert.notNull(variables.get(FlowableConstants.VAR_INITIATOR_DEPT_LEADER), "操作失败：发起用户的部门负责人为空");
                 }
             }
         }

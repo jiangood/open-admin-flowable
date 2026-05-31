@@ -37,6 +37,7 @@
     </modules>
 
     <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
         <java.version>21</java.version>
         <compile.version>21</compile.version>
         <maven.compiler.source>21</maven.compiler.source>

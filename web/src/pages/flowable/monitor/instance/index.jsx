@@ -52,7 +52,7 @@ export default class extends React.Component {
             fixed: 'right',
             render: (_, r) => {
                 return <Space>
-                    <Button size='small' onClick={() => PageUtils.open(\/flowable/monitor/instance/view?id=\, '查看流程')}>查看</Button>
+                    <Button size='small' onClick={() => PageUtils.open('/flowable/monitor/instance/view?id=', '查看流程')}>查看</Button>
                     <Popconfirm title={'关闭流程'}
                                 onConfirm={() => this.close(r.id)}>
                         <Button size='small' >终止</Button>

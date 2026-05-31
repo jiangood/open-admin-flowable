@@ -51,7 +51,7 @@ export default class extends React.Component {
 
 
         return <Page padding>
-            <Card title='流程�?>
+            <Card title='流程图'>
                 <img src={img} style={{maxWidth: '100%'}}/>
             </Card>
             <Gap/>
@@ -67,7 +67,7 @@ export default class extends React.Component {
                            },
                            {
                                dataIndex: 'user',
-                               title: '处理�?
+                               title: '处理人',
                            },
                            {
                                dataIndex: 'time',

@@ -7,7 +7,7 @@ open-admin 的 Flowable BPMN 2.0 工作流引擎插件，提供流程设计、�
 ```xml
 <dependency>
     <groupId>io.github.jiangood</groupId>
-    <artifactId>open-admin-flowable</artifactId>
+    <artifactId>open-admin-flowable-starter</artifactId>
     <version>2.0.0</version>
 </dependency>
 ```
@@ -72,16 +72,26 @@ process:
 ## 项目结构
 
 ```
-src/main/java/.../modules/flowable/
-├── FlowableTemplate.java        # 对外公开 API（推荐使用）
-├── FlowableConstants.java       # 常量定义
-├── config/                      # 引擎配置、流程初始化、事件监听
-├── core/                        # 属性配置、事件类型
-├── dao/                         # 流程元数据 DAO
-├── dto/                         # 请求/响应 DTO & VO
-├── service/                     # 内部业务服务层
-├── controller/                  # REST 控制器
-└── utils/                       # 工具类
+open-admin-flowable/
+├── pom.xml                              # 父 POM (多模块)
+├── open-admin-flowable-starter/         # ← 发布到 Maven Central
+│   ├── pom.xml
+│   └── src/main/java/.../
+│       ├── FlowableTemplate.java        # 对外公开 API（推荐使用）
+│       ├── FlowableConstants.java       # 常量定义
+│       ├── config/                      # 引擎配置、流程初始化、事件监听
+│       ├── core/                        # 属性配置、事件类型
+│       ├── dao/                         # 流程元数据 DAO
+│       ├── dto/                         # 请求/响应 DTO & VO
+│       ├── service/                     # 内部业务服务层
+│       ├── controller/                  # REST 控制器
+│       └── utils/                       # 工具类
+└── open-admin-flowable-app/             # 本地开发应用
+    ├── pom.xml
+    └── src/main/java/.../
+        ├── ProcessBootApplication.java  # 启动入口
+        ├── example/                     # 示例代码
+        └── controller/TestController.java # 测试接口
 ```
 
 ## License

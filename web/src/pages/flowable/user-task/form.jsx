@@ -44,7 +44,7 @@ export default class extends React.Component {
 
     onImgClick = () => {
         Modal.info({
-            title: '流程�?,
+            title: '流程图',
             width: '70vw',
             content: <div style={{width: '100%', overflow: 'auto', maxHeight: '80vh'}}>
                 <img src={this.state.data.img}/>
@@ -100,7 +100,7 @@ export default class extends React.Component {
                             },
                             {
                                 key: '2',
-                                label: '流程�?,
+                                label: '流程图',
                                 icon: <ShareAltOutlined/>,
                                 children: this.renderProcess(img, commentList)
                             }
@@ -120,16 +120,16 @@ export default class extends React.Component {
                                        initialValue={'APPROVE'}>
                                 <Radio.Group>
                                     <Radio value='APPROVE'>同意</Radio>
-                                    <Radio value='REJECT'>不同�?/Radio>
+                                    <Radio value='REJECT'>不同意</Radio>
                                 </Radio.Group>
                             </Form.Item>
                             <Form.Item label='审批意见' name='comment'
-                                       rules={[{required: true, message: '请输入审批意�?}]}>
+                                       rules={[{required: true, message: '请输入审批意见'}]}>
                                 <Input.TextArea/>
                             </Form.Item>
                             <div>
                                 <Button type='primary' htmlType='submit' loading={submitLoading}
-                                        size={"middle"}>�?nbsp;�?/Button>
+                                        size={"middle"}>提交</Button>
                             </div>
                         </Form>
                     </Card>
@@ -159,7 +159,7 @@ export default class extends React.Component {
                    },
                    {
                        dataIndex: 'user',
-                       title: '处理�?
+                       title: '处理人',
                    },
                    {
                        dataIndex: 'time',
@@ -177,7 +177,7 @@ export default class extends React.Component {
 
         let ExForm = FormRegistryUtils.get(formName);
         if (!ExForm) {
-            console.error(" 表单不存在： " + formName + "�?请检查表单源代码：src/forms/" + formName + ".jsx")
+            console.error(" 表单不存在： " + formName + "，请检查表单源代码：src/forms/" + formName + ".jsx")
             return <Empty description={"表单不存在： " + formName}></Empty>
         }
 

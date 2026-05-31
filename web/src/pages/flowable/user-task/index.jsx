@@ -34,7 +34,7 @@ export default class extends React.Component {
         columns={[
 
             {
-                title: '发起�?,
+                title: '发起人',
                 dataIndex: 'instanceStarter'
             },
             {
@@ -47,7 +47,7 @@ export default class extends React.Component {
                 width: 100,
             },
             {
-                title: '当前操作�?,
+                title: '当前操作人',
                 dataIndex: 'assigneeInfo',
                 width: 100
             },
@@ -87,7 +87,7 @@ export default class extends React.Component {
                 dataIndex: 'instanceName',
             },
             {
-                title: '发起�?,
+                title: '发起人',
                 dataIndex: 'instanceStarter'
             },
             {
@@ -111,7 +111,7 @@ export default class extends React.Component {
                 dataIndex: 'taskName'
             },
             {
-                title: '操作�?,
+                title: '操作人',
                 dataIndex: 'assigneeInfo'
             },
 
@@ -139,7 +139,7 @@ export default class extends React.Component {
                 }
             },
             {
-                title: '发起�?,
+                title: '发起人',
                 dataIndex: 'startUserName',
             },
             {
@@ -159,10 +159,10 @@ export default class extends React.Component {
             },
 
             {
-                title: '流程状�?,
+                title: '流程状态',
                 dataIndex: 'x',
                 render(_, row) {
-                    return row.endTime == null ? '进行�? : '已结�?
+                    return row.endTime == null ? '进行中' : '已结束'
                 }
             },
             {

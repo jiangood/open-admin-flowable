@@ -13,7 +13,7 @@ export default class extends React.Component {
     let params = PageUtils.currentParams()
     const id = this.id = params.id
 
-    HttpUtils.get('admin/flowable/test/get', {id}).then(rs=>{
+    HttpUtils.get('admin/flowable/simulate/get', {id}).then(rs=>{
         this.setState({model: rs})
     })
 
@@ -25,7 +25,7 @@ export default class extends React.Component {
       return <PageLoading />
     }
 
-    return <Card title={'流程测试 / 【' + this.state.model.name + "】 / " + this.state.model.key }>
+    return <Card title={'流程仿真 / 【' + this.state.model.name + "】 / " + this.state.model.key }>
       <Form onFinish={this.onFinish} layout='vertical' >
         <Form.Item name='key' noStyle initialValue={this.state.model.key}>
         </Form.Item>
@@ -48,7 +48,7 @@ export default class extends React.Component {
   }
 
   onFinish = values => {
-    HttpUtils.post('admin/flowable/test/submit', values).then(rs=>{
+    HttpUtils.post('admin/flowable/simulate/submit', values).then(rs=>{
       Modal.confirm({content: '跳转任务列表?', onOk: () => {
         PageUtils.open('/flowable/monitor/task')
       }})

@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("admin/flowable/test")
+@RequestMapping("admin/flowable/simulate")
 @AllArgsConstructor
-public class TestController {
+public class SimulateController {
 
     private ProcessService processService;
     private ProcessMetaService processMetaService;
@@ -37,7 +37,7 @@ public class TestController {
     public AjaxResult submit(@Valid @RequestBody SubmitRequest request) {
         processService.start(request.key(), request.id(), request.variables());
 
-        return AjaxResult.ok().msg("提交测试流程成功");
+        return AjaxResult.ok().msg("提交仿真流程成功");
     }
 
     public record SubmitRequest(

@@ -97,7 +97,7 @@ export default class extends React.Component {
                                  onClick={this.handleDeploy}>部署</Button>
                          <Button onClick={this.showXML}>XML</Button>
                          <Button
-                             onClick={() => PageUtils.open('/flowable/test?id=' + this.state.id, "流程测试")}> 测试 </Button>
+                             onClick={() => PageUtils.open('/flowable/simulate?id=' + this.state.id, "流程仿真")}> 仿真 </Button>
 
                          <Button title='查看已部署的历史版本' onClick={() => {
                              this.setState({deployedModal: true})

@@ -1,8 +1,8 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
 import io.github.jiangood.openadmin.util.SpringTool;
-import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessListener;
-import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessListener;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.core.ProcessEventType;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import lombok.AllArgsConstructor;

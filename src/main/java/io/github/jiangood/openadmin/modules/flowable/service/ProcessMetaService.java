@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
-import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.dao.IProcessMetaDao;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;

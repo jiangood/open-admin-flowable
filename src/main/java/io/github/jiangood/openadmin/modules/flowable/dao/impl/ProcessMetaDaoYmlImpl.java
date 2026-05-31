@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.dao.impl;
 
-import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.dao.IProcessMetaDao;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.Bindable;

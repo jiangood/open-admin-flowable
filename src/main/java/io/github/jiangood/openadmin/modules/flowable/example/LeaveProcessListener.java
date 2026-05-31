@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.example;
 
-import io.github.jiangood.openadmin.modules.flowable.config.meta.ProcessListener;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessListener;
 import io.github.jiangood.openadmin.modules.flowable.core.ProcessEventType;
 import org.springframework.stereotype.Component;
 

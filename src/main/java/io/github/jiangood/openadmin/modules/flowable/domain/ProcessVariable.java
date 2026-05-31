@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.config.meta;
+package io.github.jiangood.openadmin.modules.flowable.domain;
 
 import io.github.jiangood.openadmin.util.field.ValueType;
 import lombok.Data;

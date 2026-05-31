@@ -18,6 +18,7 @@ import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
+import io.github.jiangood.openadmin.modules.flowable.FlowableTemplate;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.Process;
@@ -61,89 +62,14 @@ public class ProcessService {
     private final RepositoryService repositoryService;
     private final IdentityService identityService;
     private final ProcessMetaService processMetaService;
+    private final FlowableTemplate flowableTemplate;
 
     public void start(String processDefinitionKey, String bizKey, Map<String, Object> variables) {
         start(processDefinitionKey, bizKey, null, variables);
     }
 
     public void start(String key, String bizKey, String title, Map<String, Object> variables) {
-        Assert.notNull(key, "key不能为空");
-        if (variables == null) {
-            variables = new HashMap<>();
-        }
-
-        LoginUser user = LoginTool.getUser();
-        ProcessMeta meta = processMetaService.findOne(key);
-        Assert.notNull(meta, "流程元数据定义不存在：" + key);
-
-        // 添加一些发起人的相关信息
-        String startUserId = user.getId();
-        Assert.hasText(startUserId, "当前登录人员ID不能为空");
-        variables.put(FlowableConstants.VAR_USER_ID, startUserId);
-        variables.put(FlowableConstants.VAR_USER_NAME, user.getName());
-        variables.put(FlowableConstants.VAR_UNIT_ID, user.getUnitId());
-        variables.put(FlowableConstants.VAR_UNIT_NAME, user.getUnitName());
-        variables.put(FlowableConstants.VAR_DEPT_ID, user.getDeptId());
-        variables.put(FlowableConstants.VAR_DEPT_NAME, user.getDeptName());
-        variables.put(FlowableConstants.VAR_DEPT_LEADER, user.getDeptLeaderId());   // 部门领导
-        variables.put("BUSINESS_KEY", bizKey);
-        variables.put("GLOBAL_FORM_KEY", meta.getGlobalFormKey() != null ? meta.getGlobalFormKey() : meta.getKey()); // 全局表单key
-
-
-        // 流程名称
-        ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
-                .processDefinitionKey(key).active()
-                .latestVersion()
-                .singleResult();
-        Assert.notNull(definition, "流程尚未部署，请设计后部署。编码：" + key);
-
-
-        if (title == null) {
-            String day = cn.hutool.core.date.DateUtil.format(new Date(), "yyyy年MM月dd日");
-            title = MessageFormat.format("{0}({1}){2}发起的【{3}】(业务单号:{4})",
-                    user.getName(),
-                    user.getDeptName() != null ? user.getDeptName() : "未知部门",
-                    day,
-                    definition.getName(),
-                    bizKey);
-        }
-
-        long instanceCount = runtimeService.createProcessInstanceQuery().processInstanceBusinessKey(bizKey).active().count();
-        Assert.state(instanceCount == 0, "流程审批中，请勿重复提交");
-
-        // 判断必填流程变量
-
-        List<ProcessVariable> variableList = meta.getVariables();
-        if (!CollectionUtils.isEmpty(variableList)) {
-            for (ProcessVariable formItem : variableList) {
-                String name = formItem.getName();
-                Assert.state(variables.containsKey(name), "流程异常, 必填变量未设置：" + formItem.getLabel() + ":" + name);
-                Object v = variables.get(name);
-                Assert.notNull(v, "流程异常, 必填变量未设置：" + formItem.getLabel() + ":" + name);
-            }
-        }
-
-        // 判断相对变量，如部门领导
-        BpmnModel bpmnModel = repositoryService.getBpmnModel(definition.getId());
-        for (FlowElement flowElement : bpmnModel.getMainProcess().getFlowElements()) {
-            if (flowElement instanceof org.flowable.bpmn.model.UserTask ut) {
-                if (ut.getAssignee() != null && ut.getAssignee().contains(FlowableConstants.VAR_DEPT_LEADER)) {
-                    Assert.notNull(variables.get(FlowableConstants.VAR_DEPT_LEADER), "操作失败：发起用户的部门领导为空");
-                }
-            }
-        }
-
-
-        // 设置发起人, 该方法会自动设置流程变量 INITIATOR -> startUserId
-        identityService.setAuthenticatedUserId(startUserId);
-
-        // 启动
-        runtimeService.createProcessInstanceBuilder()
-                .processDefinitionKey(key)
-                .businessKey(bizKey)
-                .variables(variables)
-                .name(title)
-                .start();
+        flowableTemplate.startProcess(key, bizKey, title, variables);
     }
 
     /**

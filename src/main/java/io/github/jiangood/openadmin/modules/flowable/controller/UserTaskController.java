@@ -46,14 +46,14 @@ public class UserTaskController {
     private ProcessService processService;
 
     @GetMapping("todoCount")
-    public AjaxResult todo() {
+    public AjaxResult getTodoCount() {
         String userId = LoginTool.getUserId();
         long userTaskCount = processService.findUserTaskCount(userId);
         return AjaxResult.ok().data(userTaskCount);
     }
 
     @RequestMapping("todoTaskPage")
-    public AjaxResult todo(Pageable pageable) {
+    public AjaxResult queryTodoTaskPage(Pageable pageable) {
         String userId = LoginTool.getUserId();
         Page<TaskResponse> page = processService.findUserTaskList(pageable, userId);
 

@@ -6,6 +6,7 @@ import io.github.jiangood.openadmin.util.ImgTool;
 import io.github.jiangood.openadmin.util.PageTool;
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
 import io.github.jiangood.openadmin.framework.auth.LoginTool;
+import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
 import io.github.jiangood.openadmin.modules.flowable.dto.request.HandleTaskRequest;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.CommentResponse;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.TaskResponse;
@@ -77,6 +78,7 @@ public class UserTaskController {
 
         HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
         query.startedBy(loginUser.getId());
+        query.variableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true");
 
 
         query.orderByProcessInstanceStartTime().desc();
@@ -86,6 +88,7 @@ public class UserTaskController {
         Page<Map<String, Object>> page2 = PageTool.convert(page, instance -> {
             Map<String, Object> map = new HashMap<>();
             map.put("id", instance.getId());
+            map.put("name", instance.getName());
             map.put("processDefinitionName", instance.getProcessDefinitionName());
             map.put("startTime", instance.getStartTime());
             map.put("endTime", instance.getEndTime());

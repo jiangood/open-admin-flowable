@@ -14,4 +14,7 @@ public class FlowableConstants {
     public static final String VAR_UNIT_NAME = "unitName";
     public static final String VAR_DEPT_ID = "deptId";
     public static final String VAR_DEPT_NAME = "deptName";
+
+    /** 仿真标记变量 — 仿真实例注入此变量，查询时过滤 */
+    public static final String VAR_SIMULATION = "_process_simulation";
 }

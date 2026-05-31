@@ -3,6 +3,8 @@ package io.github.jiangood.openadmin.modules.flowable.dto.request;
 import io.github.jiangood.openadmin.modules.flowable.dto.TaskHandleType;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class HandleTaskRequest {
 

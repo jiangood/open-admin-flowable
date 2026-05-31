@@ -1,15 +1,10 @@
 package io.github.jiangood.openadmin.modules.flowable.controller;
 
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
-import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;
+import io.github.jiangood.openadmin.modules.flowable.service.SimulateService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
-import org.flowable.engine.RepositoryService;
-import org.flowable.engine.repository.Model;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -19,32 +14,72 @@ import java.util.Map;
 @AllArgsConstructor
 public class SimulateController {
 
-    private ProcessService processService;
-    private ProcessMetaService processMetaService;
-    private RepositoryService repositoryService;
+    private final SimulateService simulateService;
 
+    /**
+     * 获取模型元数据
+     */
     @GetMapping("get")
     public AjaxResult get(String id) {
-        Assert.hasText(id, "id不能为空");
-        Model model = repositoryService.getModel(id);
-        Assert.notNull(model, "流程模型不存在");
-        ProcessMeta meta = processMetaService.findOne(model.getKey());
-        return AjaxResult.ok().data(meta);
+        return AjaxResult.ok().data(simulateService.getModelMeta(id));
     }
 
-
-    @PostMapping("submit")
-    public AjaxResult submit(@Valid @RequestBody SubmitRequest request) {
-        processService.start(request.key(), request.id(), request.variables());
-
-        return AjaxResult.ok().msg("提交仿真流程成功");
+    /**
+     * 启动仿真流程
+     */
+    @PostMapping("start")
+    public AjaxResult start(@Valid @RequestBody StartRequest request) {
+        String instanceId = simulateService.startSimulation(
+                request.key(), request.id(), request.initiatorId(), request.variables());
+        return AjaxResult.ok().data(Map.of("instanceId", instanceId)).msg("仿真流程已启动");
     }
 
-    public record SubmitRequest(
-            @NotBlank String id,
+    /**
+     * 获取仿真状态
+     */
+    @GetMapping("status")
+    public AjaxResult status(String instanceId) {
+        return AjaxResult.ok().data(simulateService.getStatus(instanceId));
+    }
+
+    /**
+     * 处理仿真任务
+     */
+    @PostMapping("task/handle")
+    public AjaxResult handleTask(@Valid @RequestBody HandleRequest request) {
+        simulateService.handleTask(request.taskId(), request.action(), request.comment(), request.handleUserId());
+        return AjaxResult.ok().msg("处理成功");
+    }
+
+    /**
+     * 查询可选用户列表
+     */
+    @GetMapping("users")
+    public AjaxResult users(String searchText) {
+        return AjaxResult.ok().data(simulateService.listUsers(searchText));
+    }
+
+    /**
+     * 查询仿真历史列表
+     */
+    @GetMapping("list")
+    public AjaxResult list(String key) {
+        return AjaxResult.ok().data(simulateService.listHistory(key));
+    }
+
+    public record StartRequest(
             @NotBlank String key,
+            @NotBlank String id,
+            @NotBlank String initiatorId,
             Map<String, Object> variables
     ) {
     }
 
+    public record HandleRequest(
+            @NotBlank String taskId,
+            @NotBlank String action,
+            String comment,
+            @NotBlank String handleUserId
+    ) {
+    }
 }

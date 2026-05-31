@@ -200,6 +200,7 @@ public class ProcessService {
                 .taskAssignee(userId)
                 .finished()
                 .includeProcessVariables()
+                .processVariableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true")
                 .orderByHistoricTaskInstanceEndTime().desc();
 
 
@@ -253,7 +254,7 @@ public class ProcessService {
                     HistoricProcessInstance instance = historyService.createHistoricProcessInstanceQuery()
                             .processInstanceId(processInstanceId).singleResult();
                     String initiator = instance.getStartUserId();
-                    String businessKey = task.getProcessInstanceBusinessKey();
+                    String businessKey = instance.getBusinessKey();
                     listener.onFormSubmit(initiator, userId, businessKey, formData);
                 }
             }
@@ -360,6 +361,9 @@ public class ProcessService {
             }
         }
         query.endOr();
+
+        // 过滤仿真实例
+        query.processVariableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true");
 
         query.orderByTaskCreateTime().desc();
 

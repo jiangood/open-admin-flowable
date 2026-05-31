@@ -255,6 +255,25 @@ public class SimulateService {
         }).toList();
     }
 
+    /**
+     * 物理删除仿真历史（彻底清除 runtime + history 数据）
+     */
+    public void deleteHistory(String instanceId) {
+        Assert.hasText(instanceId, "instanceId 不能为空");
+
+        // 如果流程还在运行，先终止
+        ProcessInstance instance = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(instanceId)
+                .singleResult();
+        if (instance != null) {
+            runtimeService.deleteProcessInstance(instanceId, "仿真历史删除");
+        }
+
+        // 物理删除历史数据
+        historyService.deleteHistoricProcessInstance(instanceId);
+        log.info("仿真历史已物理删除: instanceId={}", instanceId);
+    }
+
     private void injectSimulationVariables(Map<String, Object> variables, SysUser initiator, String bizKey) {
         variables.put(FlowableConstants.VAR_USER_ID, initiator.getId());
         variables.put(FlowableConstants.VAR_USER_NAME, initiator.getName());

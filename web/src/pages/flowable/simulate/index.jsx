@@ -144,6 +144,22 @@ export default class extends React.Component {
     this.loadStatus(instanceId);
   }
 
+  handleDeleteHistory = (instanceId) => {
+    Modal.confirm({
+      title: '确认删除',
+      content: '确定要物理删除此仿真记录吗？删除后不可恢复。',
+      okText: '确认删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: () => {
+        HttpUtils.post('admin/flowable/simulate/delete', {instanceId}).then(() => {
+          message.success('仿真记录已删除');
+          this.loadHistory();
+        });
+      },
+    });
+  }
+
   onImgClick = () => {
     Modal.info({
       title: '流程图',
@@ -257,6 +273,15 @@ export default class extends React.Component {
                    ),
                  },
                  {title: '发起时间', dataIndex: 'startTime', width: 100},
+                 {
+                   title: '操作', width: 60,
+                   render: (_, record) => (
+                     <Button type="link" danger size="small"
+                             onClick={() => this.handleDeleteHistory(record.instanceId)}>
+                       删除
+                     </Button>
+                   ),
+                 },
                ]}/>
       )}
     </div>

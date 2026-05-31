@@ -67,6 +67,20 @@ public class SimulateController {
         return AjaxResult.ok().data(simulateService.listHistory(key));
     }
 
+    /**
+     * 物理删除仿真历史
+     */
+    @PostMapping("delete")
+    public AjaxResult delete(@Valid @RequestBody DeleteRequest request) {
+        simulateService.deleteHistory(request.instanceId());
+        return AjaxResult.ok().msg("仿真历史已删除");
+    }
+
+    public record DeleteRequest(
+            @NotBlank String instanceId
+    ) {
+    }
+
     public record StartRequest(
             @NotBlank String key,
             @NotBlank String id,

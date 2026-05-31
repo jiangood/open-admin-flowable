@@ -2,7 +2,7 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 
 import io.github.jiangood.openadmin.util.FontTool;
-import jakarta.annotation.Resource;
+import lombok.AllArgsConstructor;
 import org.flowable.bpmn.model.*;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
@@ -24,19 +24,14 @@ import java.util.stream.Collectors;
  * BPMN 流程图操作：查询节点、生成高亮流程图
  */
 @Service
+@AllArgsConstructor
 public class BpmnDiagramService {
 
     public static final String FONT_NAME = FontTool.getDefaultFontName();
 
-    @Resource
-    private RuntimeService runtimeService;
-
-    @Resource
-    private RepositoryService repositoryService;
-
-
-    @Resource
-    private HistoryService historyService;
+    private final RuntimeService runtimeService;
+    private final RepositoryService repositoryService;
+    private final HistoryService historyService;
 
     /**
      * 查询任务的上一个节点

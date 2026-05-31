@@ -1,24 +1,23 @@
 # 流程定义列表
-process:
-  list:
-    - key: "leave_request"
-      name: "请假流程"
-      listener: io.github.jiangood.openadmin.modules.flowable.example.LeaveProcessListener
+definitions:
+  - key: "leave_request"
+    name: "请假流程"
+    listener: io.github.jiangood.openadmin.modules.flowable.example.LeaveProcessListener
 
-      variables:
-        - name: "days"
-          label: "请假天数"
-          value-type: number
-          required: true
-        - name: "reason"
-          label: "请假原因"
-          required: true
+    variables:
+      - name: "days"
+        label: "请假天数"
+        value-type: number
+        required: true
+      - name: "reason"
+        label: "请假原因"
+        required: true
 
-      # 流程中各个节点对应的表单定义
-      forms:
-        - key: "start_form"
-          label: "请假申请表"
-        - key: "manager_approve_form"
-          label: "经理审批表"
-        - key: "finish_view"
-          label: "流程结果查看"
+    # 流程中各个节点对应的表单定义
+    forms:
+      - key: "start_form"
+        label: "请假申请表"
+      - key: "manager_approve_form"
+        label: "经理审批表"
+      - key: "finish_view"
+        label: "流程结果查看"

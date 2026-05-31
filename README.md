@@ -51,22 +51,21 @@ flowableTemplate.startProcess("leave_request", bizId, "请假-张三", vars);
 在 `src/main/resources/data/` 下创建 `flowable-process-definition-*.yml` 文件定义流程：
 
 ```yaml
-process:
-  list:
-    - key: "leave_request"
-      name: "请假流程"
-      listener: com.example.LeaveProcessListener
-      variables:
-        - name: "days"
-          label: "请假天数"
-          value-type: number
-          required: true
-        - name: "reason"
-          label: "请假原因"
-          required: true
-      forms:
-        - key: "start_form"
-          label: "请假申请单"
+definitions:
+  - key: "leave_request"
+    name: "请假流程"
+    listener: com.example.LeaveProcessListener
+    variables:
+      - name: "days"
+        label: "请假天数"
+        value-type: number
+        required: true
+      - name: "reason"
+        label: "请假原因"
+        required: true
+    forms:
+      - key: "start_form"
+        label: "请假申请单"
 ```
 
 ## 项目结构

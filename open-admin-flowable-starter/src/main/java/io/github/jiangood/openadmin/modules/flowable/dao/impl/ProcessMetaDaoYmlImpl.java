@@ -38,8 +38,9 @@ public class ProcessMetaDaoYmlImpl implements IProcessMetaDao {
                 }
                 var sources = ConfigurationPropertySources.from(propertySources);
                 var binder = new Binder(sources);
-                var list = binder.bind("process.list", Bindable.listOf(ProcessMeta.class))
-                        .orElseThrow(() -> new IllegalStateException("绑定 " + resource.getFilename() + " 中 process 配置失败"));
+                var list = binder.bind("definitions", Bindable.listOf(ProcessMeta.class))
+                        .orElseThrow(() -> new IllegalStateException(
+                                "请在 " + resource.getFilename() + " 中使用 'definitions:' 替代旧的 'process.list:' 格式"));
                 all.addAll(list);
             }
 

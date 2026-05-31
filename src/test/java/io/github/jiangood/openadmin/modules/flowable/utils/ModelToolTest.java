@@ -8,7 +8,8 @@ class ModelToolTest {
 
     @Test
     void testXmlToModel_roundtrip() {
-        String xml = """<?xml version="1.0" encoding="UTF-8"?>
+        String xml = """
+                <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              targetNamespace="http://flowable.org/bpmn">

@@ -30,11 +30,11 @@ export default class extends React.Component {
 
     renderTodo = () => <ProTable
         showToolbarSearch={false}
-        request={(params) => HttpUtils.get("admin/flowable/my/todoTaskPage", params)}
+        request={(params) => HttpUtils.get("admin/flowable/user-task/todoTaskPage", params)}
         columns={[
 
             {
-                title: '发起人',
+                title: '发起�?,
                 dataIndex: 'instanceStarter'
             },
             {
@@ -47,7 +47,7 @@ export default class extends React.Component {
                 width: 100,
             },
             {
-                title: '当前操作人',
+                title: '当前操作�?,
                 dataIndex: 'assigneeInfo',
                 width: 100
             },
@@ -65,7 +65,7 @@ export default class extends React.Component {
                 title: '操作',
                 dataIndex: 'option',
                 render: (_, record) => {
-                    let path = '/flowable/task/form?taskId=' + record.id;
+                    let path = '/flowable/user-task/form?taskId=' + record.id;
                     return (
                         <LinkButton
                             type='primary'
@@ -80,14 +80,14 @@ export default class extends React.Component {
 
     renderDone = () => <ProTable
         showToolbarSearch={false}
-        request={(params) => HttpUtils.get("admin/flowable/my/doneTaskPage", params)}
+        request={(params) => HttpUtils.get("admin/flowable/user-task/doneTaskPage", params)}
         columns={[
             {
                 title: '流程名称',
                 dataIndex: 'instanceName',
             },
             {
-                title: '发起人',
+                title: '发起�?,
                 dataIndex: 'instanceStarter'
             },
             {
@@ -111,7 +111,7 @@ export default class extends React.Component {
                 dataIndex: 'taskName'
             },
             {
-                title: '操作人',
+                title: '操作�?,
                 dataIndex: 'assigneeInfo'
             },
 
@@ -120,7 +120,7 @@ export default class extends React.Component {
                 title: '操作',
                 dataIndex: 'option',
                 render: (_, record) => (
-                     <Button size='small' onClick={() => PageUtils.open('/flowable/task/instance/view?id='+record.id, '流程信息') }> 查看 </Button>
+                     <Button size='small' onClick={() => PageUtils.open('/flowable/user-task/instance/view?id='+record.id, '流程信息') }> 查看 </Button>
                 ),
             },
         ]}
@@ -128,7 +128,7 @@ export default class extends React.Component {
     />;
 
     renderMyStart = () => <ProTable
-        request={(params) => HttpUtils.get("admin/flowable/my/myInstance", params)}
+        request={(params) => HttpUtils.get("admin/flowable/user-task/myInstance", params)}
         columns={[
 
             {
@@ -139,7 +139,7 @@ export default class extends React.Component {
                 }
             },
             {
-                title: '发起人',
+                title: '发起�?,
                 dataIndex: 'startUserName',
             },
             {
@@ -159,10 +159,10 @@ export default class extends React.Component {
             },
 
             {
-                title: '流程状态',
+                title: '流程状�?,
                 dataIndex: 'x',
                 render(_, row) {
-                    return row.endTime == null ? '进行中' : '已结束'
+                    return row.endTime == null ? '进行�? : '已结�?
                 }
             },
             {
@@ -175,7 +175,7 @@ export default class extends React.Component {
                 title: '操作',
                 dataIndex: 'option',
                 render: (_, record) => (
-                 <Button size='small' onClick={() => PageUtils.open('/flowable/task/instance/view?id='+record.id, '流程信息') }> 查看 </Button>
+                 <Button size='small' onClick={() => PageUtils.open('/flowable/user-task/instance/view?id='+record.id, '流程信息') }> 查看 </Button>
 
             ),
             },

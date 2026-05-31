@@ -25,7 +25,7 @@ export default class extends React.Component {
     componentDidMount() {
         const { id} = PageUtils.currentParams()
 
-        HttpUtils.get("admin/flowable/my/getInstanceInfo", {id}).then(rs => {
+        HttpUtils.get("admin/flowable/user-task/getInstanceInfo", {id}).then(rs => {
             this.setState(rs)
             this.setState({data: rs})
         }).catch(e => {
@@ -51,7 +51,7 @@ export default class extends React.Component {
 
 
         return <Page padding>
-            <Card title='流程图'>
+            <Card title='流程�?>
                 <img src={img} style={{maxWidth: '100%'}}/>
             </Card>
             <Gap/>
@@ -67,7 +67,7 @@ export default class extends React.Component {
                            },
                            {
                                dataIndex: 'user',
-                               title: '处理人'
+                               title: '处理�?
                            },
                            {
                                dataIndex: 'time',

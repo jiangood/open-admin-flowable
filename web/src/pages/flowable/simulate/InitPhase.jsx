@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Empty, Form, Input, Select, Splitter, Spin, Table, Tag, Typography} from "antd";
-import {HttpUtils, StringUtils} from "@jiangood/open-admin";
+import {StringUtils} from "@jiangood/open-admin";
 import {HistoryOutlined, PlayCircleOutlined} from "@ant-design/icons";
 
 export default class InitPhase extends React.Component {

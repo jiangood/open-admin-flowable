@@ -19,7 +19,9 @@ export default class extends React.Component {
         const params = PageUtils.currentParams();
         const { id, businessKey } = params;
 
-        HttpUtils.get("admin/flowable/user-task/getInstanceInfo", {id, businessKey}).then(rs => {
+        const params = {id};
+        if (businessKey) params.businessKey = businessKey;
+        HttpUtils.get("admin/flowable/user-task/getInstanceInfo", params).then(rs => {
             this.setState(rs)
             this.setState({
                 commentList: rs.commentList,

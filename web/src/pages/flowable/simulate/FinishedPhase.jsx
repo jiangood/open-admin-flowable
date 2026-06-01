@@ -1,5 +1,5 @@
 import React from "react";
-import {Button, Empty, Space, Spin, Table, Tag, Typography} from "antd";
+import {Button, Empty, Space, Spin, Table, Tag} from "antd";
 import {HistoryOutlined, ReloadOutlined} from "@ant-design/icons";
 
 export default class FinishedPhase extends React.Component {

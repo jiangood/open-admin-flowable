@@ -1,7 +1,7 @@
 package io.github.jiangood.openadmin.modules.flowable.example;
 
-import io.github.jiangood.openadmin.modules.flowable.core.ProcessEventType;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessListener;
+import io.github.jiangood.openadmin.modules.flowable.enums.ProcessEventType;
+import io.github.jiangood.openadmin.modules.flowable.listener.ProcessListener;
 import io.github.jiangood.openadmin.modules.flowable.example.service.LeaveApplyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;

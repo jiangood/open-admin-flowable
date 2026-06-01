@@ -1,7 +1,7 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
 import cn.hutool.core.util.StrUtil;
-import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
+import io.github.jiangood.openadmin.modules.flowable.constant.FlowableConstants;
 import io.github.jiangood.openadmin.modules.flowable.dto.vo.ProcessDefinitionVO;
 import io.github.jiangood.openadmin.modules.flowable.dto.vo.ProcessInstanceVO;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.MonitorTaskResponse;
@@ -46,7 +46,7 @@ public class MonitorService {
     private final TaskService taskService;
     private final HistoryService historyService;
     private final SysUserService sysUserService;
-    private final ProcessService processService;
+    private final UserTaskService userTaskService;
 
     public Page<ProcessDefinitionVO> findProcessDefinitionPage(Pageable pageable) {
         ProcessDefinitionQuery query = repositoryService.createProcessDefinitionQuery();
@@ -84,17 +84,22 @@ public class MonitorService {
     public Page<MonitorTaskResponse> findMonitorTasks(String assignee, Pageable pageable) {
         TaskQuery query = taskService.createTaskQuery();
         if (StrUtil.isNotEmpty(assignee)) {
-            query = processService.buildUserTodoTaskQuery(assignee);
+            query = userTaskService.buildUserTodoTaskQuery(assignee);
         }
         query.orderByTaskCreateTime().desc();
         Page<Task> taskPage = FlowablePageTool.queryPage(query, pageable);
         List<Task> list = taskPage.getContent();
 
         Set<String> instanceIds = list.stream().map(TaskInfo::getProcessInstanceId).collect(Collectors.toSet());
-        List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery()
-                .active().processInstanceIds(instanceIds).list();
-        Map<String, String> idName = processInstanceList.stream()
-                .collect(Collectors.toMap(Execution::getId, ProcessInstance::getName));
+        Map<String, String> idName;
+        if (!instanceIds.isEmpty()) {
+            List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery()
+                    .active().processInstanceIds(instanceIds).list();
+            idName = processInstanceList.stream()
+                    .collect(Collectors.toMap(Execution::getId, ProcessInstance::getName));
+        } else {
+            idName = new HashMap<>();
+        }
 
         List<MonitorTaskResponse> responseList = list.stream().map(t -> {
             MonitorTaskResponse r = new MonitorTaskResponse();

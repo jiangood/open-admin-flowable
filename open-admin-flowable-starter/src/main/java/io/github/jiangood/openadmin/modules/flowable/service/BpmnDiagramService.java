@@ -2,7 +2,7 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 
 import io.github.jiangood.openadmin.util.FontTool;
-import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
+import io.github.jiangood.openadmin.modules.flowable.constant.FlowableConstants;
 import lombok.AllArgsConstructor;
 import org.flowable.bpmn.model.*;
 import org.flowable.engine.HistoryService;

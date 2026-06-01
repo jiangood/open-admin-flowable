@@ -27,21 +27,21 @@ public class UserTaskController {
     @GetMapping("todoCount")
     public AjaxResult getTodoCount() {
         String userId = LoginTool.getUserId();
-        long userTaskCount = processService.findUserTaskCount(userId);
+        long userTaskCount = userTaskService.findUserTaskCount(userId);
         return AjaxResult.ok().data(userTaskCount);
     }
 
     @RequestMapping("todoTaskPage")
     public AjaxResult queryTodoTaskPage(Pageable pageable) {
         String userId = LoginTool.getUserId();
-        Page<TaskResponse> page = processService.findUserTaskList(pageable, userId);
+        Page<TaskResponse> page = userTaskService.findUserTaskList(pageable, userId);
         return AjaxResult.ok().data(page);
     }
 
     @RequestMapping("doneTaskPage")
     public AjaxResult doneTaskPage(Pageable pageable) {
         String userId = LoginTool.getUserId();
-        Page<TaskResponse> page = processService.findUserTaskDoneList(pageable, userId);
+        Page<TaskResponse> page = userTaskService.findUserTaskDoneList(pageable, userId);
         return AjaxResult.ok().data(page);
     }
 

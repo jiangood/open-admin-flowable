@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.core;
+package io.github.jiangood.openadmin.modules.flowable.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

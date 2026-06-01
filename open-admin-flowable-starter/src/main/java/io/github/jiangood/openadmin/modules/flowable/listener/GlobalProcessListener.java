@@ -1,9 +1,8 @@
-package io.github.jiangood.openadmin.modules.flowable.config;
+package io.github.jiangood.openadmin.modules.flowable.listener;
 
 import io.github.jiangood.openadmin.util.SpringTool;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessListener;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.core.ProcessEventType;
+import io.github.jiangood.openadmin.modules.flowable.enums.ProcessEventType;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -106,4 +105,3 @@ public class GlobalProcessListener implements FlowableEventListener {
                 .toList();
     }
 }
-

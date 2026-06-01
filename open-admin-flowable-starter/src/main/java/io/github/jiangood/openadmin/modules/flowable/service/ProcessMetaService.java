@@ -1,9 +1,13 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.dao.IProcessMetaDao;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
+import org.springframework.boot.env.YamlPropertySourceLoader;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -14,12 +18,9 @@ import java.util.stream.Collectors;
 @Component
 public class ProcessMetaService {
 
-    private final List<IProcessMetaDao> daoList;
-    private Map<String, ProcessMeta> cache;
+    private static final String PROCESS_DEFINITION_PATTERN = "classpath*:data/flowable-process-definition*.yml";
 
-    public ProcessMetaService(List<IProcessMetaDao> daoList) {
-        this.daoList = daoList;
-    }
+    private Map<String, ProcessMeta> cache;
 
     @PostConstruct
     void initCache() {
@@ -30,11 +31,34 @@ public class ProcessMetaService {
     }
 
     private List<ProcessMeta> loadAll() {
-        List<ProcessMeta> list = new ArrayList<>();
-        for (IProcessMetaDao dao : daoList) {
-            list.addAll(dao.findProcessMetaList());
+        List<ProcessMeta> all = new ArrayList<>();
+        try {
+            var resolver = new PathMatchingResourcePatternResolver();
+            var resources = resolver.getResources(PROCESS_DEFINITION_PATTERN);
+            if (resources.length == 0) {
+                throw new IllegalStateException("未找到 flowable-process-definition*.yml");
+            }
+
+            var yamlLoader = new YamlPropertySourceLoader();
+            for (var resource : resources) {
+                log.info("===== 加载流程定义: {} =====", resource.getFilename());
+                var propertySources = yamlLoader.load(resource.getFilename(), resource);
+                if (propertySources.isEmpty()) {
+                    continue;
+                }
+                var sources = ConfigurationPropertySources.from(propertySources);
+                var binder = new Binder(sources);
+                var list = binder.bind("definitions", Bindable.listOf(ProcessMeta.class))
+                        .orElseThrow(() -> new IllegalStateException(
+                                "请在 " + resource.getFilename() + " 中使用 'definitions:' 替代旧的 'process.list:' 格式"));
+                all.addAll(list);
+            }
+
+            log.info("===== 共加载 {} 个流程定义 =====", all.size());
+            return all;
+        } catch (Exception e) {
+            throw new RuntimeException("读取流程定义失败: " + e.getMessage(), e);
         }
-        return list;
     }
 
     public List<ProcessMeta> findAll() {

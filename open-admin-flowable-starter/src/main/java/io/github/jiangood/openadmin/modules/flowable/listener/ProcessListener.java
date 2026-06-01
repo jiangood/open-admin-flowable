@@ -1,6 +1,6 @@
-package io.github.jiangood.openadmin.modules.flowable.domain;
+package io.github.jiangood.openadmin.modules.flowable.listener;
 
-import io.github.jiangood.openadmin.modules.flowable.core.ProcessEventType;
+import io.github.jiangood.openadmin.modules.flowable.enums.ProcessEventType;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;

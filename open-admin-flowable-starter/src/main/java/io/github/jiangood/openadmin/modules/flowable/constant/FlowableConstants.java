@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable;
+package io.github.jiangood.openadmin.modules.flowable.constant;
 
 public class FlowableConstants {
 

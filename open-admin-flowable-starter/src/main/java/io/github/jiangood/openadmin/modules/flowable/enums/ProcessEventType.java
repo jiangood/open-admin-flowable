@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.core;
+package io.github.jiangood.openadmin.modules.flowable.enums;
 
 import lombok.AllArgsConstructor;
 

@@ -2,10 +2,13 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.CommentResponse;
+import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import org.flowable.engine.HistoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
+import org.flowable.engine.runtime.ProcessInstanceQuery;
 import org.flowable.engine.task.Comment;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.TaskQuery;
@@ -36,12 +39,16 @@ class UserTaskServiceTest {
     @Mock
     private HistoryService historyService;
     @Mock
-    private ProcessService processService;
+    private RuntimeService runtimeService;
+    @Mock
+    private SysUserService sysUserService;
+    @Mock
+    private BpmnDiagramService bpmnDiagramService;
 
     private UserTaskService service;
 
     void initService() {
-        service = new UserTaskService(taskService, historyService, processService);
+        service = new UserTaskService(taskService, historyService, runtimeService, sysUserService, bpmnDiagramService);
     }
 
     @Nested
@@ -64,7 +71,7 @@ class UserTaskServiceTest {
             when(query.count()).thenReturn(1L);
             when(query.listPage(0, 10)).thenReturn(List.of(instance));
             when(historyService.createHistoricProcessInstanceQuery()).thenReturn(query);
-            when(processService.getUserName("U001")).thenReturn("张三");
+            when(sysUserService.getNameById("U001")).thenReturn("张三");
 
             LoginUser user = mock(LoginUser.class);
             when(user.getId()).thenReturn("U001");
@@ -150,8 +157,8 @@ class UserTaskServiceTest {
             when(comment.getId()).thenReturn("c1");
             when(comment.getUserId()).thenReturn("U001");
             when(taskService.getProcessInstanceComments("inst1")).thenReturn(List.of(comment));
-            when(processService.getUserName(any())).thenReturn("张三");
-            when(processService.drawImage("inst1"))
+            when(sysUserService.getNameById(any())).thenReturn("张三");
+            when(bpmnDiagramService.drawImage("inst1"))
                     .thenReturn(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
 
             initService();
@@ -203,8 +210,8 @@ class UserTaskServiceTest {
             when(query.listPage(0, 1)).thenReturn(List.of(instance));
             when(historyService.createHistoricProcessInstanceQuery()).thenReturn(query);
             when(taskService.getProcessInstanceComments("inst1")).thenReturn(List.of());
-            when(processService.getUserName(any())).thenReturn("用户");
-            when(processService.drawImage("inst1")).thenThrow(new RuntimeException("draw failed"));
+            when(sysUserService.getNameById(any())).thenReturn("用户");
+            when(bpmnDiagramService.drawImage("inst1")).thenThrow(new RuntimeException("draw failed"));
 
             initService();
             Map<String, Object> result = service.queryInstanceInfo("inst1");
@@ -228,8 +235,8 @@ class UserTaskServiceTest {
             when(query.listPage(0, 1)).thenReturn(List.of(instance));
             when(historyService.createHistoricProcessInstanceQuery()).thenReturn(query);
             when(taskService.getProcessInstanceComments("inst1")).thenReturn(List.of());
-            when(processService.getUserName("U001")).thenReturn("张三");
-            when(processService.drawImage("inst1"))
+            when(sysUserService.getNameById("U001")).thenReturn("张三");
+            when(bpmnDiagramService.drawImage("inst1"))
                     .thenReturn(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
 
             initService();
@@ -266,8 +273,8 @@ class UserTaskServiceTest {
             when(taskService.createTaskQuery()).thenReturn(taskQuery);
 
             when(taskService.getProcessInstanceComments("inst1")).thenReturn(List.of());
-            when(processService.getUserName(any())).thenReturn("用户");
-            when(processService.drawImage("inst1"))
+            when(sysUserService.getNameById(any())).thenReturn("用户");
+            when(bpmnDiagramService.drawImage("inst1"))
                     .thenReturn(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
 
             initService();
@@ -303,8 +310,8 @@ class UserTaskServiceTest {
             when(taskService.createTaskQuery()).thenReturn(taskQuery);
 
             when(taskService.getProcessInstanceComments("inst1")).thenReturn(List.of());
-            when(processService.getUserName(any())).thenReturn("用户");
-            when(processService.drawImage("inst1"))
+            when(sysUserService.getNameById(any())).thenReturn("用户");
+            when(bpmnDiagramService.drawImage("inst1"))
                     .thenReturn(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
 
             initService();
@@ -344,8 +351,8 @@ class UserTaskServiceTest {
             when(taskService.createTaskQuery()).thenReturn(taskQuery);
 
             when(taskService.getProcessInstanceComments("inst1")).thenReturn(List.of());
-            when(processService.getUserName(any())).thenReturn("用户");
-            when(processService.drawImage("inst1"))
+            when(sysUserService.getNameById(any())).thenReturn("用户");
+            when(bpmnDiagramService.drawImage("inst1"))
                     .thenReturn(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
 
             initService();

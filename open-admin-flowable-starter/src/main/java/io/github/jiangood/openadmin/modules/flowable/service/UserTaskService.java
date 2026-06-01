@@ -1,18 +1,31 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
+import io.github.jiangood.openadmin.modules.flowable.dto.response.CommentResponse;
+import io.github.jiangood.openadmin.modules.flowable.dto.response.TaskResponse;
+import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
+import io.github.jiangood.openadmin.modules.system.entity.SysRole;
+import io.github.jiangood.openadmin.modules.system.entity.SysUser;
+import io.github.jiangood.openadmin.modules.system.service.SysUserService;
+import io.github.jiangood.openadmin.util.FriendlyTool;
 import io.github.jiangood.openadmin.util.ImgTool;
 import io.github.jiangood.openadmin.util.PageTool;
-import io.github.jiangood.openadmin.modules.flowable.dto.response.CommentResponse;
-import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
 import lombok.AllArgsConstructor;
 import org.flowable.engine.HistoryService;
+import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.flowable.engine.history.HistoricProcessInstanceQuery;
+import org.flowable.engine.runtime.Execution;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.task.Comment;
 import org.flowable.task.api.Task;
+import org.flowable.task.api.TaskInfo;
+import org.flowable.task.api.TaskQuery;
+import org.flowable.task.api.history.HistoricTaskInstance;
+import org.flowable.task.api.history.HistoricTaskInstanceQuery;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,6 +33,7 @@ import org.springframework.util.Assert;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -27,7 +41,114 @@ public class UserTaskService {
 
     private final TaskService taskService;
     private final HistoryService historyService;
-    private final ProcessService processService;
+    private final RuntimeService runtimeService;
+    private final SysUserService sysUserService;
+    private final BpmnDiagramService bpmnDiagramService;
+
+    // ========== User Task Query ==========
+
+    public long findUserTaskCount(String userId) {
+        TaskQuery taskQuery = buildUserTodoTaskQuery(userId);
+        return taskQuery.count();
+    }
+
+    public Page<TaskResponse> findUserTaskList(Pageable pageable, String userId) {
+        TaskQuery query = buildUserTodoTaskQuery(userId);
+
+        Page<Task> page = FlowablePageTool.queryPage(query, pageable);
+        if (page.isEmpty()) {
+            return Page.empty();
+        }
+
+        Set<String> instanceIds = page.stream().map(TaskInfo::getProcessInstanceId).collect(Collectors.toSet());
+        Map<String, ProcessInstance> instanceMap = runtimeService.createProcessInstanceQuery()
+                .processInstanceIds(instanceIds).list().stream()
+                .collect(Collectors.toMap(Execution::getId, t -> t));
+
+        return PageTool.convert(page, task -> {
+            ProcessInstance instance = instanceMap.get(task.getProcessInstanceId());
+            TaskResponse r = new TaskResponse();
+            convert(r, task);
+            r.setInstanceName(instance.getName());
+            r.setInstanceStartTime(FriendlyTool.getPastTime(instance.getStartTime()));
+            r.setInstanceStarter(sysUserService.getNameById(instance.getStartUserId()));
+            return r;
+        });
+    }
+
+    public Page<TaskResponse> findUserTaskDoneList(Pageable pageable, String userId) {
+        HistoricTaskInstanceQuery query = historyService.createHistoricTaskInstanceQuery()
+                .taskAssignee(userId)
+                .finished()
+                .includeProcessVariables()
+                .orderByHistoricTaskInstanceEndTime().desc();
+
+        Page<HistoricTaskInstance> page = FlowablePageTool.queryPage(query, pageable);
+        if (page.isEmpty()) {
+            return Page.empty();
+        }
+
+        Set<String> instanceIds = page.stream().map(TaskInfo::getProcessInstanceId).collect(Collectors.toSet());
+        Map<String, HistoricProcessInstance> instanceMap = historyService.createHistoricProcessInstanceQuery()
+                .processInstanceIds(instanceIds).list()
+                .stream().collect(Collectors.toMap(HistoricProcessInstance::getId, t -> t));
+
+        return PageTool.convert(page, task -> {
+            HistoricProcessInstance instance = instanceMap.get(task.getProcessInstanceId());
+            TaskResponse r = new TaskResponse();
+            convert(r, task);
+            r.setInstanceName(instance.getName());
+            r.setInstanceStartTime(FriendlyTool.getPastTime(instance.getStartTime()));
+            r.setInstanceStarter(sysUserService.getNameById(instance.getStartUserId()));
+            r.setDurationInfo(FriendlyTool.getTimeDiff(task.getCreateTime(), task.getEndTime()));
+            return r;
+        });
+    }
+
+    public TaskQuery buildUserTodoTaskQuery(String userId) {
+        TaskQuery query = taskService.createTaskQuery().active();
+
+        query.or();
+        query.taskAssignee(userId);
+        query.taskCandidateUser(userId);
+
+        SysUser user = sysUserService.findById(userId).orElse(null);
+        Set<SysRole> roles = user.getRoles();
+        if (CollUtil.isNotEmpty(roles)) {
+            for (SysRole role : roles) {
+                query.taskCandidateGroup(role.getId());
+            }
+        }
+        query.endOr();
+
+        query.orderByTaskCreateTime().desc();
+
+        return query;
+    }
+
+    private void convert(TaskResponse r, TaskInfo task) {
+        r.setId(task.getId());
+        r.setTaskName(task.getName());
+        r.setCreateTime(FriendlyTool.getPastTime(task.getCreateTime()));
+        r.setAssigneeInfo(sysUserService.getNameById(task.getAssignee()));
+        r.setFormKey(task.getFormKey());
+        r.setInstanceId(task.getProcessInstanceId());
+    }
+
+    // ========== Utility ==========
+
+    public String getUserName(String userId) {
+        if (userId == null) {
+            return null;
+        }
+        return sysUserService.getNameById(userId);
+    }
+
+    public BufferedImage drawImage(String instanceId) {
+        return bpmnDiagramService.drawImage(instanceId);
+    }
+
+    // ========== Instance Query ==========
 
     public Page<Map<String, Object>> queryMyInstance(Pageable pageable, LoginUser loginUser) {
         HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
@@ -47,7 +168,7 @@ public class UserTaskService {
             map.put("deleteReason", instance.getDeleteReason());
             String startUserId = instance.getStartUserId();
             if (startUserId != null) {
-                map.put("startUserName", processService.getUserName(startUserId));
+                map.put("startUserName", getUserName(startUserId));
             }
             return map;
         });
@@ -70,13 +191,13 @@ public class UserTaskService {
         List<Comment> processInstanceComments = taskService.getProcessInstanceComments(processInstanceId);
         List<CommentResponse> commentList = processInstanceComments.stream()
                 .sorted(Comparator.comparing(Comment::getTime))
-                .map(c -> new CommentResponse(c, processService.getUserName(c.getUserId())))
+                .map(c -> new CommentResponse(c, getUserName(c.getUserId())))
                 .toList();
         data.put("commentList", commentList);
         data.put("instanceCommentList", commentList);
 
         try {
-            BufferedImage image = processService.drawImage(instance.getId());
+            BufferedImage image = drawImage(instance.getId());
             String base64 = ImgTool.toBase64DataUri(image);
             data.put("img", base64);
         } catch (Exception e) {
@@ -88,7 +209,7 @@ public class UserTaskService {
             instanceName = instance.getProcessDefinitionName();
         }
         data.put("startTime", DateUtil.format(instance.getStartTime(), "yyyy-MM-dd HH:mm:ss"));
-        data.put("starter", processService.getUserName(instance.getStartUserId()));
+        data.put("starter", getUserName(instance.getStartUserId()));
         data.put("name", instanceName);
         data.put("id", instance.getId());
         data.put("processDefinitionKey", instance.getProcessDefinitionKey());

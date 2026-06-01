@@ -1,5 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
+import io.github.jiangood.openadmin.modules.flowable.listener.GlobalProcessListener;
 import io.github.jiangood.openadmin.util.IdTool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

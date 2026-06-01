@@ -1,5 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.domain;
 
+import io.github.jiangood.openadmin.modules.flowable.listener.ProcessListener;
 import lombok.Data;
 
 import java.util.ArrayList;

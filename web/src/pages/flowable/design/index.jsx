@@ -1,4 +1,4 @@
-﻿import React from "react";
+﻿import React, { createRef } from "react";
 import {Button, Card, message, Modal, Space, Splitter} from "antd";
 
 import 'bpmn-js/dist/assets/diagram-js.css'
@@ -8,7 +8,7 @@ import BpmnModeler from 'bpmn-js/lib/Modeler'
 import './index.css'
 import customTranslate from "./customTranslate/customTranslate";
 import contextPad from "./contextPad";
-import {CloudUploadOutlined, SaveOutlined} from "@ant-design/icons";
+import {CloudUploadOutlined, DownloadOutlined, SaveOutlined, UploadOutlined} from "@ant-design/icons";
 import {HttpUtils, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import flowableJson from './descriptors/flowable';
@@ -25,6 +25,7 @@ export default class extends React.Component {
     }
 
     bpmRef = React.createRef()
+    fileRef = createRef()
 
 
     async componentDidMount() {
@@ -56,10 +57,30 @@ export default class extends React.Component {
     };
 
 
-    showXML = () => {
-        this.bpmnModeler.saveXML({format: true}).then(res => {
-            Modal.info({content: <pre style={{overflowX: "auto", height: '64vh'}}>{res.xml}</pre>, width: 1024})
-        })
+    handleExportXML = async () => {
+        const res = await this.bpmnModeler.saveXML({format: true});
+        const blob = new Blob([res.xml], {type: 'application/xml'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${this.state.model.key}.bpmn20.xml`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    handleImportXML = () => {
+        this.fileRef.current.click();
+    }
+
+    handleFileChange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            this.bpmnModeler.importXML(evt.target.result);
+        };
+        reader.readAsText(file);
+        e.target.value = '';
     }
 
 
@@ -95,7 +116,8 @@ export default class extends React.Component {
                          <Button type='primary' icon={<SaveOutlined/>} onClick={this.handleSave}>暂存</Button>
                          <Button type='primary' danger icon={<CloudUploadOutlined/>}
                                  onClick={this.handleDeploy}>部署</Button>
-                         <Button onClick={this.showXML}>XML</Button>
+                         <Button icon={<DownloadOutlined/>} onClick={this.handleExportXML}>导出XML</Button>
+                         <Button icon={<UploadOutlined/>} onClick={this.handleImportXML}>导入XML</Button>
                          <Button
                              onClick={() => PageUtils.open('/flowable/simulate?id=' + this.state.id, "流程仿真")}> 仿真 </Button>
 
@@ -115,6 +137,7 @@ export default class extends React.Component {
                 </Splitter.Panel>
             </Splitter>
 
+            <input ref={this.fileRef} type="file" accept=".xml" style={{display: 'none'}} onChange={this.handleFileChange}/>
 
             <Modal title='已部署版本' width={800} footer={null}
                    open={this.state.deployedModal}

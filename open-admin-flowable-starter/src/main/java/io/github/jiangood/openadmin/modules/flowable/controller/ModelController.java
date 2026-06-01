@@ -13,7 +13,7 @@ import io.github.jiangood.openadmin.framework.log.Log;
 import io.github.jiangood.openadmin.modules.flowable.domain.FormDefinition;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessVariable;
-import io.github.jiangood.openadmin.modules.flowable.dto.vo.ModelPageVO;
+import io.github.jiangood.openadmin.modules.flowable.model.ModelPageVO;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import static io.github.jiangood.openadmin.modules.flowable.common.utils.ModelTool.*;
 import io.github.jiangood.openadmin.modules.flowable.common.utils.FlowablePageTool;

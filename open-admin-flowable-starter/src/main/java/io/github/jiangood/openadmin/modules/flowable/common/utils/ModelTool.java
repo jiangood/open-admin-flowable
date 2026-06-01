@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.utils;
+package io.github.jiangood.openadmin.modules.flowable.common.utils;
 
 import cn.hutool.core.util.StrUtil;
 import io.github.jiangood.openadmin.util.SpringTool;

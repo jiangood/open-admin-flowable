@@ -5,7 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.CommentResponse;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.TaskResponse;
-import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
+import io.github.jiangood.openadmin.modules.flowable.common.utils.FlowablePageTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;

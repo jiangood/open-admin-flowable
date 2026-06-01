@@ -5,7 +5,7 @@ import io.github.jiangood.openadmin.modules.flowable.constant.FlowableConstants;
 import io.github.jiangood.openadmin.modules.flowable.dto.vo.ProcessDefinitionVO;
 import io.github.jiangood.openadmin.modules.flowable.dto.vo.ProcessInstanceVO;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.MonitorTaskResponse;
-import io.github.jiangood.openadmin.modules.flowable.utils.FlowablePageTool;
+import io.github.jiangood.openadmin.modules.flowable.common.utils.FlowablePageTool;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import lombok.AllArgsConstructor;
 import org.flowable.engine.HistoryService;

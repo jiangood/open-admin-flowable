@@ -1,6 +1,5 @@
-package io.github.jiangood.openadmin.modules.flowable.dto.request;
+package io.github.jiangood.openadmin.modules.flowable.common.dto;
 
-import io.github.jiangood.openadmin.modules.flowable.dto.TaskHandleType;
 import lombok.Data;
 
 import java.util.Map;

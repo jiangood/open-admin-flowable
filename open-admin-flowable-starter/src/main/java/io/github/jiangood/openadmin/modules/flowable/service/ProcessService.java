@@ -4,7 +4,7 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 import cn.hutool.core.util.StrUtil;
 import io.github.jiangood.openadmin.modules.flowable.config.FlowableProperties;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.dto.TaskHandleType;
+import io.github.jiangood.openadmin.modules.flowable.common.dto.TaskHandleType;
 import io.github.jiangood.openadmin.modules.flowable.listener.ProcessListener;
 import io.github.jiangood.openadmin.util.SpringTool;
 import lombok.AllArgsConstructor;

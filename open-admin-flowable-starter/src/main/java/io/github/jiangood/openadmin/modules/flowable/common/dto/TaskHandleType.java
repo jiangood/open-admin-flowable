@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.dto;
+package io.github.jiangood.openadmin.modules.flowable.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

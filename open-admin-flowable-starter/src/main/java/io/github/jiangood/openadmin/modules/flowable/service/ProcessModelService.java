@@ -1,7 +1,7 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.utils.ModelTool;
+import io.github.jiangood.openadmin.modules.flowable.common.utils.ModelTool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.bpmn.model.BpmnModel;

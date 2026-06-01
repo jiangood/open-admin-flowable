@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.utils;
+package io.github.jiangood.openadmin.modules.flowable.common.utils;
 
 import org.flowable.common.engine.api.query.Query;
 import org.springframework.data.domain.Page;

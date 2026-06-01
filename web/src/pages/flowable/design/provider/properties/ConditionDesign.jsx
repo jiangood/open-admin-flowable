@@ -132,8 +132,6 @@ export class ConditionDesignButton extends Component {
 
     componentDidMount() {
         const {processId} = this.props;
-        console.log('流程id', processId)
-
         HttpUtils.get('admin/flowable/model/varList', {code: processId}).then(rs => {
             const options = rs.map(r => {
                 return {

@@ -1,0 +1,9 @@
+menus:
+  - id: flowableExampleLeave
+    name: 请假示例
+    path: /example
+    icon: SendOutlined
+    seq: 20
+    perms:
+      - {name: 发起, code: flowableExample:start}
+      - {name: 查询, code: flowableExample:query}

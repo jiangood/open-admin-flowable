@@ -28,7 +28,8 @@
     "src/*",
     "!src/.umi",
     "!src/layout",
-    "!src/forms"
+    "!src/forms",
+    "!src/pages/example"
   ],
   "main": "src/index.ts",
   "scripts": {

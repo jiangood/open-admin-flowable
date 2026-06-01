@@ -10,6 +10,9 @@ export default class extends React.Component {
         startLoading: false,
         detail: null,
         detailOpen: false,
+        diagramOpen: false,
+        diagramImg: null,
+        diagramLoading: false,
     }
 
     componentDidMount() {
@@ -31,6 +34,19 @@ export default class extends React.Component {
         this.setState({detail, detailOpen: true});
     }
 
+    showDiagram = async (businessKey) => {
+        this.setState({diagramLoading: true, diagramOpen: true});
+        try {
+            const data = await HttpUtils.get('admin/flowable/user-task/getInstanceInfo', {businessKey});
+            this.setState({diagramImg: data.img});
+        } catch (e) {
+            message.error(e);
+            this.setState({diagramOpen: false});
+        } finally {
+            this.setState({diagramLoading: false});
+        }
+    }
+
     handleStart = async (values) => {
         this.setState({startLoading: true});
         try {
@@ -46,7 +62,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const {data, loading, startModal, startLoading, detail, detailOpen} = this.state;
+        const {data, loading, startModal, startLoading, detail, detailOpen, diagramOpen, diagramImg, diagramLoading} = this.state;
 
         const colorMap = {审批中: 'processing', 已通过: 'success', 已拒绝: 'error'};
 
@@ -61,7 +77,10 @@ export default class extends React.Component {
                 render: (v) => <Tag color={colorMap[v] || 'default'}>{v}</Tag>
             },
             {title: '操作', render: (_, record) => (
-                <Button size="small" onClick={() => this.showDetail(record.businessKey)}>查看</Button>
+                <Space>
+                    <Button size="small" onClick={() => this.showDetail(record.businessKey)}>查看</Button>
+                    <Button size="small" onClick={() => this.showDiagram(record.businessKey)}>查看流程图</Button>
+                </Space>
             )}
         ];
 
@@ -95,6 +114,15 @@ export default class extends React.Component {
                         <Button type="primary" htmlType="submit" loading={startLoading}>提交</Button>
                     </Form.Item>
                 </Form>
+            </Modal>
+
+            <Modal title="流程图" open={diagramOpen} width="70vw"
+                   onCancel={() => this.setState({diagramOpen: false})}
+                   footer={null} destroyOnClose>
+                <div style={{width: '100%', overflow: 'auto', maxHeight: '80vh'}}>
+                    {diagramLoading ? <div style={{textAlign: 'center', padding: 40}}>加载中...</div> :
+                        diagramImg && <img src={diagramImg} style={{maxWidth: '100%'}}/>}
+                </div>
             </Modal>
 
             <Modal title="请假详情" open={detailOpen}

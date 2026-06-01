@@ -17,8 +17,6 @@ import io.github.jiangood.openadmin.modules.flowable.utils.ModelTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
-import io.github.jiangood.openadmin.modules.flowable.FlowableConstants;
-import io.github.jiangood.openadmin.modules.flowable.FlowableTemplate;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessListener;
 import io.github.jiangood.openadmin.util.SpringTool;
 import lombok.AllArgsConstructor;
@@ -64,16 +62,6 @@ public class ProcessService {
     private final RepositoryService repositoryService;
     private final IdentityService identityService;
     private final ProcessMetaService processMetaService;
-    private final FlowableTemplate flowableTemplate;
-
-    public void start(String processDefinitionKey, String bizKey, Map<String, Object> variables) {
-        start(processDefinitionKey, bizKey, null, variables);
-    }
-
-    public void start(String key, String bizKey, String title, Map<String, Object> variables) {
-        flowableTemplate.startProcess(key, bizKey, title, variables);
-    }
-
     /**
      * 获取最新的历史流程实例
      * 根据业务键查询历史流程实例，并按开始时间降序排列，返回最近的一个流程实例

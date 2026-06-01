@@ -11,7 +11,7 @@ export default class extends React.Component {
         detail: null,
         detailOpen: false,
         diagramOpen: false,
-        diagramImg: null,
+        diagramData: null,
         diagramLoading: false,
     }
 
@@ -38,7 +38,7 @@ export default class extends React.Component {
         this.setState({diagramLoading: true, diagramOpen: true});
         try {
             const data = await HttpUtils.get('admin/flowable/user-task/getInstanceInfo', {businessKey});
-            this.setState({diagramImg: data.img});
+            this.setState({diagramData: data});
         } catch (e) {
             message.error(e);
             this.setState({diagramOpen: false});
@@ -62,7 +62,7 @@ export default class extends React.Component {
     }
 
     render() {
-        const {data, loading, startModal, startLoading, detail, detailOpen, diagramOpen, diagramImg, diagramLoading} = this.state;
+        const {data, loading, startModal, startLoading, detail, detailOpen, diagramOpen, diagramData, diagramLoading} = this.state;
 
         const colorMap = {审批中: 'processing', 已通过: 'success', 已拒绝: 'error'};
 
@@ -119,10 +119,19 @@ export default class extends React.Component {
             <Modal title="流程图" open={diagramOpen} width="70vw"
                    onCancel={() => this.setState({diagramOpen: false})}
                    footer={null} destroyOnClose>
-                <div style={{width: '100%', overflow: 'auto', maxHeight: '80vh'}}>
-                    {diagramLoading ? <div style={{textAlign: 'center', padding: 40}}>加载中...</div> :
-                        diagramImg && <img src={diagramImg} style={{maxWidth: '100%'}}/>}
-                </div>
+                {diagramLoading ? <div style={{textAlign: 'center', padding: 40}}>加载中...</div> : diagramData && <>
+                    <Descriptions bordered column={2} size="small" style={{marginBottom: 16}}>
+                        <Descriptions.Item label="流程名称">{diagramData.name}</Descriptions.Item>
+                        <Descriptions.Item label="业务编号">{diagramData.businessKey}</Descriptions.Item>
+                        <Descriptions.Item label="发起人">{diagramData.starter}</Descriptions.Item>
+                        <Descriptions.Item label="发起时间">{diagramData.startTime}</Descriptions.Item>
+                        <Descriptions.Item label="流程实例ID">{diagramData.id}</Descriptions.Item>
+                        <Descriptions.Item label="流程定义Key">{diagramData.processDefinitionKey}</Descriptions.Item>
+                    </Descriptions>
+                    <div style={{width: '100%', overflow: 'auto', maxHeight: '60vh'}}>
+                        <img src={diagramData.img} style={{maxWidth: '100%'}}/>
+                    </div>
+                </>}
             </Modal>
 
             <Modal title="请假详情" open={detailOpen}

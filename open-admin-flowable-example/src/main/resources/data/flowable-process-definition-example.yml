@@ -5,12 +5,19 @@ definitions:
     listener: io.github.jiangood.openadmin.modules.flowable.example.LeaveProcessListener
 
     variables:
+      - name: "reason"
+        label: "请假事由"
+        required: true
       - name: "days"
-        label: "请假天数"
+        label: "申请天数"
         value-type: number
         required: true
-      - name: "reason"
-        label: "请假原因"
+      - name: "actualDays"
+        label: "实际批假天数"
+        value-type: number
+        required: true
+      - name: "leaveType"
+        label: "请假类型"
         required: true
 
     # 流程中各个节点对应的表单定义

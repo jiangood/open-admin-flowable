@@ -1,5 +1,8 @@
 # open-admin-flowable
 
+![Maven Central](https://img.shields.io/maven-central/v/io.github.jiangood/open-admin-flowable-starter)
+![npm](https://img.shields.io/npm/v/@jiangood/open-admin-flowable)
+
 open-admin 的 Flowable BPMN 2.0 工作流引擎插件，提供流程设计、部署、审批、监控等完整功能。
 
 ## Maven 引入

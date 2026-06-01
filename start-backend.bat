@@ -7,7 +7,7 @@ echo.
 cd /d "%~dp0"
 
 echo [INFO] Step 1: Clean and compile...
-call mvnw clean compile -DskipTests -q
+call mvnw clean install -DskipTests -q
 if %errorlevel% neq 0 (
     echo [ERROR] Compilation failed, aborting.
     pause

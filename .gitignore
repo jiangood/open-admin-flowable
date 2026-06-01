@@ -43,3 +43,7 @@ data/rsa-key
 *.bak
 *.png
 web/dist/
+
+# App runtime
+open-admin-flowable-app/data/
+open-admin-flowable-app/logs/

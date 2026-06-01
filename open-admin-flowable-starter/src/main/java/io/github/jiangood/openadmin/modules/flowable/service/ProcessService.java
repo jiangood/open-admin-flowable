@@ -255,7 +255,11 @@ public class ProcessService {
                             .processInstanceId(processInstanceId).singleResult();
                     String initiator = instance.getStartUserId();
                     String businessKey = instance.getBusinessKey();
-                    listener.onFormSubmit(initiator, userId, businessKey, formData);
+                    String formKey = task.getFormKey();
+                    if (formKey == null) {
+                        formKey = (String) task.getProcessVariables().get("GLOBAL_FORM_KEY");
+                    }
+                    listener.onFormSubmit(formKey, formData, initiator, userId, businessKey, processInstanceId, taskId, comment);
                 }
             }
             comment = "【" + task.getName() + "】：" + result.getMessage() + "。" + comment;

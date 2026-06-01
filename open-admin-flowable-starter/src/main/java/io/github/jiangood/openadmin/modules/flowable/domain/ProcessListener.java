@@ -20,7 +20,7 @@ public interface ProcessListener {
     @Transactional
     void onProcessEvent(ProcessEventType type, String initiator, String businessKey, Map<String, Object> variables);
 
-    default void onFormSubmit(String initiator, String approver, String businessKey, Map<String, Object> formData) {
+    default void onFormSubmit(String formKey, Map<String, Object> formData, String initiator, String approver, String businessKey, String processInstanceId, String taskId, String comment) {
     }
 
 }

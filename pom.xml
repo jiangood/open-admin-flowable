@@ -33,7 +33,7 @@
 
     <modules>
         <module>open-admin-flowable-starter</module>
-        <module>open-admin-flowable-app</module>
+        <module>open-admin-flowable-example</module>
     </modules>
 
     <properties>

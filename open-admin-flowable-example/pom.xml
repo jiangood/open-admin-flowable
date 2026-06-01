@@ -8,8 +8,8 @@
         <artifactId>open-admin-flowable</artifactId>
         <version>2.0.2</version>
     </parent>
-    <artifactId>open-admin-flowable-app</artifactId>
-    <name>Admin Flowable Spring Boot App</name>
+    <artifactId>open-admin-flowable-example</artifactId>
+    <name>Admin Flowable Example App</name>
     <description>Flowable process engine development app</description>
 
     <dependencies>

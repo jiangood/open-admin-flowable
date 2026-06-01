@@ -6,11 +6,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Backend (Spring Boot 4.0.6 / Java 21 / Flowable 8.0.0)
 ```bash
-mvnw spring-boot:run -pl open-admin-flowable-app  # Start on port 8082, context-path: /process
+mvnw spring-boot:run -pl open-admin-flowable-example  # Start on port 8082, context-path: /process
 mvnw clean install                    # Build all modules
 mvnw clean install -pl open-admin-flowable-starter -Ppublish  # Build and publish starter to Maven Central
 ```
-Required: MySQL database `open-admin-process` on localhost:3306. DB config in `open-admin-flowable-app/src/main/resources/application.yml`.
+Required: MySQL database `open-admin-process` on localhost:3306. DB config in `open-admin-flowable-example/src/main/resources/application.yml`.
 
 ### Frontend (UmiJS 4 / React 19 / Ant Design 6)
 ```bash
@@ -27,7 +27,7 @@ A **Flowable BPMN 2.0 workflow engine plugin** for the `open-admin` framework. S
 ### Backend — two Maven modules
 
 - `open-admin-flowable-starter` — library published to Maven Central (`io.github.jiangood:open-admin-flowable-starter`)
-- `open-admin-flowable-app` — runnable Spring Boot app for local development (not published)
+- `open-admin-flowable-example` — runnable Spring Boot app for local development (not published)
 
 Flowable engine integration layered as a Spring Boot auto-configuration module:
 
@@ -89,7 +89,7 @@ All under prefix (configured in `.env` `SERVLET_CONTEXT=/process`):
 - `admin/flowable/monitor/...` — Admin monitoring (definitions, instances, tasks, close)
 - `admin/flowable/test/...` — Test endpoints
 
-### Example Files (in `open-admin-flowable-app` only)
+### Example Files (in `open-admin-flowable-example` only)
 - `LeaveProcessListener` — `ProcessListener` implementation for leave-request workflow
 - `DemoDelegate`, `DemoDelegate2` — `JavaDelegate` beans for service tasks
 - `flowable-process-definition-example.yml` — Example YAML process definition

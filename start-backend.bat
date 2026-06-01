@@ -10,6 +10,6 @@ echo [INFO] Compiling and starting Spring Boot backend...
 echo [INFO] Port: 8082  context-path: /process
 echo.
 
-mvnw spring-boot:run -pl open-admin-flowable-app
+mvnw spring-boot:run -pl open-admin-flowable-example
 
 pause

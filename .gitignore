@@ -45,5 +45,7 @@ data/rsa-key
 web/dist/
 
 # App runtime
-open-admin-flowable-app/data/
-open-admin-flowable-app/logs/
+open-admin-flowable-example/data/
+open-admin-flowable-example/logs/
+*.log
+*.err.log

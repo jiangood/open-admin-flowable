@@ -170,7 +170,7 @@ open-admin-flowable/
 │       ├── service/                     # 内部业务服务层
 │       ├── controller/                  # REST 控制器
 │       └── utils/                       # 工具类
-└── open-admin-flowable-app/             # 本地开发应用
+└── open-admin-flowable-example/             # 本地开发应用
     ├── pom.xml
     └── src/main/java/.../
         ├── ProcessBootApplication.java  # 启动入口

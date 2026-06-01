@@ -56,7 +56,6 @@ public class MonitorService {
 
     public Page<ProcessInstanceVO> findProcessInstancePage(Pageable pageable) {
         ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery();
-        query.variableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true");
         Page<ProcessInstance> page = FlowablePageTool.queryPage(query, pageable);
         return page.map(ProcessInstanceVO::from);
     }
@@ -88,9 +87,6 @@ public class MonitorService {
             query = processService.buildUserTodoTaskQuery(assignee);
         }
         query.orderByTaskCreateTime().desc();
-        if (StrUtil.isEmpty(assignee)) {
-            query.processVariableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true");
-        }
         Page<Task> taskPage = FlowablePageTool.queryPage(query, pageable);
         List<Task> list = taskPage.getContent();
 

@@ -78,7 +78,6 @@ public class UserTaskController {
 
         HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery();
         query.startedBy(loginUser.getId());
-        query.variableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true");
 
 
         query.orderByProcessInstanceStartTime().desc();

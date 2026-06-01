@@ -200,7 +200,6 @@ public class ProcessService {
                 .taskAssignee(userId)
                 .finished()
                 .includeProcessVariables()
-                .processVariableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true")
                 .orderByHistoricTaskInstanceEndTime().desc();
 
 
@@ -365,9 +364,6 @@ public class ProcessService {
             }
         }
         query.endOr();
-
-        // 过滤仿真实例
-        query.processVariableValueNotEquals(FlowableConstants.VAR_SIMULATION, "true");
 
         query.orderByTaskCreateTime().desc();
 

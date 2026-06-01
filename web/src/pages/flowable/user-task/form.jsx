@@ -1,5 +1,6 @@
 import React from "react";
-import {Button, Card, Empty, Form, Input, message, Modal, Radio, Spin, Splitter, Table, Tabs, Typography,} from "antd";
+import {Button, Card, Empty, Form, Input, message, Radio, Spin, Splitter, Table, Tabs, Typography,} from "antd";
+import ProcessImageViewer from "@/components/ProcessImageViewer";
 import {history} from "umi";
 import {FormRegistryUtils, Gap, HttpUtils, Page, PageUtils} from "@jiangood/open-admin";
 import {FormOutlined, ShareAltOutlined} from "@ant-design/icons";
@@ -41,16 +42,6 @@ export default class extends React.Component {
 
 
     }
-
-    onImgClick = () => {
-        Modal.info({
-            title: '流程图',
-            width: '70vw',
-            content: <div style={{width: '100%', overflow: 'auto', maxHeight: '80vh'}}>
-                <img src={this.state.data.img}/>
-            </div>
-        })
-    };
 
 
     handleTask = async value => {
@@ -140,8 +131,7 @@ export default class extends React.Component {
     }
 
     renderProcess = (img, commentList) => <Card title='处理记录'>
-        <img src={img} style={{maxWidth: '100%'}}
-             onClick={this.onImgClick}/>
+        <ProcessImageViewer imageUrl={img}/>
         <Gap></Gap>
         <Table dataSource={commentList}
 

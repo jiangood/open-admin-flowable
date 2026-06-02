@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.service;
+package io.github.jiangood.openadmin.modules.flowable.diagram;
 
 
 import io.github.jiangood.openadmin.util.FontTool;

@@ -1,7 +1,7 @@
-package io.github.jiangood.openadmin.modules.flowable.controller;
+package io.github.jiangood.openadmin.modules.flowable.simulate;
 
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
-import io.github.jiangood.openadmin.modules.flowable.service.SimulateService;
+import io.github.jiangood.openadmin.modules.flowable.simulate.SimulateService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

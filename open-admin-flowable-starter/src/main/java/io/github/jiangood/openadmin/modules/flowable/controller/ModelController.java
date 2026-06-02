@@ -2,7 +2,7 @@ package io.github.jiangood.openadmin.modules.flowable.controller;
 
 import io.github.jiangood.openadmin.framework.log.Log;
 import io.github.jiangood.openadmin.modules.flowable.dto.ModelPageResp;
-import io.github.jiangood.openadmin.modules.flowable.dto.ModelRequest;
+
 import io.github.jiangood.openadmin.modules.flowable.service.ModelService;
 import io.github.jiangood.openadmin.modules.flowable.service.ModelOptionsService;
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
@@ -94,5 +94,8 @@ public class ModelController {
     @GetMapping("getDefinitionContent")
     public AjaxResult getDefinitionContent(String id) {
         return AjaxResult.ok().data(modelService.getDefinitionContent(id));
+    }
+
+    public record ModelRequest(String id, String content) {
     }
 }

@@ -2,7 +2,7 @@ package io.github.jiangood.openadmin.modules.flowable.controller;
 
 import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.framework.log.Log;
-import io.github.jiangood.openadmin.modules.flowable.dto.SetAssigneeRequest;
+
 import io.github.jiangood.openadmin.modules.flowable.service.MonitorService;
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
 import jakarta.validation.Valid;
@@ -61,5 +61,10 @@ public class MonitorController {
     public AjaxResult setAssignee(@Valid @RequestBody SetAssigneeRequest request) {
         monitorService.setTaskAssignee(request.taskId(), request.assignee());
         return AjaxResult.ok().msg("set assignee success");
+    }
+
+    public record SetAssigneeRequest(
+            @jakarta.validation.constraints.NotBlank String taskId,
+            @jakarta.validation.constraints.NotBlank String assignee) {
     }
 }

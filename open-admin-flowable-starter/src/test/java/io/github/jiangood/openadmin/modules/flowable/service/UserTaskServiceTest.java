@@ -1,8 +1,9 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
-import io.github.jiangood.openadmin.modules.flowable.task.CommentResponse;
-import io.github.jiangood.openadmin.modules.flowable.task.UserTaskService;
+import io.github.jiangood.openadmin.modules.flowable.dto.CommentResp;
+import io.github.jiangood.openadmin.modules.flowable.service.BpmnDiagramService;
+import io.github.jiangood.openadmin.modules.flowable.service.UserTaskService;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
@@ -174,13 +175,13 @@ class UserTaskServiceTest {
             assertNotNull(result.get("img"));
 
             @SuppressWarnings("unchecked")
-            List<CommentResponse> comments = (List<CommentResponse>) result.get("commentList");
+            List<CommentResp> comments = (List<CommentResp>) result.get("commentList");
             assertEquals(1, comments.size());
             assertEquals("同意", comments.getFirst().getContent());
             assertEquals("张三", comments.getFirst().getUser());
 
             @SuppressWarnings("unchecked")
-            List<CommentResponse> instanceComments = (List<CommentResponse>) result.get("instanceCommentList");
+            List<CommentResp> instanceComments = (List<CommentResp>) result.get("instanceCommentList");
             assertSame(comments, instanceComments);
         }
 

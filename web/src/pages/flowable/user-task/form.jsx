@@ -1,9 +1,7 @@
 import React from "react";
-import {Button, Card, Empty, Form, Input, message, Radio, Spin, Splitter, Table, Tabs, Typography} from "antd";
+import {Button, Card, Empty, Form, Input, message, Radio, Spin, Splitter, Table, Typography} from "antd";
 import ProcessImageViewer from "@/components/ProcessImageViewer";
-import {history} from "umi";
 import {FormRegistryUtils, Gap, HttpUtils, Page, PageUtils} from "@jiangood/open-admin";
-import {FormOutlined, ShareAltOutlined} from "@ant-design/icons";
 import {USER_TASK_GET_INSTANCE_INFO_BY_TASK_ID, USER_TASK_HANDLE_TASK} from "@/constants/api";
 
 export default class extends React.Component {
@@ -79,25 +77,9 @@ export default class extends React.Component {
                     <Typography.Title level={4}>{data.name}</Typography.Title>
                     <Typography.Text type="secondary">{data.starter} &nbsp;&nbsp; {data.startTime}</Typography.Text>
                     <Gap></Gap>
-                    <Tabs
-                        items={[
-                            {
-                                key: '1',
-                                label: '表单',
-                                icon: <FormOutlined/>,
-                                children: this.renderForm()
-                            },
-                            {
-                                key: '2',
-                                label: '流程图',
-                                icon: <ShareAltOutlined/>,
-                                children: this.renderProcess(img, commentList)
-                            }
-                        ]}>
-
-                    </Tabs>
+                    {this.renderForm()}
                 </Splitter.Panel>
-                <Splitter.Panel defaultSize={400}>
+                <Splitter.Panel>
                     <Card title='审批意见'>
                         <Form
                             layout='vertical'
@@ -122,6 +104,8 @@ export default class extends React.Component {
                             </div>
                         </Form>
                     </Card>
+                    <Gap></Gap>
+                    {this.renderProcess(img, commentList)}
                 </Splitter.Panel>
 
             </Splitter>

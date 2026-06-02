@@ -3,7 +3,7 @@ package io.github.jiangood.openadmin.modules.flowable.example.controller;
 import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.example.entity.LeaveApply;
 import io.github.jiangood.openadmin.modules.flowable.example.service.LeaveApplyService;
-import io.github.jiangood.openadmin.modules.flowable.process.FlowableTemplate;
+import io.github.jiangood.openadmin.modules.flowable.FlowableTemplate;
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

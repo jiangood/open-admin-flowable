@@ -13,5 +13,9 @@ export default function ProcessImageViewer({ imageUrl }) {
     });
   };
 
-  return <a onClick={show}>查看流程图</a>;
+  return (
+    <div onClick={show} style={{ cursor: 'pointer', border: '1px solid #d9d9d9', borderRadius: 8, padding: 8, background: '#fafafa' }}>
+      <img src={imageUrl} style={{ maxWidth: '100%', maxHeight: 200, display: 'block', margin: '0 auto' }} />
+    </div>
+  );
 }

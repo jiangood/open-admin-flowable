@@ -1,9 +1,9 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
 import io.github.jiangood.openadmin.framework.config.OpenLifecycle;
-import io.github.jiangood.openadmin.modules.flowable.process.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.process.ProcessMetaService;
-import io.github.jiangood.openadmin.modules.flowable.model.ProcessModelService;
+import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
+import io.github.jiangood.openadmin.modules.flowable.service.ProcessModelService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

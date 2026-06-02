@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.service;
+package io.github.jiangood.openadmin.modules.flowable.model;
 
 import io.github.jiangood.openadmin.modules.flowable.process.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.common.utils.ModelTool;

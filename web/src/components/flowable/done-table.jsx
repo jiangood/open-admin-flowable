@@ -16,7 +16,7 @@ const columns = [
     {
         title: '操作', dataIndex: 'option',
         render: (_, record) => (
-            <Button size='small' onClick={() => PageUtils.open(ROUTE_USER_INSTANCE_VIEW + '?id=' + record.id, '流程信息')}>查看</Button>
+            <Button size='small' onClick={() => PageUtils.open(ROUTE_USER_INSTANCE_VIEW + '?id=' + record.instanceId, '流程信息')}>查看</Button>
         ),
     },
 ];

@@ -2,7 +2,8 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.framework.data.specification.Spec;
 import io.github.jiangood.openadmin.modules.flowable.constant.FlowableConstants;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMetaService;
 import io.github.jiangood.openadmin.util.ImgTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;

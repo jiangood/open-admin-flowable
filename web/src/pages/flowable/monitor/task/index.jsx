@@ -1,6 +1,7 @@
 import {FieldUserSelect, HttpUtils, Page, ProTable} from "@jiangood/open-admin";
-import {Button, Form, Modal} from "antd";
+import {Button, Form, message, Modal} from "antd";
 import React from "react";
+import {MONITOR_SET_ASSIGNEE, MONITOR_TASK} from "@/constants/api";
 
 export default class extends React.Component {
 
@@ -18,9 +19,11 @@ export default class extends React.Component {
     };
 
     submitSetAssignee = values => {
-        HttpUtils.post('admin/flowable/monitor/setAssignee',values).then(()=>{
+        HttpUtils.post(MONITOR_SET_ASSIGNEE,values).then(()=>{
             this.setState({assigneeFormOpen:false})
             this.taskTableRef.current.reload()
+        }).catch(e => {
+            message.error(e?.message || '指定处理人失败');
         })
     };
     render() {
@@ -72,7 +75,7 @@ export default class extends React.Component {
                         }
                     }
                 ]}
-                request={(params) => HttpUtils.get('admin/flowable/monitor/task', params)}
+                request={(params) => HttpUtils.get(MONITOR_TASK, params)}
             >
                 <Form.Item label='受理人' name='assignee'>
                     <FieldUserSelect />

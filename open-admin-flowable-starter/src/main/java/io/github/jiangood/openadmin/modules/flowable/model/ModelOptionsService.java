@@ -1,10 +1,10 @@
 package io.github.jiangood.openadmin.modules.flowable.model;
 
 import io.github.jiangood.openadmin.framework.data.specification.Spec;
-import io.github.jiangood.openadmin.modules.flowable.domain.FormDefinition;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessVariable;
-import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
+import io.github.jiangood.openadmin.modules.flowable.process.FormDefinition;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessVariable;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMetaService;
 import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysRoleService;

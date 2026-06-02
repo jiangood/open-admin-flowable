@@ -1,6 +1,6 @@
-package io.github.jiangood.openadmin.modules.flowable.service;
+package io.github.jiangood.openadmin.modules.flowable.process;
 
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMeta;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.bind.Bindable;

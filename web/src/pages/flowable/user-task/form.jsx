@@ -1,9 +1,10 @@
 import React from "react";
-import {Button, Card, Empty, Form, Input, message, Radio, Spin, Splitter, Table, Tabs, Typography,} from "antd";
+import {Button, Card, Empty, Form, Input, message, Radio, Spin, Splitter, Table, Tabs, Typography} from "antd";
 import ProcessImageViewer from "@/components/ProcessImageViewer";
 import {history} from "umi";
 import {FormRegistryUtils, Gap, HttpUtils, Page, PageUtils} from "@jiangood/open-admin";
 import {FormOutlined, ShareAltOutlined} from "@ant-design/icons";
+import {USER_TASK_GET_INSTANCE_INFO_BY_TASK_ID, USER_TASK_HANDLE_TASK} from "@/constants/api";
 
 export default class extends React.Component {
 
@@ -32,9 +33,10 @@ export default class extends React.Component {
         const {taskId} = PageUtils.currentParams()
 
 
-        HttpUtils.get("admin/flowable/user-task/getInstanceInfoByTaskId", {taskId}).then(rs => {
+        HttpUtils.get(USER_TASK_GET_INSTANCE_INFO_BY_TASK_ID, {taskId}).then(rs => {
             this.setState({data: rs})
         }).catch(e => {
+            message.error(e?.message || '获取任务信息失败');
             this.setState({errorMsg: e})
         }).finally(() => {
             this.setState({loading: false})
@@ -51,11 +53,11 @@ export default class extends React.Component {
                 value.formData = this.state.formData
             }
             value.taskId = this.state.data.taskId
-            await HttpUtils.post("admin/flowable/user-task/handleTask", value)
+            await HttpUtils.post(USER_TASK_HANDLE_TASK, value)
 
             PageUtils.closeCurrent()
         } catch (error) {
-            message.error(error)
+            message.error(error?.message || '操作失败')
         } finally {
             this.setState({submitLoading: false})
         }

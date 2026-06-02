@@ -1,11 +1,13 @@
-package io.github.jiangood.openadmin.modules.flowable.service;
+package io.github.jiangood.openadmin.modules.flowable.process;
 
 
 import cn.hutool.core.util.StrUtil;
 import io.github.jiangood.openadmin.modules.flowable.config.FlowableProperties;
-import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.common.dto.TaskHandleType;
+import io.github.jiangood.openadmin.modules.flowable.service.BpmnDiagramService;
 import io.github.jiangood.openadmin.modules.flowable.listener.ProcessListener;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessMetaService;
 import io.github.jiangood.openadmin.util.SpringTool;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

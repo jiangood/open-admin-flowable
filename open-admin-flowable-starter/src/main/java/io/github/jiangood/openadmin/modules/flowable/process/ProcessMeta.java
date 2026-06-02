@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.domain;
+package io.github.jiangood.openadmin.modules.flowable.process;
 
 import io.github.jiangood.openadmin.modules.flowable.listener.ProcessListener;
 import lombok.Data;

@@ -5,7 +5,7 @@ import io.github.jiangood.openadmin.util.dto.AjaxResult;
 import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.common.dto.HandleTaskRequest;
 import io.github.jiangood.openadmin.modules.flowable.dto.response.TaskResponse;
-import io.github.jiangood.openadmin.modules.flowable.service.ProcessService;
+import io.github.jiangood.openadmin.modules.flowable.process.ProcessService;
 import io.github.jiangood.openadmin.modules.flowable.service.UserTaskService;
 import lombok.AllArgsConstructor;
 import org.flowable.engine.history.HistoricProcessInstance;

@@ -1,6 +1,7 @@
 import {Form, Radio} from "antd";
 import {FieldRemoteSelect, FieldRemoteSelectMultipleInline, StringUtils} from "@jiangood/open-admin";
 import React from "react";
+import {MODEL_ASSIGNEE_OPTIONS, MODEL_CANDIDATE_GROUPS_OPTIONS, MODEL_CANDIDATE_USERS_OPTIONS} from "@/constants/api";
 
 export default function AssignmentSection(props) {
     const {element, modeling} = props
@@ -56,17 +57,17 @@ export default function AssignmentSection(props) {
               }}>
             {mode === 'assignee' && (
                 <Form.Item label="办理人" name='assignee'>
-                    <FieldRemoteSelect url='admin/flowable/model/assigneeOptions'/>
+                    <FieldRemoteSelect url={MODEL_ASSIGNEE_OPTIONS}/>
                 </Form.Item>
             )}
             {mode === 'candidateGroups' && (
                 <Form.Item label="候选组" name='candidateGroups'>
-                    <FieldRemoteSelect url='admin/flowable/model/candidateGroupsOptions'/>
+                    <FieldRemoteSelect url={MODEL_CANDIDATE_GROUPS_OPTIONS}/>
                 </Form.Item>
             )}
             {mode === 'candidateUsers' && (
                 <Form.Item label="候选人" name='candidateUsers'>
-                    <FieldRemoteSelectMultipleInline url='admin/flowable/model/candidateUsersOptions'/>
+                    <FieldRemoteSelectMultipleInline url={MODEL_CANDIDATE_USERS_OPTIONS}/>
                 </Form.Item>
             )}
         </Form>

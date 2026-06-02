@@ -1,12 +1,12 @@
-package io.github.jiangood.openadmin.modules.flowable.controller;
+package io.github.jiangood.openadmin.modules.flowable.task;
 
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
 import io.github.jiangood.openadmin.util.dto.AjaxResult;
 import io.github.jiangood.openadmin.framework.auth.LoginTool;
 import io.github.jiangood.openadmin.modules.flowable.common.dto.HandleTaskRequest;
-import io.github.jiangood.openadmin.modules.flowable.dto.response.TaskResponse;
+import io.github.jiangood.openadmin.modules.flowable.task.TaskResponse;
 import io.github.jiangood.openadmin.modules.flowable.process.ProcessService;
-import io.github.jiangood.openadmin.modules.flowable.service.UserTaskService;
+import io.github.jiangood.openadmin.modules.flowable.task.UserTaskService;
 import lombok.AllArgsConstructor;
 import org.flowable.engine.history.HistoricProcessInstance;
 import org.springframework.data.domain.Page;

@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.dto.vo;
+package io.github.jiangood.openadmin.modules.flowable.monitor;
 
 import org.flowable.engine.runtime.ProcessInstance;
 

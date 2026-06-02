@@ -1,6 +1,8 @@
 import React from "react";
 import {Button, Descriptions, Form, Input, InputNumber, message, Modal, Select, Space, Table, Tag} from "antd";
 import {HttpUtils, Page} from "@jiangood/open-admin";
+import {EXAMPLE_LEAVE_LIST, EXAMPLE_LEAVE_DETAIL, EXAMPLE_LEAVE_START} from "@/constants/api";
+import {USER_TASK_GET_INSTANCE_INFO} from "@/constants/api";
 
 export default class extends React.Component {
     state = {
@@ -22,7 +24,7 @@ export default class extends React.Component {
     loadList = async () => {
         this.setState({loading: true});
         try {
-            const data = await HttpUtils.get('admin/flowable/example/leave/list');
+            const data = await HttpUtils.get(EXAMPLE_LEAVE_LIST);
             this.setState({data: Array.isArray(data) ? data : []});
         } finally {
             this.setState({loading: false});
@@ -30,17 +32,17 @@ export default class extends React.Component {
     }
 
     showDetail = async (businessKey) => {
-        const detail = await HttpUtils.get('admin/flowable/example/leave/detail', {businessKey});
+        const detail = await HttpUtils.get(EXAMPLE_LEAVE_DETAIL, {businessKey});
         this.setState({detail, detailOpen: true});
     }
 
     showDiagram = async (businessKey) => {
         this.setState({diagramLoading: true, diagramOpen: true});
         try {
-            const data = await HttpUtils.get('admin/flowable/user-task/getInstanceInfo', {businessKey});
+            const data = await HttpUtils.get(USER_TASK_GET_INSTANCE_INFO, {businessKey});
             this.setState({diagramData: data});
         } catch (e) {
-            message.error(e);
+            message.error(e?.message || '加载失败');
             this.setState({diagramOpen: false});
         } finally {
             this.setState({diagramLoading: false});
@@ -50,12 +52,12 @@ export default class extends React.Component {
     handleStart = async (values) => {
         this.setState({startLoading: true});
         try {
-            await HttpUtils.post('admin/flowable/example/leave/start', values);
+            await HttpUtils.post(EXAMPLE_LEAVE_START, values);
             message.success('发起成功');
             this.setState({startModal: false});
             this.loadList();
         } catch (e) {
-            message.error(e);
+            message.error(e?.message || '发起失败');
         } finally {
             this.setState({startLoading: false});
         }

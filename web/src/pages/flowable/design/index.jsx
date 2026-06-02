@@ -10,6 +10,8 @@ import customTranslate from "./customTranslate/customTranslate";
 import contextPad from "./contextPad";
 import {CloudUploadOutlined, DownloadOutlined, SaveOutlined, UploadOutlined} from "@ant-design/icons";
 import {HttpUtils, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
+import {MODEL_DETAIL, MODEL_SAVE_CONTENT, MODEL_DEPLOY, MODEL_GET_DEFINITION_CONTENT, MODEL_DEFINITION_PAGE} from "@/constants/api";
+import {ROUTE_SIMULATE} from "@/constants/routes";
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import flowableJson from './descriptors/flowable';
 import PropertiesPanel from './PropertiesPanel';
@@ -30,7 +32,7 @@ export default class extends React.Component {
 
     async componentDidMount() {
         const params = PageUtils.currentParams()
-        const rs = await HttpUtils.get('admin/flowable/model/detail', {id: params.id})
+        const rs = await HttpUtils.get(MODEL_DETAIL, {id: params.id})
         this.setState({model: rs, id: params.id}, this.initBpmn)
     }
 
@@ -89,7 +91,7 @@ export default class extends React.Component {
         const hide = message.loading('正在保存...', 0)
         try {
             const res = await this.bpmnModeler.saveXML();
-            await HttpUtils.post('admin/flowable/model/saveContent', {id, content: res.xml});
+            await HttpUtils.post(MODEL_SAVE_CONTENT, {id, content: res.xml});
         } finally {
             hide()
         }
@@ -100,7 +102,7 @@ export default class extends React.Component {
         const hide = message.loading('正在部署...', 0)
         try {
             const res = await this.bpmnModeler.saveXML();
-            await HttpUtils.post('admin/flowable/model/deploy', {id, content: res.xml});
+            await HttpUtils.post(MODEL_DEPLOY, {id, content: res.xml});
         } finally {
             hide()
         }
@@ -119,7 +121,7 @@ export default class extends React.Component {
                          <Button icon={<DownloadOutlined/>} onClick={this.handleExportXML}>导出XML</Button>
                          <Button icon={<UploadOutlined/>} onClick={this.handleImportXML}>导入XML</Button>
                          <Button
-                             onClick={() => PageUtils.open('/flowable/simulate?id=' + this.state.id, "流程仿真")}> 仿真 </Button>
+                             onClick={() => PageUtils.open(ROUTE_SIMULATE + '?id=' + this.state.id, "流程仿真")}> 仿真 </Button>
 
                          <Button title='查看已部署的历史版本' onClick={() => {
                              this.setState({deployedModal: true})
@@ -162,7 +164,7 @@ export default class extends React.Component {
                             dataIndex:'id',
                             render:(_, record)=> {
                                 return <Button type='primary' onClick={()=>{
-                                    HttpUtils.get('admin/flowable/model/getDefinitionContent',{id: record.id}).then(xml=>{
+                                    HttpUtils.get(MODEL_GET_DEFINITION_CONTENT,{id: record.id}).then(xml=>{
                                         this.bpmnModeler.importXML(xml)
                                         this.setState({deployedModal:false})
                                     })
@@ -172,7 +174,7 @@ export default class extends React.Component {
                     ]}
                     request={params => {
                         params.key = this.state.model.key
-                        return HttpUtils.get('admin/flowable/model/definitionPage', params)
+                        return HttpUtils.get(MODEL_DEFINITION_PAGE, params)
                     }}>
 
                 </ProTable>

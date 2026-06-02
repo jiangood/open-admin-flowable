@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.dto.response;
+package io.github.jiangood.openadmin.modules.flowable.task;
 
 import lombok.Data;
 import org.apache.commons.lang3.time.DateFormatUtils;

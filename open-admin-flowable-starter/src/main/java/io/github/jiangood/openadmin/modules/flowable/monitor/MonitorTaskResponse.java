@@ -1,4 +1,4 @@
-package io.github.jiangood.openadmin.modules.flowable.dto.response;
+package io.github.jiangood.openadmin.modules.flowable.monitor;
 
 
 import lombok.Data;

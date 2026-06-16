@@ -51,7 +51,7 @@ flowableTemplate.startProcess("leave_request", bizId, "请假-张三", vars);
 
 ### 流程定义
 
-在 `src/main/resources/data/` 下创建 `flowable-process-definition-*.yml` 文件定义流程：
+在 `src/main/resources/data/` 下创建 `flowable-*.yml` 文件定义流程：
 
 ```yaml
 definitions:
@@ -77,7 +77,7 @@ definitions:
 
 #### 1. YAML 定义表单元数据
 
-在 `flowable-process-definition-*.yml` 的 `forms` 列表中配置：
+在 `flowable-*.yml` 的 `forms` 列表中配置：
 
 ```yaml
 definitions:

@@ -54,14 +54,6 @@
         <profile>
             <id>publish</id>
             <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <excludes>
-                            <exclude>data/flowable-process-definition-example.yml</exclude>
-                        </excludes>
-                    </resource>
-                </resources>
                 <plugins>
                     <!-- 展平 POM，移除父引用（父 POM 不上传 Central） -->
                     <plugin>

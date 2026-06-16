@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @Component
 public class ProcessMetaService {
 
-    private static final String PROCESS_DEFINITION_PATTERN = "classpath*:data/flowable-process-definition*.yml";
+    private static final String PROCESS_DEFINITION_PATTERN = "classpath*:data/flowable-*.yml";
 
     private Map<String, ProcessMeta> cache;
 
@@ -36,7 +36,7 @@ public class ProcessMetaService {
             var resolver = new PathMatchingResourcePatternResolver();
             var resources = resolver.getResources(PROCESS_DEFINITION_PATTERN);
             if (resources.length == 0) {
-                throw new IllegalStateException("未找到 flowable-process-definition*.yml");
+                throw new IllegalStateException("未找到任何流程定义文件 "+ PROCESS_DEFINITION_PATTERN);
             }
 
             var yamlLoader = new YamlPropertySourceLoader();

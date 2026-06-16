@@ -49,3 +49,4 @@ open-admin-flowable-example/data/
 open-admin-flowable-example/logs/
 *.log
 *.err.log
+/docs/superpowers/

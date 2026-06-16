@@ -11,7 +11,7 @@ open-admin 的 Flowable BPMN 2.0 工作流引擎插件，提供流程设计、�
 <dependency>
     <groupId>io.github.jiangood</groupId>
     <artifactId>open-admin-flowable-starter</artifactId>
-    <version>2.0.0</version>
+    <version>版本号</version>
 </dependency>
 ```
 

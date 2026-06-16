@@ -1,7 +1,7 @@
 import React from "react";
 import {Button, Card, Empty, Input, Select, Space, Splitter, Table, Tag, Typography} from "antd";
 import {CheckCircleOutlined, CloseCircleOutlined} from "@ant-design/icons";
-import ProcessImageViewer from "@/components/ProcessImageViewer";
+import ProcessImageViewer from "../../../components/ProcessImageViewer";
 
 export default class RunningPhase extends React.Component {
     render() {

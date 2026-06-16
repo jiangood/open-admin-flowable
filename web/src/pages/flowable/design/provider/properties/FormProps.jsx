@@ -1,13 +1,12 @@
 import {Select} from 'antd';
 import {useEffect, useState} from 'react';
 import {HttpUtils} from "@jiangood/open-admin";
-import {MODEL_FORM_OPTIONS} from "@/constants/api";
 
 export default function FormField({element, modeling, processId}) {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        HttpUtils.get(MODEL_FORM_OPTIONS, {code: processId}).then(rs => {
+        HttpUtils.get('admin/flowable/model/formOptions', {code: processId}).then(rs => {
             setOptions((rs || []).map(o => typeof o === 'string' ? {label: o, value: o} : o));
         });
     }, [processId]);

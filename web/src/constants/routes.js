@@ -1,8 +1,0 @@
-export const ROUTE_DESIGN = '/flowable/design'
-export const ROUTE_SIMULATE = '/flowable/simulate'
-export const ROUTE_TASK_FORM = '/flowable/user-task/form'
-export const ROUTE_USER_INSTANCE_VIEW = '/flowable/user-task/instance/view'
-export const ROUTE_MONITOR_TASK = '/flowable/monitor/task'
-export const ROUTE_MONITOR_INSTANCE = '/flowable/monitor/instance'
-export const ROUTE_MONITOR_DEFINITION = '/flowable/monitor/definition'
-export const ROUTE_MONITOR_INSTANCE_VIEW = '/flowable/monitor/instance/view'

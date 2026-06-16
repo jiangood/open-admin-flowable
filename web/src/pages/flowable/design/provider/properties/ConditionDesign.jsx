@@ -1,7 +1,6 @@
 import {Button, Input, InputNumber, Modal, Select} from "antd";
 import {Component} from "react";
 import {FieldBoolean, FieldTable, HttpUtils, ObjectUtils, StringUtils, ThemeUtils} from "@jiangood/open-admin";
-import {MODEL_VAR_LIST} from "@/constants/api";
 import {ConditionExpressionUtils} from "./ConditionExpressionUtils";
 
 
@@ -133,7 +132,7 @@ export class ConditionDesignButton extends Component {
 
     componentDidMount() {
         const {processId} = this.props;
-        HttpUtils.get(MODEL_VAR_LIST, {code: processId}).then(rs => {
+        HttpUtils.get('admin/flowable/model/varList', {code: processId}).then(rs => {
             const options = rs.map(r => {
                 return {
                     label: r.label,

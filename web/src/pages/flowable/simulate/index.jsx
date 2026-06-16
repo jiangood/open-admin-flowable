@@ -4,7 +4,6 @@ import {HttpUtils, PageLoading, PageUtils} from "@jiangood/open-admin";
 import InitPhase from "./InitPhase";
 import RunningPhase from "./RunningPhase";
 import FinishedPhase from "./FinishedPhase";
-import {SIMULATE_GET, SIMULATE_USERS, SIMULATE_LIST, SIMULATE_START, SIMULATE_STATUS, SIMULATE_TASK_HANDLE, SIMULATE_DELETE} from "@/constants/api";
 
 const PHASE_INIT = 'init';
 const PHASE_RUNNING = 'running';
@@ -32,7 +31,7 @@ export default class extends React.Component {
     const params = PageUtils.currentParams();
     const id = this.id = params.id;
 
-    HttpUtils.get(SIMULATE_GET, {id}).then(rs => {
+    HttpUtils.get('admin/flowable/simulate/get', {id}).then(rs => {
       this.setState({model: rs}, this.loadHistory);
     });
 
@@ -40,7 +39,7 @@ export default class extends React.Component {
   }
 
   loadUsers = (searchText) => {
-    HttpUtils.get(SIMULATE_USERS, {searchText}).then(rs => {
+    HttpUtils.get('admin/flowable/simulate/users', {searchText}).then(rs => {
       this.setState({users: rs || []});
     });
   }
@@ -49,7 +48,7 @@ export default class extends React.Component {
     const {model} = this.state;
     if (!model?.key) return;
     this.setState({historyLoading: true});
-    HttpUtils.get(SIMULATE_LIST, {key: model.key}).then(rs => {
+    HttpUtils.get('admin/flowable/simulate/list', {key: model.key}).then(rs => {
       this.setState({historyList: rs || [], historyLoading: false});
     }).catch(e => {
       message.error(e?.message || '加载历史记录失败');
@@ -59,7 +58,7 @@ export default class extends React.Component {
 
   handleStart = values => {
     this.setState({submitting: true});
-    HttpUtils.post(SIMULATE_START, values).then(rs => {
+    HttpUtils.post('admin/flowable/simulate/start', values).then(rs => {
       message.success('仿真流程已启动');
       this.loadStatus(rs.instanceId);
     }).catch(e => {
@@ -70,7 +69,7 @@ export default class extends React.Component {
 
   loadStatus = (instanceId) => {
     this.setState({loading: true, instanceId, phase: PHASE_RUNNING, taskFormValues: {}});
-    HttpUtils.get(SIMULATE_STATUS, {instanceId}).then(rs => {
+    HttpUtils.get('admin/flowable/simulate/status', {instanceId}).then(rs => {
       const phase = rs.finished ? PHASE_FINISHED : PHASE_RUNNING;
       this.setState({status: rs, phase, loading: false, submitting: false});
     }).catch(e => {
@@ -109,7 +108,7 @@ export default class extends React.Component {
     }
 
     this.setState({submitting: true});
-    HttpUtils.post(SIMULATE_TASK_HANDLE, {
+    HttpUtils.post('admin/flowable/simulate/task/handle', {
       taskId,
       action,
       comment: formValue.comment || '',
@@ -146,7 +145,7 @@ export default class extends React.Component {
       okType: 'danger',
       cancelText: '取消',
       onOk: () => {
-        HttpUtils.post(SIMULATE_DELETE, {instanceId}).then(() => {
+        HttpUtils.post('admin/flowable/simulate/delete', {instanceId}).then(() => {
           message.success('仿真记录已删除');
           this.loadHistory();
         });

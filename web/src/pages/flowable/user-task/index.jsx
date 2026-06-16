@@ -1,9 +1,9 @@
 import React from "react";
 import {Tabs} from "antd";
 import {Page, PageLoading} from "@jiangood/open-admin";
-import TodoTable from "@/components/flowable/todo-table";
-import DoneTable from "@/components/flowable/done-table";
-import MyTable from "@/components/flowable/my-table";
+import TodoTable from "../../../components/flowable/todo-table";
+import DoneTable from "../../../components/flowable/done-table";
+import MyTable from "../../../components/flowable/my-table";
 
 export default class extends React.Component {
     state = { show: true }

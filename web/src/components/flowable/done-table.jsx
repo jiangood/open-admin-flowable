@@ -1,8 +1,6 @@
 import {Button} from "antd";
 import {HttpUtils, PageUtils, ProTable} from "@jiangood/open-admin";
 import React from "react";
-import {USER_TASK_DONE_PAGE} from "@/constants/api";
-import {ROUTE_USER_INSTANCE_VIEW} from "@/constants/routes";
 
 const columns = [
     {title: '流程名称', dataIndex: 'instanceName'},
@@ -16,7 +14,7 @@ const columns = [
     {
         title: '操作', dataIndex: 'option',
         render: (_, record) => (
-            <Button size='small' onClick={() => PageUtils.open(ROUTE_USER_INSTANCE_VIEW + '?id=' + record.instanceId, '流程信息')}>查看</Button>
+            <Button size='small' onClick={() => PageUtils.open('/flowable/user-task/instance/view' + '?id=' + record.instanceId, '流程信息')}>查看</Button>
         ),
     },
 ];
@@ -24,7 +22,7 @@ const columns = [
 export default function DoneTable() {
     return <ProTable
         showToolbarSearch={false}
-        request={(params) => HttpUtils.get(USER_TASK_DONE_PAGE, params)}
+        request={(params) => HttpUtils.get('admin/flowable/user-task/doneTaskPage', params)}
         columns={columns}
         size='small'
     />;

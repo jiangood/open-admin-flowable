@@ -1,6 +1,5 @@
 import {HttpUtils, LinkButton, ProTable} from "@jiangood/open-admin";
 import React from "react";
-import {USER_TASK_TODO_PAGE} from "@/constants/api";
 
 const columns = [
     {title: '发起人', dataIndex: 'instanceStarter'},
@@ -21,7 +20,7 @@ const columns = [
 export default function TodoTable() {
     return <ProTable
         showToolbarSearch={false}
-        request={(params) => HttpUtils.get(USER_TASK_TODO_PAGE, params)}
+        request={(params) => HttpUtils.get('admin/flowable/user-task/todoTaskPage', params)}
         columns={columns}
         size='small'
     />;

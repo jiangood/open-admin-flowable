@@ -1,8 +1,6 @@
 import React from "react";
 import {Gap, HttpUtils, Page, PageUtils, ProTable} from "@jiangood/open-admin";
 import {Card, Empty, Skeleton, Table} from "antd";
-import {USER_TASK_GET_INSTANCE_INFO, MONITOR_INSTANCE_VARS} from "@/constants/api";
-
 export default class extends React.Component {
     state = {
         commentList: [],
@@ -22,7 +20,7 @@ export default class extends React.Component {
 
         const reqParams = {id};
         if (businessKey) reqParams.businessKey = businessKey;
-        HttpUtils.get(USER_TASK_GET_INSTANCE_INFO, reqParams).then(rs => {
+        HttpUtils.get('admin/flowable/user-task/getInstanceInfo', reqParams).then(rs => {
             this.setState(rs)
             this.setState({
                 commentList: rs.commentList,
@@ -76,7 +74,7 @@ export default class extends React.Component {
                             {dataIndex: 'value', title: '变量值'},
                         ]}
                                   rowKey='key'
-                                  request={() => HttpUtils.get(MONITOR_INSTANCE_VARS, {id})}
+                                  request={() => HttpUtils.get('admin/flowable/monitor/instance/vars', {id})}
                         />
                     </Card>
                 )}

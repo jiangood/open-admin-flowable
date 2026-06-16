@@ -1,6 +1,5 @@
 import React from "react";
 import {HttpUtils, ProTable} from "@jiangood/open-admin";
-import {MONITOR_DEFINITION_PAGE} from "@/constants/api";
 
 export default class extends React.Component {
 
@@ -80,7 +79,7 @@ export default class extends React.Component {
         return <ProTable
             search={false}
             columns={this.columns}
-            request={(params) => HttpUtils.get(MONITOR_DEFINITION_PAGE, params)}
+            request={(params) => HttpUtils.get('admin/flowable/monitor/definitionPage', params)}
         >
 
         </ProTable>

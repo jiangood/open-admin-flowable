@@ -2,7 +2,7 @@ import React from "react";
 import {Button, Form, Input, Select, Splitter} from "antd";
 import {StringUtils} from "@jiangood/open-admin";
 import {PlayCircleOutlined} from "@ant-design/icons";
-import HistoryListPanel from "@/components/flowable/HistoryListPanel";
+import HistoryListPanel from "../../../components/flowable/HistoryListPanel";
 
 export default class InitPhase extends React.Component {
     render() {

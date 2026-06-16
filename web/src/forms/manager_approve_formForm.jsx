@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {Form, Input, InputNumber, Skeleton} from "antd";
 import {HttpUtils} from "@jiangood/open-admin";
-import {EXAMPLE_LEAVE_DETAIL} from "@/constants/api";
 
 export default function ({value, onChange, id}) {
     const [loading, setLoading] = useState(false);
@@ -10,7 +9,7 @@ export default function ({value, onChange, id}) {
     useEffect(() => {
         if (id) {
             setLoading(true);
-            HttpUtils.get(EXAMPLE_LEAVE_DETAIL, {businessKey: id})
+            HttpUtils.get('admin/flowable/example/leave/detail', {businessKey: id})
                 .then(data => {
                     setInitialValues({
                         reason: data.reason,

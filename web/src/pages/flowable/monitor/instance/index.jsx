@@ -1,8 +1,6 @@
 import {Button, message, Popconfirm, Space} from "antd";
 import {HttpUtils, PageUtils, ProTable} from "@jiangood/open-admin";
 import React from "react";
-import {MONITOR_PROCESS_INSTANCE_CLOSE, MONITOR_INSTANCE_PAGE} from "@/constants/api";
-import {ROUTE_MONITOR_INSTANCE_VIEW} from "@/constants/routes";
 
 export default class extends React.Component {
 
@@ -54,7 +52,7 @@ export default class extends React.Component {
             fixed: 'right',
             render: (_, r) => {
                 return <Space>
-                    <Button size='small' onClick={() => PageUtils.open(ROUTE_MONITOR_INSTANCE_VIEW + '?id=' + r.id, '查看流程')}>查看</Button>
+                    <Button size='small' onClick={() => PageUtils.open('/flowable/monitor/instance/view' + '?id=' + r.id, '查看流程')}>查看</Button>
                     <Popconfirm title={'关闭流程'}
                                 onConfirm={() => this.close(r.id)}>
                         <Button size='small' >终止</Button>
@@ -65,7 +63,7 @@ export default class extends React.Component {
     ]
 
     close = (id) => {
-        HttpUtils.get(MONITOR_PROCESS_INSTANCE_CLOSE, {id}).then((rs) => {
+        HttpUtils.get('admin/flowable/monitor/processInstance/close', {id}).then((rs) => {
             this.tableRef.current.reload()
         }).catch(e => {
             message.error(e?.message || '关闭流程失败');
@@ -78,7 +76,7 @@ export default class extends React.Component {
         return <ProTable
             actionRef={this.tableRef}
             columns={this.columns}
-            request={(params) => HttpUtils.get(MONITOR_INSTANCE_PAGE, params)}
+            request={(params) => HttpUtils.get('admin/flowable/monitor/instancePage', params)}
         >
 
         </ProTable>

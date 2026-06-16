@@ -1,6 +1,8 @@
 spring:
+  config:
+    import: classpath:application-lib.yml
   datasource:
-    url: jdbc:h2:mem:flowable;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:flowable;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -17,6 +19,9 @@ spring:
       - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
       - org.springframework.boot.autoconfigure.security.servlet.SecurityFilterAutoConfiguration
       - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
+
+sys:
+  default-password: admin123
 
 server:
   port: 0

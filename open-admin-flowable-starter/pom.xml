@@ -63,6 +63,7 @@
                     </resource>
                 </resources>
                 <plugins>
+                    <!-- 展平 POM，移除父引用（父 POM 不上传 Central） -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>flatten-maven-plugin</artifactId>

@@ -48,7 +48,7 @@ public class FlowableTemplate {
 
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(key).active().latestVersion().singleResult();
-        Assert.notNull(definition, "流程尚未部署，请设计后部署。编码：" + key);
+        Assert.notNull(definition, "流程【" + meta.getName() + "】尚未部署，请先设计并部署");
 
         if (title == null) { title = buildDefaultTitle(user, definition, bizKey); }
 

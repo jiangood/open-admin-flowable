@@ -67,9 +67,12 @@ public class SimulateService {
         Assert.hasText(key, "流程编码不能为空");
         Assert.hasText(initiatorId, "发起人不能为空");
 
+        ProcessMeta meta = processMetaService.findOne(key);
+        Assert.notNull(meta, "流程元数据定义不存在：" + key);
+
         ProcessDefinition definition = repositoryService.createProcessDefinitionQuery()
                 .processDefinitionKey(key).active().latestVersion().singleResult();
-        Assert.notNull(definition, "流程尚未部署，请设计后部署。编码：" + key);
+        Assert.notNull(definition, "流程【" + meta.getName() + "】尚未部署，请先设计并部署");
 
         SysUser initiator = sysUserService.findById(initiatorId)
                 .orElseThrow(() -> new IllegalArgumentException("发起人不存在：" + initiatorId));

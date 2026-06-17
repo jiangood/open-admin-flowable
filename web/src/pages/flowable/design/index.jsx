@@ -113,7 +113,7 @@ export default class extends React.Component {
         }
         return <Card title={'流程设计  ' + this.state.model?.name}
                      extra={<Space>
-                         <Button type='primary' icon={<SaveOutlined/>} onClick={this.handleSave}>暂存</Button>
+                         <Button type='primary' icon={<SaveOutlined/>} onClick={this.handleSave}>保存</Button>
                          <Button type='primary' danger icon={<CloudUploadOutlined/>}
                                  onClick={this.handleDeploy}>部署</Button>
                          <Button icon={<DownloadOutlined/>} onClick={this.handleExportXML}>导出XML</Button>

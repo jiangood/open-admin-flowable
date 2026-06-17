@@ -12,6 +12,7 @@ menus:
   - id: flowable
     pid: sys
     name: 流程管理
+    icon: GatewayOutlined
     path: /flowable
     seq: 10
     perms:

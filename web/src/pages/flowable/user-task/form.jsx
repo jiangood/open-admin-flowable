@@ -33,7 +33,12 @@ export default class extends React.Component {
         HttpUtils.get('admin/flowable/user-task/getInstanceInfoByTaskId', {taskId}).then(rs => {
             this.setState({data: rs})
         }).catch(e => {
-            message.error(e?.message || '获取任务信息失败');
+            if (e?.message?.includes('任务已被处理')) {
+                message.warning('此任务已被处理');
+                setTimeout(() => PageUtils.closeCurrent(), 1500);
+            } else {
+                message.error(e?.message || '获取任务信息失败');
+            }
             this.setState({errorMsg: e})
         }).finally(() => {
             this.setState({loading: false})

@@ -222,6 +222,9 @@ public class UserTaskService {
         Assert.notNull(taskId, "taskId不能为空");
 
         Task task = taskService.createTaskQuery().taskId(taskId).includeProcessVariables().singleResult();
+        if (task == null) {
+            throw new IllegalArgumentException("任务已被处理");
+        }
         String processInstanceId = task.getProcessInstanceId();
 
         Map<String, Object> data = queryInstanceInfo(processInstanceId);

@@ -1,5 +1,6 @@
+## Flowable 工作流模块预设菜单
 menus:
-  - id: myFlowableTask
+  myFlowableTask:
     name: 我的任务
     path: /flowable/user-task
     icon: ScheduleOutlined
@@ -8,8 +9,7 @@ menus:
     messageCountUrl: /admin/flowable/user-task/todoCount
     perms:
       - {name: 任务管理, code: myFlowableTask:manage}
-
-  - id: flowable
+  flowable:
     pid: sys
     name: 流程管理
     icon: GatewayOutlined

@@ -1,5 +1,6 @@
+## Flowable 示例项目菜单
 menus:
-  - id: flowableExampleLeave
+  flowableExampleLeave:
     name: 请假示例
     path: /example
     icon: SendOutlined

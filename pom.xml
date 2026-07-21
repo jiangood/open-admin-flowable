@@ -12,8 +12,8 @@
     </parent>
 
     <groupId>io.github.jiangood</groupId>
-    <artifactId>open-admin-flowable</artifactId>
-    <version>2.5.0</version>
+    <artifactId>open-admin-flowable-parent</artifactId>
+    <version>2.5.1</version>
     <packaging>pom</packaging>
     <name>Admin Flowable Spring Boot Starter</name>
     <description>Flowable 流程引擎插件</description>
@@ -32,7 +32,7 @@
     </scm>
 
     <modules>
-        <module>open-admin-flowable-starter</module>
+        <module>open-admin-flowable</module>
         <module>open-admin-flowable-example</module>
     </modules>
 

@@ -1,6 +1,6 @@
 # open-admin-flowable
 
-![Maven Central](https://img.shields.io/maven-central/v/io.github.jiangood/open-admin-flowable-starter)
+![Maven Central](https://img.shields.io/maven-central/v/io.github.jiangood/open-admin-flowable)
 ![npm](https://img.shields.io/npm/v/@jiangood/open-admin-flowable)
 
 open-admin 的 Flowable BPMN 2.0 工作流引擎插件，提供流程设计、部署、审批、监控等完整功能。
@@ -10,7 +10,7 @@ open-admin 的 Flowable BPMN 2.0 工作流引擎插件，提供流程设计、�
 ```xml
 <dependency>
     <groupId>io.github.jiangood</groupId>
-    <artifactId>open-admin-flowable-starter</artifactId>
+    <artifactId>open-admin-flowable</artifactId>
     <version>版本号</version>
 </dependency>
 ```
@@ -158,7 +158,7 @@ public class MyProcessListener implements ProcessListener {
 ```
 open-admin-flowable/
 ├── pom.xml                              # 父 POM (多模块)
-├── open-admin-flowable-starter/         # ← 发布到 Maven Central
+├── open-admin-flowable/         # ← 发布到 Maven Central
 │   ├── pom.xml
 │   └── src/main/java/.../
 │       ├── FlowableTemplate.java        # 对外公开 API（推荐使用）

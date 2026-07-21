@@ -2,7 +2,7 @@
 
 ## Project structure
 - **Maven multi-module** (Java 21, Spring Boot 4.1.0, Flowable 8.0.0)
-  - `open-admin-flowable-starter/` — published to Maven Central
+  - `open-admin-flowable/` — published to Maven Central
   - `open-admin-flowable-example/` — local dev app, not published
 - **Frontend** (`web/`) — UmiJS npm package `@jiangood/open-admin-flowable`
 
@@ -12,7 +12,7 @@ CI publishes on `v*` tags. Before tagging, update ALL three locations:
 
 1. **Parent POM** — `pom.xml` `<version>`
 2. **Frontend** — `web/package.json` `"version"`
-3. **Sub-module POMs** — `open-admin-flowable-starter/pom.xml` and `open-admin-flowable-example/pom.xml` inherit via `<parent><version>`, so they auto-update when parent changes — verify they reference the new parent version.
+3. **Sub-module POMs** — `open-admin-flowable/pom.xml` and `open-admin-flowable-example/pom.xml` inherit via `<parent><version>`, so they auto-update when parent changes — verify they reference the new parent version.
 
 The versions *must* match across all files above.
 
@@ -32,7 +32,7 @@ cd web && npm run dev
 ## CI / publish workflow
 
 `.github/workflows/publish.yml` triggers on `v*` tag push. Sequence:
-1. `mvn deploy -Dmaven.test.skip=true -pl open-admin-flowable-starter -am -P publish` — only starter module goes to Maven Central
+1. `mvn deploy -Dmaven.test.skip=true -pl open-admin-flowable -am -P publish` — only starter module goes to Maven Central
 2. `npm publish --access public` from `web/`
 3. GitHub Release created automatically
 

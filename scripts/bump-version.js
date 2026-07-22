@@ -6,8 +6,9 @@
  *
  * 特性:
  *   - 自动递归扫描所有 pom.xml（排除 target、node_modules 等目录）
- *   - 自动识别根 POM vs 子模块 POM，采用不同替换策略
- *   - 无论 pom.xml 层级多深，都安全替换，不误改 parent 或 dependency 的版本
+ *   - 从根 POM 的 <modules> 字段确定子模块列表，精准匹配替换策略
+ *   - 根 POM 替换项目自身的 <version>，保留 <parent> 块不变
+ *   - 子模块 POM 只替换 <parent> 块内的 <version>，不改其他任何版本
  *   - 同时升级 web/package.json（如存在）
  */
 
@@ -26,21 +27,24 @@ const EXCLUDE_DIRS = new Set([
   'dist', 'build', '.gradle',
 ]);
 
-/* =================================================================
- * 判断 POM 是否有项目自身的 <version> 声明
- *
- * 只检查 <dependencies>/<build>/<profiles> 之前的"头部区域"，
- * 避免把 flatten-maven-plugin 等插件的版本号误当成项目版本。
- * ================================================================= */
-function hasOwnVersionDeclaration(content) {
-  // 如果连 <parent> 块都没有，肯定是根 POM
-  const parentMatch = content.match(/<parent>[\s\S]*?<\/parent>/);
-  if (!parentMatch) return true;
+// 根 POM 文件名，用于识别
+const ROOT_POM = 'pom.xml';
 
-  // 去掉 <parent> 块后，只检查头部区域
-  const withoutParent = content.replace(parentMatch[0], '');
-  const headerRegion = withoutParent.split(/<(dependencies|build|profiles|repositories|pluginRepositories)>/)[0];
-  return /<version>\d+\.\d+\.\d+<\/version>/.test(headerRegion);
+/* =================================================================
+ * 从根 POM 中解析 <modules> 字段，获取子模块目录名
+ * 返回 Set，例如：Set { 'open-admin-flowable', 'open-admin-flowable-example' }
+ * ================================================================= */
+function getChildModuleDirs(rootPomContent) {
+  const modulesMatch = rootPomContent.match(/<modules>([\s\S]*?)<\/modules>/);
+  if (!modulesMatch) return new Set();
+
+  const moduleRegex = /<module>(.*?)<\/module>/g;
+  const dirs = new Set();
+  let m;
+  while ((m = moduleRegex.exec(modulesMatch[1])) !== null) {
+    dirs.add(m[1].trim());
+  }
+  return dirs;
 }
 
 /* =================================================================
@@ -73,7 +77,7 @@ function replaceRootPomVersion(content, version) {
 /* =================================================================
  * 替换子模块 POM 的版本号
  *
- * 子模块特征：有 <parent> 块，无自己独立的 <version>，版本号从父 POM 继承
+ * 子模块特征：有 <parent> 块指向项目根 POM，无自己独立的 <version>
  * 策略：只替换 <parent> 块内的 <version>，其他任何地方都不改
  * 场景：open-admin-flowable/pom.xml、open-admin-flowable-example/pom.xml
  * ================================================================= */
@@ -105,7 +109,7 @@ function findPomFiles(dir) {
   for (const entry of entries) {
     if (EXCLUDE_DIRS.has(entry.name)) continue;
     const fullPath = path.join(dir, entry.name);
-    if (fullPath === __filename) continue; // 脚本自身所在目录
+    if (fullPath === __filename) continue;
     if (entry.isDirectory()) {
       results.push(...findPomFiles(fullPath));
     } else if (entry.name === 'pom.xml') {
@@ -131,10 +135,22 @@ function main() {
 
   console.log(`\n🚀 开始升级版本至 v${newVersion}\n`);
 
-  let updatedCount = 0;
+  // ---------- 读取根 POM，获取子模块列表 ----------
+  const rootPomPath = path.join(ROOT, ROOT_POM);
+  let rootPomContent;
+  try {
+    rootPomContent = fs.readFileSync(rootPomPath, 'utf-8');
+  } catch {
+    console.error(`❌ 未找到根 POM: ${ROOT_POM}`);
+    process.exit(1);
+  }
+  const childModuleDirs = getChildModuleDirs(rootPomContent);
+  console.log(`📦 发现 ${childModuleDirs.size} 个子模块: ${[...childModuleDirs].join(', ') || '无'}\n`);
 
   // ---------- pom.xml（自动扫描） ----------
   const pomFiles = findPomFiles(ROOT);
+  let updatedCount = 0;
+
   if (pomFiles.length === 0) {
     console.warn('⚠️  未找到任何 pom.xml 文件');
   } else {
@@ -143,25 +159,30 @@ function main() {
       const relPath = path.relative(ROOT, absPath);
 
       // 根据 POM 类型选择替换函数
+      let type;
       let newContent;
-      if (!/<parent>[\s\S]*?<\/parent>/.test(content)) {
-        // 没有 parent 块 → 无父 POM 的独立 POM，直接替换第一个版本号
+
+      if (relPath === ROOT_POM) {
+        // 根 POM
+        type = '根 POM';
         newContent = replaceRootPomVersion(content, newVersion);
-      } else if (hasOwnVersionDeclaration(content)) {
-        // 有 parent 块 + 有自己的版本 → 根 POM
-        newContent = replaceRootPomVersion(content, newVersion);
-      } else {
-        // 有 parent 块 + 无自己的版本 → 子模块 POM
+      } else if (childModuleDirs.has(path.dirname(relPath))) {
+        // 子模块 POM（目录名匹配 <modules> 中的声明）
+        type = '子模块';
         newContent = replaceChildModuleVersion(content, newVersion);
+      } else {
+        // 其他 pom.xml（如外部依赖或嵌套项目），按根 POM 方式处理
+        type = '其他';
+        newContent = replaceRootPomVersion(content, newVersion);
       }
 
       if (content === newContent) {
-        console.warn(`⚠️  未能找到版本号，跳过: ${relPath}`);
+        console.warn(`⚠️  [${type}] 未能找到版本号，跳过: ${relPath}`);
         continue;
       }
 
       fs.writeFileSync(absPath, newContent, 'utf-8');
-      console.log(`✅ pom.xml: ${relPath}`);
+      console.log(`✅ [${type}] ${relPath}`);
       updatedCount++;
     }
   }

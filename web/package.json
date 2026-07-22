@@ -38,5 +38,5 @@
   "scripts": {
     "dev": "umi dev"
   },
-  "version": "2.5.5"
+  "version": "2.5.4"
 }

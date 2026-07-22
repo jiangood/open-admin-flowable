@@ -28,7 +28,6 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE_KEY }}
 
   npm:
-    needs: maven
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -46,7 +45,7 @@ jobs:
           npm publish --access public
 
   release:
-    needs: npm
+    needs: [maven, npm]
     runs-on: ubuntu-latest
     permissions:
       contents: write

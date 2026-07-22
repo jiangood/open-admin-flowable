@@ -41,7 +41,7 @@ jobs:
       - name: 发布 npm 包
         run: |
           cd web
-          npm ci
+          npm install
           npm publish --access public
 
   release:

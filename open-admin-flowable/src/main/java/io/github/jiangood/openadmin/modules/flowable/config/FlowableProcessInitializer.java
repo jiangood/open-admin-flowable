@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
-import io.github.jiangood.openadmin.framework.config.OpenLifecycle;
+import io.github.jiangood.openadmin.framework.config.StartupHook;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessModelService;
@@ -13,14 +13,14 @@ import java.util.List;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class FlowableProcessInitializer implements OpenLifecycle {
+public class FlowableProcessInitializer implements StartupHook {
 
     private ProcessMetaService processMetaService;
 
     private ProcessModelService processModelService;
 
     @Override
-    public void onDataInit() {
+    public void beforeSystemDataInitialize() {
         log.info("===== FlowableProcessInitializer 开始执行 =====");
         List<ProcessMeta> list = processMetaService.findAll();
         log.info("===== 流程定义数量: {} =====", list.size());

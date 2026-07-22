@@ -23,6 +23,10 @@
     "umi": "^4.6.61"
   },
   "name": "@jiangood/open-admin-flowable",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiangood/open-admin-flowable"
+  },
   "files": [
     "src/*",
     "!src/.umi",
@@ -34,5 +38,5 @@
   "scripts": {
     "dev": "umi dev"
   },
-  "version": "2.5.4"
+  "version": "2.5.5"
 }

@@ -9,7 +9,7 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^6.2.5",
-    "@jiangood/open-admin": "^2.5.5",
+    "@jiangood/open-admin": "^2.5.9",
     "@tinymce/tinymce-react": "^6.3.0",
     "antd": "^6.4.4",
     "antd-img-crop": "^4.30.0",
@@ -38,5 +38,5 @@
   "scripts": {
     "dev": "umi dev"
   },
-  "version": "2.5.6"
+  "version": "2.5.10"
 }

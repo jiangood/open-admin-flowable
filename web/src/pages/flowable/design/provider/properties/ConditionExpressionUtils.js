@@ -43,7 +43,8 @@ export class ConditionExpressionUtils {
         const index = expr.indexOf(op);
         const left = expr.substring(0, index).trim();
         let right = expr.substring(index + op.length).trim();
-        right = StringUtils.removePrefixAndSuffix(right, '"', '"')
+        right = StringUtils.removePrefix(right, '"')
+        right = StringUtils.removeSuffix(right, '"')
 
         return {left, op, right};
     }

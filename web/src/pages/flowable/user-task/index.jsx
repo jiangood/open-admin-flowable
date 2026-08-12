@@ -1,6 +1,7 @@
 import React from "react";
 import {Button, Card, Empty, Form, Input, message, Modal, Radio, Skeleton, Spin, Splitter, Table, Tabs, Typography} from "antd";
-import {FormRegistryUtils, Gap, HttpUtils, Page, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
+import {Gap, HttpUtils, Page, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
+import {FormRegistry} from "../../../framework";
 
 function TodoTable({onProcess}) {
     const columns = [
@@ -18,7 +19,6 @@ function TodoTable({onProcess}) {
         },
     ];
     return <ProTable
-        showToolbarSearch={false}
         request={(params) => HttpUtils.get('admin/flowable/user-task/todoTaskPage', params)}
         columns={columns}
         size='small'
@@ -43,7 +43,6 @@ function DoneTable({onView}) {
         },
     ];
     return <ProTable
-        showToolbarSearch={false}
         request={(params) => HttpUtils.get('admin/flowable/user-task/doneTaskPage', params)}
         columns={columns}
         size='small'
@@ -146,7 +145,7 @@ class FormModal extends React.Component {
         const formKey = data.formKey;
         const formName = data.formKey + 'Form'
 
-        let ExForm = FormRegistryUtils.get(formName);
+        let ExForm = FormRegistry.get(formName);
         if (!ExForm) {
             console.error(" 表单不存在： " + formName + "，请检查表单源代码：src/forms/" + formName + ".jsx")
             return <Empty description={"表单不存在： " + formName}></Empty>

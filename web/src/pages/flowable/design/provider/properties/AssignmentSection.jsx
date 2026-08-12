@@ -1,5 +1,5 @@
 import {Form, Radio} from "antd";
-import {FieldRemoteSelect, FieldRemoteSelectMultipleInline, StringUtils} from "@jiangood/open-admin";
+import {FieldRemoteSelect, StringUtils} from "@jiangood/open-admin";
 import React from "react";
 
 export default function AssignmentSection(props) {
@@ -66,7 +66,7 @@ export default function AssignmentSection(props) {
             )}
             {mode === 'candidateUsers' && (
                 <Form.Item label="候选人" name='candidateUsers'>
-                    <FieldRemoteSelectMultipleInline url='admin/flowable/model/candidateUsersOptions'/>
+                    <FieldRemoteSelect multiple url='admin/flowable/model/candidateUsersOptions'/>
                 </Form.Item>
             )}
         </Form>

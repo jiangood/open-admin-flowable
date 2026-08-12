@@ -3,6 +3,7 @@ package io.github.jiangood.openadmin.modules.flowable.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import io.github.jiangood.openadmin.framework.config.security.LoginUser;
+import io.github.jiangood.openadmin.modules.flowable.common.utils.FlowableImgTool;
 import io.github.jiangood.openadmin.modules.flowable.common.utils.FlowablePageTool;
 import io.github.jiangood.openadmin.modules.flowable.dto.CommentResp;
 import io.github.jiangood.openadmin.modules.flowable.dto.TaskResp;
@@ -10,7 +11,6 @@ import io.github.jiangood.openadmin.modules.system.entity.SysRole;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import io.github.jiangood.openadmin.util.FriendlyTool;
-import io.github.jiangood.openadmin.util.ImgTool;
 import io.github.jiangood.openadmin.util.PageTool;
 import lombok.AllArgsConstructor;
 import org.flowable.engine.HistoryService;
@@ -198,7 +198,7 @@ public class UserTaskService {
 
         try {
             BufferedImage image = drawImage(instance.getId());
-            String base64 = ImgTool.toBase64DataUri(image);
+            String base64 = FlowableImgTool.toBase64DataUri(image);
             data.put("img", base64);
         } catch (Exception e) {
             data.put("img", null);

@@ -1,6 +1,6 @@
 package io.github.jiangood.openadmin.modules.flowable.config;
 
-import io.github.jiangood.openadmin.framework.config.StartupHook;
+import io.github.jiangood.openadmin.framework.spi.StartupHook;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessMetaService;
 import io.github.jiangood.openadmin.modules.flowable.service.ProcessModelService;

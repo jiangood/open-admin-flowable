@@ -1,0 +1,1 @@
+export {FormRegistry} from './FormRegistry';

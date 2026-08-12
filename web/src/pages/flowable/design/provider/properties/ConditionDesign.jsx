@@ -1,6 +1,6 @@
 import {Button, Input, InputNumber, Modal, Select} from "antd";
 import {Component} from "react";
-import {FieldBoolean, FieldTable, HttpUtils, ObjectUtils, StringUtils, ThemeUtils} from "@jiangood/open-admin";
+import {FieldBoolean, FieldTable, getToken, HttpUtils, ObjectUtils, StringUtils} from "@jiangood/open-admin";
 import {ConditionExpressionUtils} from "./ConditionExpressionUtils";
 
 
@@ -214,7 +214,7 @@ export class ConditionDesignButton extends Component {
 
                     styles={{
                         root: {
-                            backgroundColor: ThemeUtils.getColor('primary-color')
+                            backgroundColor: getToken().colorPrimary
                         }
                     }}
 
@@ -270,7 +270,8 @@ export class ConditionDesignButton extends Component {
 
     convertStrToArr(value) {
         if (value) {
-            value = StringUtils.removePrefixAndSuffix(value, "${", "}")
+            value = StringUtils.removePrefix(value, "${")
+            value = StringUtils.removeSuffix(value, "}")
             const strArr = StringUtils.split(value, '&&');
             return strArr.map(decode).filter(t => t != null)
         }

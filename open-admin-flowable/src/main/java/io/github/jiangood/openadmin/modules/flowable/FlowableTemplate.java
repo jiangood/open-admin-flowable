@@ -70,8 +70,8 @@ public class FlowableTemplate {
         variables.put(FlowableConstants.VAR_USER_NAME, user.getName());
         variables.put(FlowableConstants.VAR_UNIT_ID, user.getUnitId());
         variables.put(FlowableConstants.VAR_UNIT_NAME, user.getUnitName());
-        variables.put(FlowableConstants.VAR_DEPT_ID, user.getDeptId());
-        variables.put(FlowableConstants.VAR_DEPT_NAME, user.getDeptName());
+        variables.put(FlowableConstants.VAR_ORG_ID, user.getOrgId());
+        variables.put(FlowableConstants.VAR_ORG_NAME, user.getOrgName());
         variables.put(FlowableConstants.VAR_INITIATOR_DEPT_LEADER, user.getDeptLeaderId());
         variables.put("BUSINESS_KEY", bizKey);
         variables.put("GLOBAL_FORM_KEY", meta.getGlobalFormKey() != null ? meta.getGlobalFormKey() : meta.getKey());
@@ -80,7 +80,7 @@ public class FlowableTemplate {
     private String buildDefaultTitle(LoginUser user, ProcessDefinition definition, String bizKey) {
         String day = DateUtil.format(new Date(), "yyyy年M月d日");
         return MessageFormat.format("{0}({1}){2}发起的【{3}】(业务单号:{4})",
-                user.getName(), user.getDeptName() != null ? user.getDeptName() : "未知部门",
+                user.getName(), user.getOrgName() != null ? user.getOrgName() : "未知部门",
                 day, definition.getName(), bizKey);
     }
 

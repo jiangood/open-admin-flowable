@@ -5,7 +5,6 @@ menus:
     path: /flowable/user-task
     icon: ScheduleOutlined
     seq: -1
-    refreshOnTabClick: true
     messageCountUrl: /admin/flowable/user-task/todoCount
     perms:
       - {name: 任务管理, code: myFlowableTask:manage}

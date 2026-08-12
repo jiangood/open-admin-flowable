@@ -1,9 +1,9 @@
 package io.github.jiangood.openadmin.modules.flowable.service;
 
 import io.github.jiangood.openadmin.framework.data.specification.Spec;
+import io.github.jiangood.openadmin.modules.flowable.common.utils.FlowableImgTool;
 import io.github.jiangood.openadmin.modules.flowable.constant.FlowableConstants;
 import io.github.jiangood.openadmin.modules.flowable.domain.ProcessMeta;
-import io.github.jiangood.openadmin.util.ImgTool;
 import io.github.jiangood.openadmin.modules.system.entity.SysUser;
 import io.github.jiangood.openadmin.modules.system.service.SysUserService;
 import lombok.AllArgsConstructor;
@@ -167,7 +167,7 @@ public class SimulateService {
         // 高亮流程图
         BufferedImage image = bpmnDiagramService.drawImage(instanceId);
         try {
-            String base64 = ImgTool.toBase64DataUri(image);
+            String base64 = FlowableImgTool.toBase64DataUri(image);
             data.put("img", base64);
         } catch (IOException e) {
             log.warn("生成仿真流程图失败", e);

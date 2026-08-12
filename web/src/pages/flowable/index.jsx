@@ -1,6 +1,6 @@
 import {Button, Card, Empty, Form, message, Modal, Popconfirm, Skeleton, Space, Table} from 'antd';
 import React from 'react';
-import {ButtonList, FieldUserSelect, Gap, HttpUtils, Page, PageUtils, ProTable} from "@jiangood/open-admin";
+import {FieldUserSelect, Gap, HttpUtils, Page, PageUtils, PermActions, ProTable} from "@jiangood/open-admin";
 
 class InstanceViewModal extends React.Component {
     state = {
@@ -118,10 +118,15 @@ export default class extends React.Component {
                 <Space>
                     <Button size='small' type='primary'
                             onClick={() => PageUtils.open('/flowable/design' + '?id=' + record.id, '流程设计' + record.name)}> 设计 </Button>
-                    <Popconfirm perm='flowable/model:delete' title={'是否确定删除流程模型'}
-                                onConfirm={() => this.handleDelete(record)}>
-                        <Button size='small' danger>删除</Button>
-                    </Popconfirm>
+                    <PermActions actions={[
+                        {
+                            label: '删除',
+                            perm: 'flowable/model:delete',
+                            confirm: '是否确定删除流程模型',
+                            danger: true,
+                            onClick: () => this.handleDelete(record),
+                        }
+                    ]}/>
                 </Space>
             ),
         },
@@ -288,9 +293,8 @@ export default class extends React.Component {
                 actionRef={this.actionRef}
                 request={(params) => HttpUtils.get('admin/flowable/model/page', params)}
                 columns={this.columns}
-                showToolbarSearch={true}
                 toolBarRender={() => {
-                    return <ButtonList>
+                    return <Space>
                         <Button onClick={() => this.setState({taskModalOpen: true})}>
                             运行中的任务
                         </Button>
@@ -300,7 +304,7 @@ export default class extends React.Component {
                         <Button onClick={() => this.setState({definitionModalOpen: true})}>
                             已部署的流程定义
                         </Button>
-                    </ButtonList>
+                    </Space>
                 }}
             />
 
@@ -352,11 +356,14 @@ export default class extends React.Component {
                         }
                     ]}
                     request={(params) => HttpUtils.get('admin/flowable/monitor/task', params)}
-                >
-                    <Form.Item label='受理人' name='assignee'>
-                        <FieldUserSelect/>
-                    </Form.Item>
-                </ProTable>
+                    searchFormRender={() => (
+                        <>
+                            <Form.Item label='受理人' name='assignee'>
+                                <FieldUserSelect/>
+                            </Form.Item>
+                        </>
+                    )}
+                />
             </Modal>
 
             <Modal title='指定处理人'
@@ -404,7 +411,6 @@ export default class extends React.Component {
             >
                 <ProTable
                     actionRef={this.definitionTableRef}
-                    search={false}
                     columns={this.definitionColumns}
                     request={(params) => HttpUtils.get('admin/flowable/monitor/definitionPage', params)}
                 />

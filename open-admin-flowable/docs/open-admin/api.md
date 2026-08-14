@@ -172,12 +172,12 @@ class ReportPage extends React.Component {
 - `/file/{objectName}` 预览，如 `/file/public/202607/xxx.jpg`（公共，免登录）、`/file/private/202607/xxx.pdf`（私有，需登录）
 
 上传/下载接口（需登录）：
-- `POST /admin/sysFile/upload` — 上传，表单参数 `visibility`（`public` / `private`，默认 `public`）
+- `POST /admin/sysFile/upload` — 上传，表单参数 `isPublic`（`true` 公开免登录 / `false` 私有需登录，默认 `true`）
 - `GET /admin/sysFile/download/{objectName}` — 下载
 
 上传文件默认标记为临时，保存业务数据后后端自动确认（详见[临时文件自动清理](config.md#未认领文件自动清理)）。
 
-前端字段直接存储文件 `objectName`（如 `public/202607/xxx.jpg`），`ViewImage` / `ViewFile` / `FieldUploadFile` 自动拼接 `/file/{objectName}` 展示；上传组件通过 `visibility` prop 指定可见性，默认 `public`（私有文件显式传 `visibility='private'`）：
+前端字段直接存储文件 `objectName`（如 `public/202607/xxx.jpg`），`ViewImage` / `ViewFile` / `FieldUploadFile` 自动拼接 `/file/{objectName}` 展示；上传组件通过 `isPublic` prop 指定是否公开，默认 `true`（私有文件显式传 `isPublic={false}`）：
 
 ##### nginx 直连公共文件
 

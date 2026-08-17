@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {Descriptions, Skeleton, Tag} from "antd";
-import {HttpUtils} from "@jiangood/open-admin";
+import {HttpClient} from "@jiangood/open-admin";
 
 export default function ({id}) {
     const [loading, setLoading] = useState(false);
@@ -9,8 +9,8 @@ export default function ({id}) {
     useEffect(() => {
         if (id) {
             setLoading(true);
-            HttpUtils.get('admin/flowable/example/leave/detail', {businessKey: id})
-                .then(setData)
+            HttpClient.get('admin/flowable/example/leave/detail', {businessKey: id})
+                .then(rs => setData(rs.data))
                 .finally(() => setLoading(false));
         }
     }, [id]);

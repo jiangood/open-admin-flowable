@@ -70,7 +70,7 @@ public class UserTaskService {
             TaskResp r = new TaskResp();
             convert(r, task);
             r.setInstanceName(instance.getName());
-            r.setInstanceStartTime(FriendlyTool.getPastTime(instance.getStartTime()));
+            r.setInstanceStartTime(FriendlyTool.getPastTime(DateUtil.toLocalDateTime(instance.getStartTime())));
             r.setInstanceStarter(sysUserService.getNameById(instance.getStartUserId()));
             return r;
         });
@@ -98,9 +98,9 @@ public class UserTaskService {
             TaskResp r = new TaskResp();
             convert(r, task);
             r.setInstanceName(instance.getName());
-            r.setInstanceStartTime(FriendlyTool.getPastTime(instance.getStartTime()));
+            r.setInstanceStartTime(FriendlyTool.getPastTime(DateUtil.toLocalDateTime(instance.getStartTime())));
             r.setInstanceStarter(sysUserService.getNameById(instance.getStartUserId()));
-            r.setDurationInfo(FriendlyTool.getTimeDiff(task.getCreateTime(), task.getEndTime()));
+            r.setDurationInfo(FriendlyTool.getTimeDiff(DateUtil.toLocalDateTime(task.getCreateTime()), DateUtil.toLocalDateTime(task.getEndTime())));
             return r;
         });
     }
@@ -129,7 +129,7 @@ public class UserTaskService {
     private void convert(TaskResp r, TaskInfo task) {
         r.setId(task.getId());
         r.setTaskName(task.getName());
-        r.setCreateTime(FriendlyTool.getPastTime(task.getCreateTime()));
+        r.setCreateTime(FriendlyTool.getPastTime(DateUtil.toLocalDateTime(task.getCreateTime())));
         r.setAssigneeInfo(sysUserService.getNameById(task.getAssignee()));
         r.setFormKey(task.getFormKey());
         r.setInstanceId(task.getProcessInstanceId());

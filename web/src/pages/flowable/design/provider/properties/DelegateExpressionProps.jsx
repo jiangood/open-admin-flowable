@@ -1,13 +1,13 @@
 import {Select} from 'antd';
 import {useEffect, useState} from 'react';
-import {HttpUtils} from "@jiangood/open-admin";
+import {HttpClient} from "@jiangood/open-admin";
 
 export default function DelegateExpressionField({element, modeling}) {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        HttpUtils.get('admin/flowable/model/javaDelegateOptions').then(rs => {
-            setOptions((rs || []).map(o => typeof o === 'string' ? {label: o, value: o} : o));
+        HttpClient.get('admin/flowable/model/javaDelegateOptions').then(rs => {
+            setOptions((rs.data || []).map(o => typeof o === 'string' ? {label: o, value: o} : o));
         });
     }, []);
 

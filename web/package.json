@@ -10,7 +10,7 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^6.2.5",
-    "@jiangood/open-admin": "^3.0.15",
+    "@jiangood/open-admin": "^3.1.0",
     "@tinymce/tinymce-react": "^6.3.0",
     "antd": "^6.4.4",
     "antd-img-crop": "^4.30.0",
@@ -46,5 +46,5 @@
     "build": "vite build",
     "preview": "vite preview"
   },
-  "version": "2.5.11"
+  "version": "2.5.12"
 }

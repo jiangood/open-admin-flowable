@@ -9,7 +9,7 @@ import './index.css'
 import customTranslate from "./customTranslate/customTranslate";
 import contextPad from "./contextPad";
 import {CloudUploadOutlined, DownloadOutlined, SaveOutlined, UploadOutlined} from "@ant-design/icons";
-import {HttpUtils, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
+import {HttpClient, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
 import 'bpmn-js/dist/assets/bpmn-js.css';
 import flowableJson from './descriptors/flowable';
 import PropertiesPanel from './PropertiesPanel';
@@ -30,8 +30,8 @@ export default class extends React.Component {
 
     async componentDidMount() {
         const params = PageUtils.currentParams()
-        const rs = await HttpUtils.get('admin/flowable/model/detail', {id: params.id})
-        this.setState({model: rs, id: params.id}, this.initBpmn)
+        const rs = await HttpClient.get('admin/flowable/model/detail', {id: params.id})
+        this.setState({model: rs.data, id: params.id}, this.initBpmn)
     }
 
     initBpmn = () => {
@@ -89,7 +89,7 @@ export default class extends React.Component {
         const hide = message.loading('正在保存...', 0)
         try {
             const res = await this.bpmnModeler.saveXML();
-            await HttpUtils.post('admin/flowable/model/saveContent', {id, content: res.xml});
+            await HttpClient.post('admin/flowable/model/saveContent', {id, content: res.xml});
         } finally {
             hide()
         }
@@ -100,7 +100,7 @@ export default class extends React.Component {
         const hide = message.loading('正在部署...', 0)
         try {
             const res = await this.bpmnModeler.saveXML();
-            await HttpUtils.post('admin/flowable/model/deploy', {id, content: res.xml});
+            await HttpClient.post('admin/flowable/model/deploy', {id, content: res.xml});
         } finally {
             hide()
         }
@@ -162,8 +162,8 @@ export default class extends React.Component {
                             dataIndex:'id',
                             render:(_, record)=> {
                                 return <Button type='primary' onClick={()=>{
-                                    HttpUtils.get('admin/flowable/model/getDefinitionContent',{id: record.id}).then(xml=>{
-                                        this.bpmnModeler.importXML(xml)
+                                    HttpClient.get('admin/flowable/model/getDefinitionContent',{id: record.id}).then(rs=>{
+                                        this.bpmnModeler.importXML(rs.data)
                                         this.setState({deployedModal:false})
                                     })
                                 }}>加载</Button>
@@ -172,7 +172,7 @@ export default class extends React.Component {
                     ]}
                     request={params => {
                         params.key = this.state.model.key
-                        return HttpUtils.get('admin/flowable/model/definitionPage', params)
+                        return HttpClient.get('admin/flowable/model/definitionPage', params)
                     }}>
 
                 </ProTable>

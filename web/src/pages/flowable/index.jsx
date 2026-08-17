@@ -1,6 +1,6 @@
 import {Button, Card, Empty, Form, message, Modal, Popconfirm, Skeleton, Space, Table} from 'antd';
 import React from 'react';
-import {FieldUserSelect, Gap, HttpUtils, Page, PageUtils, PermActions, ProTable} from "@jiangood/open-admin";
+import {FieldUserSelect, Gap, HttpClient, Page, PageUtils, PermActions, ProTable} from "@jiangood/open-admin";
 
 class InstanceViewModal extends React.Component {
     state = {
@@ -15,15 +15,15 @@ class InstanceViewModal extends React.Component {
         const {id, businessKey} = this.props;
         const reqParams = {id};
         if (businessKey) reqParams.businessKey = businessKey;
-        HttpUtils.get('admin/flowable/user-task/getInstanceInfo', reqParams).then(rs => {
+        HttpClient.get('admin/flowable/user-task/getInstanceInfo', reqParams).then(rs => {
             this.setState({
-                ...rs,
-                commentList: rs.commentList,
-                img: rs.img,
-                id: rs.id,
+                ...rs.data,
+                commentList: rs.data.commentList,
+                img: rs.data.img,
+                id: rs.data.id,
             })
         }).catch(e => {
-            this.setState({errorMsg: e})
+            this.setState({errorMsg: e?.message ?? '加载失败'})
         }).finally(() => {
             this.setState({loading: false})
         })
@@ -68,7 +68,7 @@ class InstanceViewModal extends React.Component {
                         {dataIndex: 'value', title: '变量值'},
                     ]}
                               rowKey='key'
-                              request={() => HttpUtils.get('admin/flowable/monitor/instance/vars', {id})}
+                              request={() => HttpClient.get('admin/flowable/monitor/instance/vars', {id})}
                     />
                 </Card>
             )}
@@ -133,7 +133,7 @@ export default class extends React.Component {
     ];
 
     handleDelete = row => {
-        HttpUtils.post('admin/flowable/model/delete', {id: row.id}).then(rs => {
+        HttpClient.post('admin/flowable/model/delete', {id: row.id}).then(rs => {
             this.actionRef.current.reload();
         })
     }
@@ -143,7 +143,7 @@ export default class extends React.Component {
     };
 
     submitSetAssignee = values => {
-        HttpUtils.post('admin/flowable/monitor/setAssignee', values).then(() => {
+        HttpClient.post('admin/flowable/monitor/setAssignee', values).then(() => {
             this.setState({assigneeFormOpen: false})
             this.taskTableRef.current.reload()
         }).catch(e => {
@@ -210,7 +210,7 @@ export default class extends React.Component {
     ]
 
     closeInstance = (id) => {
-        HttpUtils.get('admin/flowable/monitor/processInstance/close', {id}).then((rs) => {
+        HttpClient.get('admin/flowable/monitor/processInstance/close', {id}).then((rs) => {
             this.instanceTableRef.current.reload()
         }).catch(e => {
             message.error(e?.message || '关闭流程失败');
@@ -291,7 +291,7 @@ export default class extends React.Component {
         return <Page padding>
             <ProTable
                 actionRef={this.actionRef}
-                request={(params) => HttpUtils.get('admin/flowable/model/page', params)}
+                request={(params) => HttpClient.get('admin/flowable/model/page', params)}
                 columns={this.columns}
                 toolBarRender={() => {
                     return <Space>
@@ -355,7 +355,7 @@ export default class extends React.Component {
                             }
                         }
                     ]}
-                    request={(params) => HttpUtils.get('admin/flowable/monitor/task', params)}
+                    request={(params) => HttpClient.get('admin/flowable/monitor/task', params)}
                     searchFormRender={() => (
                         <>
                             <Form.Item label='受理人' name='assignee'>
@@ -390,7 +390,7 @@ export default class extends React.Component {
                 <ProTable
                     actionRef={this.instanceTableRef}
                     columns={this.instanceColumns}
-                    request={(params) => HttpUtils.get('admin/flowable/monitor/instancePage', params)}
+                    request={(params) => HttpClient.get('admin/flowable/monitor/instancePage', params)}
                 />
             </Modal>
 
@@ -412,7 +412,7 @@ export default class extends React.Component {
                 <ProTable
                     actionRef={this.definitionTableRef}
                     columns={this.definitionColumns}
-                    request={(params) => HttpUtils.get('admin/flowable/monitor/definitionPage', params)}
+                    request={(params) => HttpClient.get('admin/flowable/monitor/definitionPage', params)}
                 />
             </Modal>
         </Page>

@@ -1,5 +1,4 @@
 import {Form, Input, InputNumber, Select} from "antd";
-import {HttpUtils} from "@jiangood/open-admin";
 
 export default function ({value, onChange, id}) {
     if (value == null) {

@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, Empty, Form, Input, message, Modal, Radio, Skeleton, Spin, Splitter, Table, Tabs, Typography} from "antd";
-import {Gap, HttpUtils, Page, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
+import {Gap, HttpClient, Page, PageLoading, PageUtils, ProTable} from "@jiangood/open-admin";
 import {FormRegistry} from "../../../framework";
 
 function TodoTable({onProcess}) {
@@ -19,7 +19,7 @@ function TodoTable({onProcess}) {
         },
     ];
     return <ProTable
-        request={(params) => HttpUtils.get('admin/flowable/user-task/todoTaskPage', params)}
+        request={(params) => HttpClient.get('admin/flowable/user-task/todoTaskPage', params)}
         columns={columns}
         size='small'
     />;
@@ -43,7 +43,7 @@ function DoneTable({onView}) {
         },
     ];
     return <ProTable
-        request={(params) => HttpUtils.get('admin/flowable/user-task/doneTaskPage', params)}
+        request={(params) => HttpClient.get('admin/flowable/user-task/doneTaskPage', params)}
         columns={columns}
         size='small'
     />;
@@ -72,7 +72,7 @@ function MyTable({onView}) {
         },
     ];
     return <ProTable
-        request={(params) => HttpUtils.get('admin/flowable/user-task/myInstance', params)}
+        request={(params) => HttpClient.get('admin/flowable/user-task/myInstance', params)}
         columns={columns}
     />;
 }
@@ -91,8 +91,8 @@ class FormModal extends React.Component {
 
     componentDidMount() {
         const taskId = this.props.taskId ?? PageUtils.currentParams()?.taskId
-        HttpUtils.get('admin/flowable/user-task/getInstanceInfoByTaskId', {taskId}).then(rs => {
-            this.setState({data: rs})
+        HttpClient.get('admin/flowable/user-task/getInstanceInfoByTaskId', {taskId}).then(rs => {
+            this.setState({data: rs.data})
         }).catch(e => {
             if (e?.message?.includes('任务已被处理')) {
                 message.warning('此任务已被处理');
@@ -116,7 +116,7 @@ class FormModal extends React.Component {
                 value.formData = this.state.formData
             }
             value.taskId = this.state.data.taskId
-            await HttpUtils.post('admin/flowable/user-task/handleTask', value)
+            await HttpClient.post('admin/flowable/user-task/handleTask', value)
             this.props.onClose?.();
             if (!this.props.onClose) PageUtils.closeCurrent()
         } catch (error) {
@@ -229,15 +229,15 @@ class ViewModal extends React.Component {
 
         const reqParams = {id};
         if (businessKey) reqParams.businessKey = businessKey;
-        HttpUtils.get('admin/flowable/user-task/getInstanceInfo', reqParams).then(rs => {
-            this.setState(rs)
+        HttpClient.get('admin/flowable/user-task/getInstanceInfo', reqParams).then(rs => {
+            this.setState(rs.data)
             this.setState({
-                commentList: rs.commentList,
-                img: rs.img,
-                id: rs.id,
+                commentList: rs.data.commentList,
+                img: rs.data.img,
+                id: rs.data.id,
             })
         }).catch(e => {
-            this.setState({errorMsg: e})
+            this.setState({errorMsg: e?.message ?? '加载失败'})
         }).finally(() => {
             this.setState({loading: false})
         })
@@ -282,7 +282,7 @@ class ViewModal extends React.Component {
                         {dataIndex: 'value', title: '变量值'},
                     ]}
                               rowKey='key'
-                              request={() => HttpUtils.get('admin/flowable/monitor/instance/vars', {id})}
+                              request={() => HttpClient.get('admin/flowable/monitor/instance/vars', {id})}
                     />
                 </Card>
             )}

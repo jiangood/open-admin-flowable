@@ -1,6 +1,6 @@
 import React from "react";
 import {Button, Card, message, Modal, Space, Spin} from "antd";
-import {HttpUtils, PageLoading, PageUtils} from "@jiangood/open-admin";
+import {HttpClient, PageLoading, PageUtils} from "@jiangood/open-admin";
 import InitPhase from "./InitPhase";
 import RunningPhase from "./RunningPhase";
 import FinishedPhase from "./FinishedPhase";
@@ -31,16 +31,16 @@ export default class extends React.Component {
     const params = PageUtils.currentParams();
     const id = this.id = params.id;
 
-    HttpUtils.get('admin/flowable/simulate/get', {id}).then(rs => {
-      this.setState({model: rs}, this.loadHistory);
+    HttpClient.get('admin/flowable/simulate/get', {id}).then(rs => {
+      this.setState({model: rs.data}, this.loadHistory);
     });
 
     this.loadUsers();
   }
 
   loadUsers = (searchText) => {
-    HttpUtils.get('admin/flowable/simulate/users', {searchText}).then(rs => {
-      this.setState({users: rs || []});
+    HttpClient.get('admin/flowable/simulate/users', {searchText}).then(rs => {
+      this.setState({users: rs.data || []});
     });
   }
 
@@ -48,8 +48,8 @@ export default class extends React.Component {
     const {model} = this.state;
     if (!model?.key) return;
     this.setState({historyLoading: true});
-    HttpUtils.get('admin/flowable/simulate/list', {key: model.key}).then(rs => {
-      this.setState({historyList: rs || [], historyLoading: false});
+    HttpClient.get('admin/flowable/simulate/list', {key: model.key}).then(rs => {
+      this.setState({historyList: rs.data || [], historyLoading: false});
     }).catch(e => {
       message.error(e?.message || '加载历史记录失败');
       this.setState({historyLoading: false});
@@ -58,9 +58,9 @@ export default class extends React.Component {
 
   handleStart = values => {
     this.setState({submitting: true});
-    HttpUtils.post('admin/flowable/simulate/start', values).then(rs => {
+    HttpClient.post('admin/flowable/simulate/start', values).then(rs => {
       message.success('仿真流程已启动');
-      this.loadStatus(rs.instanceId);
+      this.loadStatus(rs.data.instanceId);
     }).catch(e => {
       message.error(e?.message || '启动仿真失败');
       this.setState({submitting: false});
@@ -69,9 +69,9 @@ export default class extends React.Component {
 
   loadStatus = (instanceId) => {
     this.setState({loading: true, instanceId, phase: PHASE_RUNNING, taskFormValues: {}});
-    HttpUtils.get('admin/flowable/simulate/status', {instanceId}).then(rs => {
-      const phase = rs.finished ? PHASE_FINISHED : PHASE_RUNNING;
-      this.setState({status: rs, phase, loading: false, submitting: false});
+    HttpClient.get('admin/flowable/simulate/status', {instanceId}).then(rs => {
+      const phase = rs.data.finished ? PHASE_FINISHED : PHASE_RUNNING;
+      this.setState({status: rs.data, phase, loading: false, submitting: false});
     }).catch(e => {
       message.error(e?.message || '获取状态失败');
       this.setState({loading: false, submitting: false});
@@ -108,7 +108,7 @@ export default class extends React.Component {
     }
 
     this.setState({submitting: true});
-    HttpUtils.post('admin/flowable/simulate/task/handle', {
+    HttpClient.post('admin/flowable/simulate/task/handle', {
       taskId,
       action,
       comment: formValue.comment || '',
@@ -145,7 +145,7 @@ export default class extends React.Component {
       okType: 'danger',
       cancelText: '取消',
       onOk: () => {
-        HttpUtils.post('admin/flowable/simulate/delete', {instanceId}).then(() => {
+        HttpClient.post('admin/flowable/simulate/delete', {instanceId}).then(() => {
           message.success('仿真记录已删除');
           this.loadHistory();
         });
